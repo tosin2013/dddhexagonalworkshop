@@ -48,18 +48,18 @@ We'll build this system step-by-step, with each piece compiling as we go:
 
 We'll build this system step-by-step, with each piece compiling as we go:
 
-| Step | Component           | Time   | Focus                       |
-| ---- | ------------------- | ------ | --------------------------- |
-| 01   | **Events**          | 8 min  | Capture business facts      |
-| 02   | **Commands**        | 8 min  | Represent business requests |
-| 03   | **Result Objects**  | 6 min  | Package multiple outputs    |
-| 04   | **Aggregates**      | 16 min | Core business logic         |
-| 05   | **Entities**        | 12 min | Database mapping            |
-| 06   | **Repositories**    | 16 min | Data access layer           |
-| 07   | **Event Publisher** | 12 min | Messaging integration       |
-| 08   | **Domain Services** | 16 min | Workflow orchestration      |
-| 09   | **DTOs**            | 6 min  | API data contracts          |
-| 10   | **REST Endpoint**   | 6 min  | HTTP interface              |
+| Step | Component           | Focus                       |
+| ---- | ------------------- | --------------------------- |
+| 01   | **Events**          | Capture business facts      |
+| 02   | **Commands**        | Represent business requests |
+| 03   | **Result Objects**  | Combine multiple outputs    |
+| 04   | **Aggregates**      | Core business logic         |
+| 05   | **Entities**        | Database mapping            |
+| 06   | **Repositories**    | Data access layer           |
+| 07   | **Event Publisher** | Messaging integration       |
+| 08   | **Domain Services** | Workflow orchestration      |
+| 09   | **DTOs**            | API data contracts          |
+| 10   | **REST Endpoint**   | HTTP interface              |
 
 **Total:** 106 minutes + 14 minutes buffer = 2 hours
 
@@ -69,15 +69,15 @@ We'll build this system step-by-step, with each piece compiling as we go:
 
 We'll build this system step-by-step, with each piece compiling as we go:
 
-| Step | Component                              | Time   | Focus                       |
-| ---- | -------------------------------------- | ------ | --------------------------- |
-| 01   | **Create the Address Value Object**    | 8 min  | Capture business facts      |
-| 02   | **Update the RegisterAttendeeCommand** | 8 min  | Represent business requests |
-| 03   | **Update the Attendee Aggregate**      | 6 min  | Package multiple outputs    |
-| 04   | **Update the AttendeeRegisteredEvent** | 16 min | Core business logic         |
-| 05   | **Update the Persistence Layer**       | 12 min | Database mapping            |
-| 06   | **Update the AttendeeService**         | 16 min | Data access layer           |
-| 07   | **Update the AttendeeDTO**             | 12 min | Messaging integration       |
+| Step | Component                              | Focus                       |
+| ---- | -------------------------------------- | --------------------------- |
+| 01   | **Create the Address Value Object**    | Capture business facts      |
+| 02   | **Update the RegisterAttendeeCommand** | Represent business requests |
+| 03   | **Update the Attendee Aggregate**      | Package multiple outputs    |
+| 04   | **Update the AttendeeRegisteredEvent** | Core business logic         |
+| 05   | **Update the Persistence Layer**       | Database mapping            |
+| 06   | **Update the AttendeeService**         | Data access layer           |
+| 07   | **Update the AttendeeDTO**             | Messaging integration       |
 
 **Total:** 106 minutes + 14 minutes buffer = 2 hours
 
@@ -87,15 +87,15 @@ We'll build this system step-by-step, with each piece compiling as we go:
 
 We'll build this system step-by-step, with each piece compiling as we go:
 
-| Step | Component                              | Time   | Focus                       |
-| ---- | -------------------------------------- | ------ | --------------------------- |
-| 01   | **Create the Address Value Object**    | 8 min  | Capture business facts      |
-| 02   | **Update the RegisterAttendeeCommand** | 8 min  | Represent business requests |
-| 03   | **Update the Attendee Aggregate**      | 6 min  | Package multiple outputs    |
-| 04   | **Update the AttendeeRegisteredEvent** | 16 min | Core business logic         |
-| 05   | **Update the Persistence Layer**       | 12 min | Database mapping            |
-| 06   | **Update the AttendeeService**         | 16 min | Data access layer           |
-| 07   | **Update the AttendeeDTO**             | 12 min | Messaging integration       |
+| Step | Component                              | Focus                       |
+| ---- | -------------------------------------- | --------------------------- |
+| 01   | **Create the Address Value Object**    | Capture business facts      |
+| 02   | **Update the RegisterAttendeeCommand** | Represent business requests |
+| 03   | **Update the Attendee Aggregate**      | Package multiple outputs    |
+| 04   | **Update the AttendeeRegisteredEvent** | Core business logic         |
+| 05   | **Update the Persistence Layer**       | Database mapping            |
+| 06   | **Update the AttendeeService**         | Data access layer           |
+| 07   | **Update the AttendeeDTO**             | Messaging integration       |
 
 **Total:** 106 minutes + 14 minutes buffer = 2 hours
 
@@ -127,29 +127,23 @@ External World → REST → Domain Logic → Events → External Systems
 
 ## Your Learning Path
 
-### 🚀 **Today (Live Session - 2 hours)**
+### 🚀 **Workshop**
 
 - **Goal:** Working end-to-end system
 - **Approach:** Copy code, compile, and understand the basics
 - **Questions:** Ask questions at any time!
 
-### 📚 **After Workshop (Self-Study)**
+### 📚 **Extra Stuff**
 
 - **Deep-dive materials** explaining the "why" behind what you built
 - **Advanced patterns** for production systems
 - **Additional iterations** to extend your knowledge
 
-### 🎯 **Future Learning (Optional)**
-
-- **Iteration 2:** Add Value Objects (Address)
-- **Iteration 3:** Anti-Corruption Layer for external systems
-- **Iteration 4:** Comprehensive testing strategies
-
 ---
 
 ## Step-by-Step Preview
 
-### Steps 1-3: Foundation (22 minutes)
+### Steps 1-3: Building Blocks
 
 **Events, Commands, Result Objects**
 
@@ -159,7 +153,7 @@ External World → REST → Domain Logic → Events → External Systems
 
 _These establish the vocabulary of your domain._
 
-### Step 4: The Heart (16 minutes)
+### Step 4: The Heart
 
 **Aggregates**
 
@@ -169,7 +163,7 @@ _These establish the vocabulary of your domain._
 
 _This is the core of Domain-Driven Design._
 
-### Steps 5-6: Persistence (28 minutes)
+### Steps 5-6: Persistence
 
 **Entities and Repositories**
 
@@ -178,16 +172,23 @@ _This is the core of Domain-Driven Design._
 
 _Clean separation between domain model and database concerns._
 
-### Steps 7-8: Integration (28 minutes)
+### Steps 7: Outbound Adapters
 
-**Event Publisher and Domain Services**
+**Event Publisher**
 
 - **Event Publisher:** Send domain events to external systems
-- **Domain Services:** Orchestrate complex business workflows
 
 _Hexagonal Architecture in action - adapters for external systems._
 
-### Steps 9-10: API Layer (12 minutes)
+### Steps 8: Services
+
+**Domain Services**
+
+- **Domain Services:** Orchestrate complex business workflows
+
+_Orchestrating the Domain_
+
+### Steps 9-10: Inbound Adapters
 
 **DTOs and REST Endpoint**
 
@@ -211,13 +212,12 @@ _External interface that exposes your domain capabilities._
 
 - **Don't try to understand everything** during live coding
 - **Don't optimize or change the code** - get it working first
-- **Don't get stuck on theory questions** - save for self-study
+- **Don't get stuck on theory questions** - ask questions!
 
 ### 🆘 **If You Fall Behind:**
 
-- Use the **completed solution files** to catch up
 - **Don't panic** - the goal is learning, not perfection
-- **Pair with someone** who's keeping up
+- **Revisit at a later date** - the workshop will be on GitHub, and the authors are easy to get in touch with
 
 ---
 
