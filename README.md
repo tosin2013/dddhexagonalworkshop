@@ -1,8 +1,6 @@
 # Domain Driven Design and Hexagonal Architecture Hands-On Workshop
 
-# Domain-Driven Design with Hexagonal Architecture Workshop
-
-## Welcome! (2-Hour Hands-On Workshop)
+## Welcome to this Hands-On Workshop!
 
 There is a great deal of theory in Domain Driven Design. This workshop was built because while the authors love talking about software architecture (their colleagues will verify), they also like getting their hands dirty with code. In fact, your workshop authors believe that it is impossible to understand software architecture **_without_** getting your hands on a keyboard and implementing the ideas.
 
@@ -12,7 +10,8 @@ By the end of this workshop, you'll have a **complete, working attendee registra
 
 ### Our Learning Strategy
 
-**⚡ Live Session (2 hours):** Focus on getting working code with minimal theory
+**⚡ Live Session:** Focus on getting working code with minimal theory
+
 **📚 Self-Study Materials:** Deep-dive explanations for later learning
 
 ---
@@ -33,12 +32,12 @@ A conference attendee registration microservice with:
 
 We'll build this system step-by-step, with each piece compiling as we go:
 
-| Iteration | Component                 | Time   | Focus                                                                 |
-| --------- | ------------------------- | ------ | --------------------------------------------------------------------- |
-| 01        | **End to End DDD**        | 60 min | Implement a (very) basic workflow                                     |
-| 02        | **Value Objects**         | 15 min | Add more detail to the basic workflow                                 |
-| 03        | **Anti-Corruption Layer** | 30 min | Implement an Anti Corruption Layer to integrate with external systems |
-| 04        | **Testability**           | 15 min | Focus on testing                                                      |
+| Iteration | Component                 | Focus                                                                 |
+| --------- | ------------------------- | --------------------------------------------------------------------- |
+| 01        | **End to End DDD**        | Implement a (very) basic workflow                                     |
+| 02        | **Value Objects**         | Add more detail to the basic workflow                                 |
+| 03        | **Anti-Corruption Layer** | Implement an Anti Corruption Layer to integrate with external systems |
+| 04        | **Testability**           | Focus on testing                                                      |
 
 **Total:** 120 minutes = 2 hours
 
