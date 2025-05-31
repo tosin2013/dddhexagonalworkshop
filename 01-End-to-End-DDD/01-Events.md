@@ -1,6 +1,6 @@
-# Steps 1-3: Foundation (22 minutes)
+# Steps 1-2: Building Blocks
 
-## Building the Vocabulary of Your Domain
+## The Building Blocks of Domain Driven Design
 
 ### What We're Building in This Module
 
