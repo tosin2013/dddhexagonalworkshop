@@ -231,4 +231,5 @@ _External interface that exposes your domain capabilities._
 - [ ] **Starter project** compiles: `mvn compile`
 
 ## Get Started!
-[01-foundations README](01-foundations/README.md)
+
+[01 End to End DDD](01-End-to-End-DDD/README.md)
