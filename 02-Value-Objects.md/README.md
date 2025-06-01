@@ -1,87 +1,86 @@
-# Step 4: The Heart of DDD (16 minutes)
+# Iteration 02: Adding Value Objects
 
-## Where Your Business Logic Lives
+## Overview
 
-### What We're Building in This Step
+In this iteration we will enhance the `Attendee` model by adding an address field. This will allow us to store more detailed information about each attendee using **Value Objects** - a core Domain Driven Design concept.
 
-The **Attendee Aggregate** - the single most important component in our entire system. This is where all business logic for attendee registration lives, where business rules are enforced, and where domain events are created.
+We will also use the `Hexagonal Architecture`, or `Ports and Adapters` pattern to integrate with external systems, ensuring a clean separation of concerns.
 
-Think of this as the **brain** of your attendee registration system.
+## DDD Concepts Covered
 
----
+- **Value Objects**: Objects that describe the state of something else, equal based on their value rather than identity
+- **Hexagonal Architecture**: Maintaining clean boundaries between domain, persistence, and infrastructure layers
 
-## Why This Is the Heart of DDD
+## Technology Stack
 
-### The Scattered Logic Problem
+**Quarkus** (https://quarkus.io) is a modern Java framework designed for building cloud-native applications. It provides a set of tools and libraries that make it easy to develop, test, and deploy applications. In this workshop, we will leverage Quarkus to implement our DDD concepts and build a RESTful API for registering attendees.
 
-In most applications, business logic gets scattered everywhere:
+The project uses Quarkus features including:
 
-```java
-// ❌ Business logic scattered across layers
-@RestController
-public class AttendeeController {
-    public ResponseEntity register(RegisterRequest request) {
-        if (request.getEmail() == null) return badRequest(); // Validation in controller
-    }
-}
+- Built-in support for REST endpoints
+- JSON serialization
+- Database access
+- `Dev Mode` that automatically spins up external dependencies like Kafka and PostgreSQL
 
-@Service
-public class AttendeeService {
-    public void register(RegisterRequest request) {
-        if (attendeeExists(request.getEmail())) throw new Exception(); // Business rule in service
-    }
-}
+## Project Structure
 
-@Entity
-public class AttendeeEntity {
-    @PrePersist
-    void validate() {
-        if (!email.contains("@")) throw new Exception(); // Validation in entity
-    }
-}
+The basic project structure is already set up for you:
+
+```text
+dddhexagonalworkshop
+├── conference
+│   └── attendees
+│       ├── domain
+│       │   ├── aggregates
+│       │   │   └── Attendee.java
+│       │   ├── events
+│       │   │   └── AttendeeRegisteredEvent.java
+│       │   ├── services
+│       │   │   ├── AttendeeRegistrationResult.java
+│       │   │   └── AttendeeService.java
+│       │   │   └── RegisterAttendeeCommand.java
+│       │   └── valueobjects
+│       │       └── Address.java
+│       ├── infrastructure
+│       │   ├── AttendeeEndpoint.java
+│       │   ├── AttendeeDTO.java
+│       │   └── AttendeeEventPublisher.java
+│       └── persistence
+│           ├── AttendeeEntity.java
+│           └── AttendeeRepository.java
 ```
 
-**Problem:** Business logic is everywhere. No one place contains the complete business rules.
+## Workshop Steps
 
-### The Aggregate Solution
+This iteration is divided into the following steps:
 
-```java
-// ✅ All business logic centralized in one place
-public class Attendee {
-    public static AttendeeRegistrationResult registerAttendee(String email) {
-        // ALL business rules for attendee registration live here
-        validateEmailFormat(email);           // Input validation
-        checkBusinessRules(email);            // Domain rules
-        Attendee attendee = new Attendee(email);
-        AttendeeRegisteredEvent event = new AttendeeRegisteredEvent(email);
-        return new AttendeeRegistrationResult(attendee, event);
-    }
-}
-```
+1. **[Step 1: Create the Address Value Object](step1-address-value-object.md)**
+2. **[Step 2: Update the RegisterAttendeeCommand](step2-update-command.md)**
+3. **[Step 3: Update the Attendee Aggregate](step3-update-attendee.md)**
+4. **[Step 4: Update the AttendeeRegisteredEvent](step4-update-event.md)**
+5. **[Step 5: Update the Persistence Layer](step5-update-persistence.md)**
+6. **[Step 6: Update the AttendeeDTO](step6-update-dto.md)**
+7. **[Step 7: Update the AttendeeService](step7-update-service.md)**
 
-**Solution:** One place to look for attendee business logic. One place to change it.
+## How to Use This Workshop
 
----
+As you progress through the workshop, you will fill in the missing pieces of code in the appropriate packages. The workshop authors have stubbed out the classes so that you can focus on the Domain Driven Design concepts as much as possible and Java and framework concepts as little as possible.
 
-## What Makes This "The Heart"
+You can:
 
-### The Core DDD Principle
+- Type in the code line by line
+- Copy and paste the code provided into your IDE
+- Combine both approaches as you see fit
 
-> **"All business logic for a business concept belongs in its aggregate."**
+The goal is to understand the concepts and how they fit together in a DDD context.
 
-### What This Means for Attendees
+## Expected Outcome
 
-- **Email validation?** → Attendee aggregate
-- **Registration rules?** → Attendee aggregate
-- **Creating events?** → Attendee aggregate
-- **Business invariants?** → Attendee aggregate
+By the end of this iteration, you'll have:
 
-### What This Looks Like
+- A solid understanding of Value Objects in DDD
+- An enhanced Attendee model with proper address encapsulation
+- Experience with evolving domain models while maintaining clean architecture
+- A working application that demonstrates hexagonal architecture principles
 
-```java
-// The Attendee aggregate becomes the single source of truth for:
-✅ How to create a valid attendee
-✅ What rules must be followed during registration
-✅ What events should be published when someone registers
-✅ How attendees sho
-```
+Let's get coding!
