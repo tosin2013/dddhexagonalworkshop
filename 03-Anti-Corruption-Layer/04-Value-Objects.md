@@ -1,171 +1,223 @@
-# Step 2: Implement the Anti-Corruption Layer Translator
+# Step 4: Update Domain Value Objects
 
 ## Overview
 
-In this step, we'll implement the `SalesteamToDomainTranslator` class, which is the heart of our Anti-Corruption Layer. This translator converts external system data into our domain model, protecting our domain from external changes and terminology.
+In this step, we need to create new value objects that our Anti-Corruption Layer translator references: `MealPreference` and `TShirtSize`. These value objects represent domain concepts that are distinct from the external system's terminology.
 
-## Understanding Translation in ACL
+## Understanding Domain Value Objects
 
-The translator:
+Value objects in our domain:
+- **Represent** domain concepts using domain language
+- **Encapsulate** business rules and validation
+- **Remain** independent of external system terminology
+- **Provide** type safety and clarity
+- **Enable** rich domain modeling
 
-- **Converts** external models to domain commands
-- **Maps** external terminology to domain concepts
-- **Handles** differences in data structure and representation
-- **Protects** the domain from external system changes
-- **Centralizes** integration logic in one place
+## Value Objects to Create
+
+Based on our translator implementation, we need:
+1. `MealPreference` - represents dietary preferences in domain terms
+2. `TShirtSize` - represents t-shirt sizes available in our domain
 
 ## Implementation
 
-Create the `SalesteamToDomainTranslator` class:
+### MealPreference.java
+
+Create the `MealPreference` value object in the `valueobjects` package:
 
 ```java
-package dddhexagonalworkshop.conference.attendees.integration.salesteam;
+package dddhexagonalworkshop.conference.attendees.domain.valueobjects;
 
-import dddhexagonalworkshop.conference.attendees.domain.services.RegisterAttendeeCommand;
-import dddhexagonalworkshop.conference.attendees.domain.valueobjects.MealPreference;
-import dddhexagonalworkshop.conference.attendees.domain.valueobjects.TShirtSize;
+/**
+ * Represents meal preferences for conference attendees.
+ * Uses domain-specific terminology rather than external system language.
+ */
+public enum MealPreference {
+    NONE("No special dietary requirements"),
+    VEGETARIAN("Vegetarian meals"),
+    GLUTEN_FREE("Gluten-free meals"),
+    VEGAN("Vegan meals"),
+    HALAL("Halal meals"),
+    KOSHER("Kosher meals");
 
-import java.util.List;
+    private final String description;
 
-public class SalesteamToDomainTranslator {
-
-    public static List<RegisterAttendeeCommand> translate(List<Customer> customers) {
-        return customers.stream()
-                .map(customer -> new RegisterAttendeeCommand(
-                        customer.email(),
-                        customer.firstName(),
-                        customer.lastName(),
-                        null, // No address provided by Salesteam
-                        mapDietaryRequirements(customer.customerDetails().dietaryRequirements()),
-                        mapTShirtSize(customer.customerDetails().size())
-                ))
-                .toList();
+    MealPreference(String description) {
+        this.description = description;
     }
 
-    private static MealPreference mapDietaryRequirements(DietaryRequirements dietaryRequirements) {
-        if (dietaryRequirements == null) {
-            return MealPreference.NONE;
-        }
-        return switch (dietaryRequirements) {
-            case VEGETARIAN -> MealPreference.VEGETARIAN;
-            case GLUTEN_FREE -> MealPreference.GLUTEN_FREE;
-            case NONE -> MealPreference.NONE;
-        };
+    public String getDescription() {
+        return description;
     }
 
-    private static TShirtSize mapTShirtSize(Size size) {
-        if (size == null) {
-            return null;
-        }
-        return switch (size) {
-            case XS -> TShirtSize.S;  // XS maps to S (no XS in our domain)
-            case S -> TShirtSize.S;
-            case M -> TShirtSize.M;
-            case L -> TShirtSize.L;
-            case XL -> TShirtSize.XL;
-            case XXL -> TShirtSize.XXL;
-        };
+    /**
+     * Returns whether this preference requires special meal preparation.
+     */
+    public boolean requiresSpecialPreparation() {
+        return this != NONE;
+    }
+
+    /**
+     * Returns whether this preference is plant-based.
+     */
+    public boolean isPlantBased() {
+        return this == VEGETARIAN || this == VEGAN;
+    }
+
+    @Override
+    public String toString() {
+        return description;
     }
 }
 ```
 
-## Key Translation Decisions
+### TShirtSize.java
 
-### 1. Main Translation Method
-
-```java
-public static List<RegisterAttendeeCommand> translate(List<Customer> customers)
-```
-
-**Design Choices:**
-
-- **Static method**: Simple utility function for translation
-- **Batch processing**: Handles lists of customers efficiently
-- **Command pattern**: Converts to domain commands rather than domain objects directly
-- **Stream API**: Leverages functional programming for clean transformation
-
-### 2. Address Handling
+Create the `TShirtSize` value object in the `valueobjects` package:
 
 ```java
-null, // No address provided by Salesteam
+package dddhexagonalworkshop.conference.attendees.domain.valueobjects;
+
+/**
+ * Represents t-shirt sizes available for conference attendees.
+ * Defines the sizes our domain supports, independent of external systems.
+ */
+public enum TShirtSize {
+    S("Small"),
+    M("Medium"), 
+    L("Large"),
+    XL("Extra Large"),
+    XXL("Extra Extra Large");
+
+    private final String displayName;
+
+    TShirtSize(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    /**
+     * Returns the relative size order for comparison purposes.
+     */
+    public int getSizeOrder() {
+        return switch (this) {
+            case S -> 1;
+            case M -> 2;
+            case L -> 3;
+            case XL -> 4;
+            case XXL -> 5;
+        };
+    }
+
+    /**
+     * Checks if this size is larger than the given size.
+     */
+    public boolean isLargerThan(TShirtSize other) {
+        return this.getSizeOrder() > other.getSizeOrder();
+    }
+
+    /**
+     * Returns the next larger size, if available.
+     */
+    public TShirtSize getNextLargerSize() {
+        return switch (this) {
+            case S -> M;
+            case M -> L;
+            case L -> XL;
+            case XL -> XXL;
+            case XXL -> XXL; // No larger size available
+        };
+    }
+
+    @Override
+    public String toString() {
+        return displayName;
+    }
+}
 ```
 
-**Strategic Decision:**
+## Key Design Decisions
 
-- Salesteam doesn't provide address information
-- We set address to `null` rather than creating a default
-- This preserves data integrity - we don't make up missing information
-- Future enhancement could prompt for address collection separately
+### 1. Domain-Specific Terminology
 
-### 3. Dietary Requirements Mapping
+**MealPreference vs DietaryRequirements:**
+- Our domain uses "preference" (choice-oriented)
+- External system uses "requirements" (constraint-oriented)
+- Domain language is more customer-friendly
+
+**TShirtSize vs Size:**
+- Our domain is specific about t-shirts
+- External system uses generic "size"
+- Domain is more precise and contextual
+
+### 2. Rich Behavior
+
+Both value objects include behavior beyond simple data:
+
+**MealPreference methods:**
+- `requiresSpecialPreparation()` - business logic
+- `isPlantBased()` - categorization logic
+- `getDescription()` - human-readable information
+
+**TShirtSize methods:**
+- `getSizeOrder()` - comparison support
+- `isLargerThan()` - business comparison
+- `getNextLargerSize()` - inventory management support
+
+### 3. Domain Rules Encoded
+
+**MealPreference:**
+- Supports more options than external system (VEGAN, HALAL, KOSHER)
+- Enables future expansion without breaking external integration
+- Provides business categorization methods
+
+**TShirtSize:**
+- Deliberately excludes XS (business decision)
+- Provides size comparison logic
+- Includes inventory-oriented methods
+
+### 4. Independent Evolution
+
+- Domain enums can evolve independently of external systems
+- Anti-Corruption Layer handles the mapping
+- Business logic stays in domain layer
+
+## Integration with Anti-Corruption Layer
+
+The ACL translator maps external concepts to these domain concepts:
 
 ```java
-private static MealPreference mapDietaryRequirements(DietaryRequirements dietaryRequirements)
+// External -> Domain mapping
+DietaryRequirements.VEGETARIAN -> MealPreference.VEGETARIAN
+DietaryRequirements.GLUTEN_FREE -> MealPreference.GLUTEN_FREE
+DietaryRequirements.NONE -> MealPreference.NONE
+
+// Size mapping with business logic
+Size.XS -> TShirtSize.S  // Business rule: no XS in our domain
+Size.S -> TShirtSize.S
+Size.M -> TShirtSize.M
+// ... etc
 ```
-
-**Mapping Strategy:**
-
-- **One-to-one mapping**: External enums map directly to domain enums
-- **Null safety**: Handles null values gracefully
-- **Default handling**: Null external values become `MealPreference.NONE`
-- **Switch expression**: Modern Java syntax for clean mapping
-
-### 4. T-Shirt Size Mapping
-
-```java
-case XS -> TShirtSize.S;  // XS maps to S (no XS in our domain)
-```
-
-**Business Logic in Translation:**
-
-- **Size coercion**: XS external size maps to S in our domain
-- **Business decision**: Our domain doesn't support XS, so we map to closest size
-- **Data preservation**: All other sizes map directly
-- **Null handling**: Preserves null values appropriately
-
-## Anti-Corruption Layer Principles Demonstrated
-
-### 1. **Terminology Translation**
-
-- `Customer` → `RegisterAttendeeCommand`
-- `DietaryRequirements` → `MealPreference`
-- `Size` → `TShirtSize`
-
-### 2. **Structural Translation**
-
-- Flat customer structure → Command with value objects
-- `CustomerDetails` grouping → Separate domain concepts
-
-### 3. **Business Logic Isolation**
-
-- Size mapping rules contained in ACL
-- Domain model doesn't know about XS → S mapping
-- Integration-specific decisions stay in integration layer
-
-### 4. **Error Boundaries**
-
-- Null handling at integration boundary
-- Invalid data doesn't reach domain
-- Clear failure modes for integration issues
 
 ## Benefits of This Approach
 
-1. **Domain Protection**: Domain model never sees external terminology
-2. **Change Isolation**: External system changes only affect the translator
-3. **Business Logic Clarity**: Domain focuses on core business, ACL handles integration
-4. **Testing Simplicity**: Can test translation logic independently
-5. **Maintainability**: Integration concerns are centralized
+1. **Domain Clarity**: Clear, business-focused terminology
+2. **Rich Modeling**: Value objects contain relevant business behavior
+3. **Independent Evolution**: Domain can evolve without breaking integration
+4. **Type Safety**: Compile-time guarantees about valid values
+5. **Business Logic Encapsulation**: Rules live close to the data
 
-## Potential Enhancements
+## Future Considerations
 
-For production systems, consider:
-
-- **Validation**: Check data quality before translation
-- **Logging**: Track translation decisions and issues
-- **Error Handling**: Robust handling of malformed external data
-- **Metrics**: Monitor translation success rates
-- **Configuration**: Make mapping rules configurable
+These value objects can be enhanced with:
+- **Validation logic** for input data
+- **Formatting methods** for different display contexts
+- **Business rules** specific to conference management
+- **Internationalization** support for descriptions
 
 ## Next Step
 
-Continue to [Step 3: Implement the Integration Endpoint](step3-implement-endpoint.md)
+Continue to [Step 5: Update the RegisterAttendeeCommand](step5-update-command.md)
