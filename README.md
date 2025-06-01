@@ -85,7 +85,7 @@ You can implement the classes by typing in the supplied code, which is your work
 
 The examples are not meant to be reflect a production system so you will find, for instance, that validation might not be as complete as it would in a real application.
 
-#### tl;dr
+### :rocket: tl;dr
 
 Each step starts with a **tl;dr** section containing only code.  If you want to get the application up and running as quickly as possible you can copy/paste the code into the stubbed classes without reading the rest of the material.
 
@@ -95,7 +95,7 @@ We think this can be a good approach if you are as impatient as (one of) us, but
 
 ## Workshop Overview
 
-### What We're Building
+### What We Are Building
 
 A conference attendee registration microservice with:
 
@@ -105,7 +105,7 @@ A conference attendee registration microservice with:
 - **Database persistence** for attendee data
 - **Clean architecture** that separates concerns
 
-### The Journey (3 Iterations)
+### The Journey (4 Modules)
 
 We'll build this system step-by-step, with each piece compiling as we go:
 
@@ -116,11 +116,9 @@ We'll build this system step-by-step, with each piece compiling as we go:
 | 03        | **Anti-Corruption Layer** | Implement an Anti Corruption Layer to integrate with external systems |
 | 04        | **Testability**           | Focus on testing                                                      |
 
-**Total:** 120 minutes = 2 hours
-
 ---
 
-### Iteration 1 (10 Steps)
+### Module 1 (10 Steps)
 
 We'll build this system step-by-step, with each piece compiling as we go:
 
@@ -137,11 +135,9 @@ We'll build this system step-by-step, with each piece compiling as we go:
 | 09   | **DTOs**            | API data contracts          |
 | 10   | **REST Endpoint**   | HTTP interface              |
 
-**Total:** 106 minutes + 14 minutes buffer = 2 hours
-
 ---
 
-### Iteration 2 (7 Steps)
+### Module 2 (7 Steps)
 
 We'll build this system step-by-step, with each piece compiling as we go:
 
@@ -155,11 +151,9 @@ We'll build this system step-by-step, with each piece compiling as we go:
 | 06   | **Update the AttendeeService**         | Data access layer           |
 | 07   | **Update the AttendeeDTO**             | Messaging integration       |
 
-**Total:** 106 minutes + 14 minutes buffer = 2 hours
-
 ---
 
-### Iteration 3 (7 Steps)
+### Module 3 (7 Steps)
 
 We'll build this system step-by-step, with each piece compiling as we go:
 
@@ -173,7 +167,6 @@ We'll build this system step-by-step, with each piece compiling as we go:
 | 06   | **Update the AttendeeService**         | Data access layer           |
 | 07   | **Update the AttendeeDTO**             | Messaging integration       |
 
-**Total:** 106 minutes + 14 minutes buffer = 2 hours
 
 ## Key Concepts We'll Experience
 
@@ -201,103 +194,39 @@ External World → REST → Domain Logic → Events → External Systems
 
 ---
 
-## Your Learning Path
-
-### 🚀 **Workshop**
-
-- **Goal:** Working end-to-end system
-- **Approach:** Copy code, compile, and understand the basics
-- **Questions:** Ask questions at any time!
-
-### 📚 **Extra Stuff**
-
-- **Deep-dive materials** explaining the "why" behind what you built
-- **Advanced patterns** for production systems
-- **Additional iterations** to extend your knowledge
-
----
-
-## Step-by-Step Preview
-
-### Steps 1-3: Building Blocks
-
-**Events, Commands, Result Objects**
-
-- **Events:** Capture what happened in the business
-- **Commands:** Represent requests for action
-- **Result Objects:** Clean way to return multiple values
-
-_These establish the vocabulary of your domain._
-
-### Step 4: The Heart
-
-**Aggregates**
-
-- **Where business logic lives**
-- **Enforces business rules and invariants**
-- **Coordinates creating events and domain objects**
-
-_This is the core of Domain-Driven Design._
-
-### Steps 5-6: Persistence
-
-**Entities and Repositories**
-
-- **Entities:** Map domain objects to database tables
-- **Repositories:** Abstract data access behind domain interfaces
-
-_Clean separation between domain model and database concerns._
-
-### Steps 7: Outbound Adapters
-
-**Event Publisher**
-
-- **Event Publisher:** Send domain events to external systems
-
-_Hexagonal Architecture in action - adapters for external systems._
-
-### Steps 8: Services
-
-**Domain Services**
-
-- **Domain Services:** Orchestrate complex business workflows
-
-_Orchestrating the Domain_
-
-### Steps 9-10: Inbound Adapters
-
-**DTOs and REST Endpoint**
-
-- **DTOs:** Clean contracts for API responses
-- **REST Endpoint:** HTTP interface to your domain
-
-_External interface that exposes your domain capabilities._
-
----
-
 ## Workshop Rules for Success
 
 ### ✅ **Do This:**
 
 - **Follow along step-by-step** - don't jump ahead
-- **Copy code exactly** - worry about understanding later
+- **Copy code exactly** - before experimenting.  Once everything is working, experiment all you want
 - **Ask for help** if you get stuck
-- **Focus on getting it working** - theory comes later
 
 ### ❌ **Avoid This:**
 
-- **Don't try to understand everything** during live coding
 - **Don't optimize or change the code** - get it working first
-- **Don't get stuck on theory questions** - ask questions!
+- **Don't get stuck on theory questions** - ask theory questions!
+- **Don't get stuck on implementation questions** - ask implementation questions!
 
 ### 🆘 **If You Fall Behind:**
 
 - **Don't panic** - the goal is learning, not perfection
-- **Revisit at a later date** - the workshop will be on GitHub, and the authors are easy to get in touch with
+- **Revisit at a later date** - the workshop will be on GitHub, the authors are easy to get in touch with, and happy to help at any time
 
 ---
 
-## Pre-Workshop Checklist
+## Hands-on-Keyaboards Checklist 
+
+There are three ways to do the workshop:
+
+- GitHub Codespace
+- Quarkus' Dev Mode on your laptop
+- Quarkus and Docker Compose on your laptop
+
+### GitHub Codespaces
+
+- Clone the workshop repository
+- 
 
 ### Required Setup (Should be done already)
 
