@@ -73,3 +73,7 @@ mvn test -Dtest=AttendeeRegisteredEventTest
 
 The test should pass, confirming that the `AttendeeRegisteredEvent` record is correctly defined and can be instantiated with an email address.
 
+## Next Steps
+
+Next up is implementing a Command to trigger the registration worklow: [Step 2: Commands](02-Commands.md)
+
