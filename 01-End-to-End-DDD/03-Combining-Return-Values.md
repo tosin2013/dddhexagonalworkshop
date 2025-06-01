@@ -60,3 +60,7 @@ public record AttendeeRegistrationResult(Attendee attendee, AttendeeRegisteredEv
 ## Testing Your Implementation
 The `AttendeeRegistrationResult` record is tested indirectly through the `AttendeeService` tests. Once you implement the `Attendee` aggregate in the next step, the `AttendeeRegistrationResult` will be used in the service layer, and you can run the tests to verify its functionality.
 
+## Next Steps
+[**Step 4: Aggregates**](04-Aggregates.md)
+
+
