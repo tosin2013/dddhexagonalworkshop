@@ -226,7 +226,19 @@ There are three ways to do the workshop:
 ### GitHub Codespaces
 
 - Clone the workshop repository
-- 
+- Open the repo in a Codespace
+- Open the Workshop files from the file menu on the left
+- In the Terminal change into the 01-End-to-End-DDD/dddhexagonalarchitecture-01 directory with the following commands:
+
+```bash
+(main) $ cd 01-End-to-End-DDD/dddhexagonalarchitecture-01
+(main) $ ./mvnw clean compile quarkus dev
+```
+- Click on "Ports" and click on the globe icon in the row for port 8080, which is where Quarkus is running, and the application will open in a new browser tab
+
+![Open in Codespaces](01-End-to-End-DDD/open-repo-in-codespaces.png)
+![Open in Codespaces](01-End-to-End-DDD/open-repo-in-codespaces.png)
+![Open in Codespaces](01-End-to-End-DDD/open-repo-in-codespaces.png)
 
 ### Required Setup (Should be done already)
 
