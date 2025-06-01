@@ -1,171 +1,236 @@
-# Step 2: Implement the Anti-Corruption Layer Translator
+# Step 3: Implement the Integration Endpoint
 
 ## Overview
 
-In this step, we'll implement the `SalesteamToDomainTranslator` class, which is the heart of our Anti-Corruption Layer. This translator converts external system data into our domain model, protecting our domain from external changes and terminology.
+In this step, we'll implement the `SalesteamEndpoint` class, which provides a REST API for the external Salesteam system to send bulk registrations. This endpoint demonstrates how to create integration points while maintaining clean architectural boundaries.
 
-## Understanding Translation in ACL
+## Understanding Integration Endpoints
 
-The translator:
-
-- **Converts** external models to domain commands
-- **Maps** external terminology to domain concepts
-- **Handles** differences in data structure and representation
-- **Protects** the domain from external system changes
-- **Centralizes** integration logic in one place
+Integration endpoints:
+- **Accept** external system data in their format
+- **Coordinate** with Anti-Corruption Layer for translation
+- **Delegate** to domain services for business logic
+- **Provide** appropriate responses for external systems
+- **Handle** bulk operations efficiently
 
 ## Implementation
 
-Create the `SalesteamToDomainTranslator` class:
+Create the `SalesteamEndpoint` class:
 
 ```java
 package dddhexagonalworkshop.conference.attendees.integration.salesteam;
 
 import dddhexagonalworkshop.conference.attendees.domain.services.RegisterAttendeeCommand;
-import dddhexagonalworkshop.conference.attendees.domain.valueobjects.MealPreference;
-import dddhexagonalworkshop.conference.attendees.domain.valueobjects.TShirtSize;
+import dddhexagonalworkshop.conference.attendees.domain.services.AttendeeService;
+import io.quarkus.logging.Log;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
-public class SalesteamToDomainTranslator {
+@Path("/salesteam")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+public class SalesteamEndpoint {
 
-    public static List<RegisterAttendeeCommand> translate(List<Customer> customers) {
-        return customers.stream()
-                .map(customer -> new RegisterAttendeeCommand(
-                        customer.email(),
-                        customer.firstName(),
-                        customer.lastName(),
-                        null, // No address provided by Salesteam
-                        mapDietaryRequirements(customer.customerDetails().dietaryRequirements()),
-                        mapTShirtSize(customer.customerDetails().size())
-                ))
-                .toList();
-    }
+    @Inject
+    AttendeeService attendeeService;
 
-    private static MealPreference mapDietaryRequirements(DietaryRequirements dietaryRequirements) {
-        if (dietaryRequirements == null) {
-            return MealPreference.NONE;
-        }
-        return switch (dietaryRequirements) {
-            case VEGETARIAN -> MealPreference.VEGETARIAN;
-            case GLUTEN_FREE -> MealPreference.GLUTEN_FREE;
-            case NONE -> MealPreference.NONE;
-        };
-    }
+    @POST
+    public Response registerAttendees(SalesteamRegistrationRequest salesteamRegistrationRequest) {
+        Log.debugf("Registering attendees for %s", salesteamRegistrationRequest);
 
-    private static TShirtSize mapTShirtSize(Size size) {
-        if (size == null) {
-            return null;
-        }
-        return switch (size) {
-            case XS -> TShirtSize.S;  // XS maps to S (no XS in our domain)
-            case S -> TShirtSize.S;
-            case M -> TShirtSize.M;
-            case L -> TShirtSize.L;
-            case XL -> TShirtSize.XL;
-            case XXL -> TShirtSize.XXL;
-        };
+        List<RegisterAttendeeCommand> commands = SalesteamToDomainTranslator.translate(
+            salesteamRegistrationRequest.customers()
+        );
+        
+        commands.forEach(attendeeService::registerAttendee);
+        
+        return Response.accepted().build();
     }
 }
 ```
 
-## Key Translation Decisions
+## Key Components Analysis
 
-### 1. Main Translation Method
+### 1. REST Endpoint Configuration
 
 ```java
-public static List<RegisterAttendeeCommand> translate(List<Customer> customers)
+@Path("/salesteam")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 ```
 
 **Design Choices:**
+- **Specific path**: `/salesteam` clearly indicates this is for Salesteam integration
+- **JSON handling**: Accepts and produces JSON for modern API integration
+- **RESTful design**: Uses POST for bulk creation operations
 
-- **Static method**: Simple utility function for translation
-- **Batch processing**: Handles lists of customers efficiently
-- **Command pattern**: Converts to domain commands rather than domain objects directly
-- **Stream API**: Leverages functional programming for clean transformation
-
-### 2. Address Handling
+### 2. Dependency Injection
 
 ```java
-null, // No address provided by Salesteam
+@Inject
+AttendeeService attendeeService;
 ```
 
-**Strategic Decision:**
+**Benefits:**
+- **Loose coupling**: Endpoint doesn't create service instances
+- **Testability**: Easy to mock AttendeeService for testing
+- **Framework integration**: Leverages Quarkus dependency injection
 
-- Salesteam doesn't provide address information
-- We set address to `null` rather than creating a default
-- This preserves data integrity - we don't make up missing information
-- Future enhancement could prompt for address collection separately
-
-### 3. Dietary Requirements Mapping
+### 3. Request Processing Flow
 
 ```java
-private static MealPreference mapDietaryRequirements(DietaryRequirements dietaryRequirements)
+public Response registerAttendees(SalesteamRegistrationRequest salesteamRegistrationRequest)
 ```
 
-**Mapping Strategy:**
+**Workflow:**
+1. **Accept request**: Receive bulk registration data
+2. **Log processing**: Track integration activity
+3. **Translate data**: Convert external model to domain commands
+4. **Process commands**: Execute through domain service
+5. **Return response**: Provide appropriate HTTP response
 
-- **One-to-one mapping**: External enums map directly to domain enums
-- **Null safety**: Handles null values gracefully
-- **Default handling**: Null external values become `MealPreference.NONE`
-- **Switch expression**: Modern Java syntax for clean mapping
-
-### 4. T-Shirt Size Mapping
+### 4. Anti-Corruption Layer Integration
 
 ```java
-case XS -> TShirtSize.S;  // XS maps to S (no XS in our domain)
+List<RegisterAttendeeCommand> commands = SalesteamToDomainTranslator.translate(
+    salesteamRegistrationRequest.customers()
+);
 ```
 
-**Business Logic in Translation:**
+**Key Points:**
+- **Clean separation**: Endpoint doesn't handle translation logic
+- **Single responsibility**: Translation is delegated to specialist class
+- **Type safety**: Works with strongly-typed command objects
 
-- **Size coercion**: XS external size maps to S in our domain
-- **Business decision**: Our domain doesn't support XS, so we map to closest size
-- **Data preservation**: All other sizes map directly
-- **Null handling**: Preserves null values appropriately
+### 5. Bulk Processing
 
-## Anti-Corruption Layer Principles Demonstrated
+```java
+commands.forEach(attendeeService::registerAttendee);
+```
 
-### 1. **Terminology Translation**
+**Processing Strategy:**
+- **Method reference**: Clean, functional approach to processing
+- **Individual transactions**: Each registration is processed separately
+- **Error isolation**: Failures in one registration don't affect others
 
-- `Customer` → `RegisterAttendeeCommand`
-- `DietaryRequirements` → `MealPreference`
-- `Size` → `TShirtSize`
+### 6. Response Handling
 
-### 2. **Structural Translation**
+```java
+return Response.accepted().build();
+```
 
-- Flat customer structure → Command with value objects
-- `CustomerDetails` grouping → Separate domain concepts
+**HTTP Semantics:**
+- **202 Accepted**: Indicates request was accepted for processing
+- **Asynchronous processing**: Implies processing may continue after response
+- **No content**: Simple acknowledgment without detailed response data
 
-### 3. **Business Logic Isolation**
+## Missing Component: SalesteamRegistrationRequest
 
-- Size mapping rules contained in ACL
-- Domain model doesn't know about XS → S mapping
-- Integration-specific decisions stay in integration layer
+You'll need to create the request wrapper:
 
-### 4. **Error Boundaries**
+```java
+package dddhexagonalworkshop.conference.attendees.integration.salesteam;
 
-- Null handling at integration boundary
-- Invalid data doesn't reach domain
-- Clear failure modes for integration issues
+import java.util.List;
 
-## Benefits of This Approach
+public record SalesteamRegistrationRequest(List<Customer> customers) {
+}
+```
 
-1. **Domain Protection**: Domain model never sees external terminology
-2. **Change Isolation**: External system changes only affect the translator
-3. **Business Logic Clarity**: Domain focuses on core business, ACL handles integration
-4. **Testing Simplicity**: Can test translation logic independently
-5. **Maintainability**: Integration concerns are centralized
+This record:
+- **Wraps** the customer list in a proper request object
+- **Matches** the expected JSON structure from Salesteam
+- **Provides** type safety for the endpoint parameter
 
-## Potential Enhancements
+## Integration Patterns Demonstrated
 
-For production systems, consider:
+### 1. **Adapter Pattern**
+- Endpoint adapts external HTTP requests to domain operations
+- Translates between REST and domain service interfaces
 
-- **Validation**: Check data quality before translation
-- **Logging**: Track translation decisions and issues
-- **Error Handling**: Robust handling of malformed external data
-- **Metrics**: Monitor translation success rates
-- **Configuration**: Make mapping rules configurable
+### 2. **Facade Pattern**
+- Endpoint provides simplified interface to complex domain operations
+- Hides internal complexity from external systems
+
+### 3. **Batch Processing**
+- Efficiently handles multiple registrations in single request
+- Reduces network overhead for bulk operations
+
+### 4. **Separation of Concerns**
+- Endpoint handles HTTP concerns
+- Translator handles data conversion
+- Service handles business logic
+
+## Error Handling Considerations
+
+For production systems, enhance with:
+
+```java
+@POST
+public Response registerAttendees(SalesteamRegistrationRequest request) {
+    try {
+        Log.infof("Processing %d customer registrations", request.customers().size());
+        
+        List<RegisterAttendeeCommand> commands = SalesteamToDomainTranslator.translate(
+            request.customers()
+        );
+        
+        List<String> errors = new ArrayList<>();
+        for (RegisterAttendeeCommand command : commands) {
+            try {
+                attendeeService.registerAttendee(command);
+            } catch (Exception e) {
+                Log.errorf("Failed to register attendee %s: %s", command.email(), e.getMessage());
+                errors.add("Failed to register " + command.email() + ": " + e.getMessage());
+            }
+        }
+        
+        if (errors.isEmpty()) {
+            return Response.accepted().build();
+        } else {
+            return Response.status(207) // Multi-Status
+                    .entity(Map.of("errors", errors))
+                    .build();
+        }
+    } catch (Exception e) {
+        Log.error("Failed to process registration request", e);
+        return Response.serverError()
+                .entity(Map.of("error", "Failed to process request"))
+                .build();
+    }
+}
+```
+
+## Testing the Endpoint
+
+Example curl command to test:
+
+```bash
+curl -X POST http://localhost:8080/salesteam \
+  -H "Content-Type: application/json" \
+  -d '{
+    "customers": [
+      {
+        "firstName": "John",
+        "lastName": "Doe",
+        "email": "john.doe@example.com",
+        "employer": "Acme Corp",
+        "customerDetails": {
+          "dietaryRequirements": "VEGETARIAN",
+          "size": "L"
+        }
+      }
+    ]
+  }'
+```
 
 ## Next Step
 
-Continue to [Step 3: Implement the Integration Endpoint](step3-implement-endpoint.md)
+Continue to [Step 4: Update Domain Value Objects](step4-update-value-objects.md)
