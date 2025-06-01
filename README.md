@@ -12,9 +12,84 @@ By the end of this workshop, we will have a **working attendee registration syst
 
 ### Our Learning Strategy
 
-Each workshop module contains a pre-built directory with stubbed out classes.  You will implement the classes by typing in the supplied code or by copying and pasting if you prefer.  Each step will cover a particular DDD topic.
+Each workshop module contains a pre-built directory with stubbed out classes, like the one below.
+
+```java
+package dddhexagonalworkshop.conference.attendees.infrastructure;
+
+import dddhexagonalworkshop.conference.attendees.domain.services.AttendeeService;
+import dddhexagonalworkshop.conference.attendees.domain.services.RegisterAttendeeCommand;
+import io.quarkus.logging.Log;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+
+import java.net.URI;
+
+
+/**
+ * "The application is blissfully ignorant of the nature of the input device. When the application has something to send out, it sends it out through a port to an adapter, which creates the appropriate signals needed by the receiving technology (human or automated). The application has a semantically sound interaction with the adapters on all sides of it, without actually knowing the nature of the things on the other side of the adapters."
+ * Alistair Cockburn, Hexagonal Architecture, 2005.
+ *
+ */
+public class AttendeeEndpoint {
+}
+
+```
+
+The documentation contains the code to complete the classes:
+
+```java
+package dddhexagonalworkshop.conference.attendees.infrastructure;
+
+import dddhexagonalworkshop.conference.attendees.domain.services.AttendeeService;
+import dddhexagonalworkshop.conference.attendees.domain.services.RegisterAttendeeCommand;
+import io.quarkus.logging.Log;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+
+import java.net.URI;
+
+
+/**
+ * "The application is blissfully ignorant of the nature of the input device. When the application has something to send out, it sends it out through a port to an adapter, which creates the appropriate signals needed by the receiving technology (human or automated). The application has a semantically sound interaction with the adapters on all sides of it, without actually knowing the nature of the things on the other side of the adapters."
+ * Alistair Cockburn, Hexagonal Architecture, 2005.
+ *
+ */
+@Path("/attendees")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+public class AttendeeEndpoint {
+
+    @Inject
+    AttendeeService attendeeService;
+
+    @POST
+    public Response registerAttendee(RegisterAttendeeCommand registerAttendeeCommand) {
+        Log.debugf("Creating attendee %s", registerAttendeeCommand);
+
+        AttendeeDTO attendeeDTO = attendeeService.registerAttendee(registerAttendeeCommand);
+
+        Log.debugf("Created attendee %s", attendeeDTO);
+
+        return Response.created(URI.create("/" + attendeeDTO.email())).entity(attendeeDTO).build();
+    }
+
+}
+```
+
+You can implement the classes by typing in the supplied code, which is your workshop authors preferred method because we believe it is easier to remember that way, or by copying and pasting.  Each step will cover a particular DDD topic.
 
 The examples are not meant to be reflect a production system so you will find, for instance, that validation might not be as complete as it would in a real application.
+
+#### tl;dr
+
+Each step starts with a **tl;dr** section containing only code.  If you want to get the application up and running as quickly as possible you can copy/paste the code into the stubbed classes without reading the rest of the material.
+
+We think this can be a good approach if you are as impatient as (one of) us, but we hope you go back through the material and read through each step.
 
 ---
 
