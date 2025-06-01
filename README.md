@@ -2,17 +2,19 @@
 
 ## Welcome to this Hands-On Workshop!
 
+This workshop is for anyone who likes to get their hands on a keyboard as part of the learning process. Your project authors believe that architecture is best learned through practice, and this workshop provides a structured way to apply Domain-Driven Design (DDD) principles in a practical context.
+
 There is a great deal of theory in Domain Driven Design. This workshop was built because while the authors love talking about software architecture (their colleagues will verify), they also like getting their hands dirty with code. In fact, your workshop authors believe that it is impossible to understand software architecture **_without_** getting your hands on a keyboard and implementing the ideas.
 
-### What You'll Build Today
+### What We Will Build Today
 
-By the end of this workshop, you'll have a **complete, working attendee registration system** that demonstrates core Domain-Driven Design (DDD) patterns within a Hexagonal Architecture. You'll be able to register attendees via REST API, with events published to Kafka and data persisted to PostgreSQL.
+By the end of this workshop, we will have a **working attendee registration system** that demonstrates core Domain-Driven Design (DDD) patterns using a Hexagonal Architecture at its' core. We will be able to register attendees via a REST API, with events published to Kafka and data persisted to PostgreSQL.
 
 ### Our Learning Strategy
 
-**⚡ Live Session:** Focus on getting working code with minimal theory
+Each workshop module contains a pre-built directory with stubbed out classes.  You will implement the classes by typing in the supplied code or by copying and pasting if you prefer.  Each step will cover a particular DDD topic.
 
-**📚 Self-Study Materials:** Deep-dive explanations for later learning
+The examples are not meant to be reflect a production system so you will find, for instance, that validation might not be as complete as it would in a real application.
 
 ---
 
