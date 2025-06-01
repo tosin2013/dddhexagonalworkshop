@@ -181,4 +181,5 @@ A: You don't! Commands are immutable. Instead, create a new command with the upd
 
 ### Next Steps
 
-In the next step, we'll create the `AttendeeRegistrationResult` that will package together the outputs of processing this command - both the created `Attendee` and the `AttendeeRegisteredEvent` that needs to be published.### Step 2: Adapters
+In the next step, we'll create the `AttendeeRegistrationResult` that will package together the outputs of processing this command - both the created `Attendee` and the `AttendeeRegisteredEvent` that needs to be published: [**Step 3: Combining Return Values**](01-Combining-Return-Values.md)
+
