@@ -168,4 +168,4 @@ For production systems, consider:
 
 ## Next Step
 
-Continue to [Step 3: Implement the Integration Endpoint](step3-implement-endpoint.md)
+Continue to [Step 3: Implement the Integration Endpoint](03-Inbound-Adapter.md)
