@@ -76,7 +76,7 @@ External system's representation of dietary needs:
 package dddhexagonalworkshop.conference.attendees.integration.salesteam;
 
 public enum DietaryRequirements {
-    VEGETARIAN, GLUTEN_FREE, NONE;
+    VEG, GLF, NA;
 }
 ```
 
