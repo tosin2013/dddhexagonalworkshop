@@ -342,5 +342,5 @@ We will test the `AttendeeEntity` in the `AttendeeRepositoryTest.java` class, wh
 **A:** For simple cases, yes. For complex scenarios, consider separate read/write models (CQRS pattern).
 
 ### Next Steps
-In the next step, we'll create the AttendeeRepository that bridges between our domain aggregates and these persistence entities. The repository will handle converting Attendee aggregates to AttendeeEntity objects for storage, and vice versa for retrieval, maintaining the clean separation between domain and persistence concerns.
+In the next step, we'll create the AttendeeRepository that bridges between our domain aggregates and these persistence entities. The repository will handle converting Attendee aggregates to AttendeeEntity objects for storage, and vice versa for retrieval, maintaining the clean separation between domain and persistence concerns: **[06 Repositories](06-Repositories.md)**
 
