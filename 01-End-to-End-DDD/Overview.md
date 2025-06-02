@@ -4,7 +4,7 @@ Welcome to the **Domain-Driven Design (DDD) with Hexagonal Architecture Workshop
 
 ## 🎯 Workshop Overview
 
-This workshop is for anyone who likes to get their hands on a keyboard as part of the learning process.  Your project authors believe that architecture is best learned through practice, and this workshop provides a structured way to apply Domain-Driven Design (DDD) principles in a practical context.
+This workshop is for anyone who likes to get their hands on a keyboard as part of the learning process. Your project authors believe that architecture is best learned through practice, and this workshop provides a structured way to apply Domain-Driven Design (DDD) principles in a practical context.
 
 In this introductory workshop, you'll learn to apply Domain-Driven Design principles by building a microservice for managing conference attendee registrations. You'll implement the complete workflow from receiving HTTP requests to persisting data and publishing events, all while maintaining clean architectural boundaries.
 
@@ -32,27 +32,33 @@ HTTP Requests → REST Endpoints    → Business Logic   → Event Publisher    
 ## 📚 Core DDD Concepts Covered
 
 ### 🎪 **Aggregates**
+
 The heart of DDD - business entities that encapsulate logic and maintain consistency within their boundaries.
 
 ### 📋 **Events & Commands**
+
 - **Events**: Record facts that have already occurred (immutable) and most importantly _what the business cares about_.
 - **Commands**: Represent intentions to change state (can fail)
 
 ### 🔧 **Application Services**
+
 Orchestrate business workflows that don't naturally belong in a single aggregate.
 
 ### 📦 **Entities**
+
 Model your domain with appropriate object types that reflect business concepts.
 
 ### 🗃️ **Repositories**
+
 Provide a collection-like interface for accessing and persisting aggregates, abstracting database details.
 
 ### 🔌 **Adapters**
+
 Integration points between the domain and external systems (REST APIs, databases, message queues).
 
 ### 📦 **Value Objects**
-Model your domain with appropriate object types that reflect business concepts.
 
+Model your domain with appropriate object types that reflect business concepts.
 
 ## 🚀 About Quarkus
 
@@ -73,16 +79,20 @@ Your workshop authors work for Red Hat, the company behind Quarkus, but we belie
 ### Workshop-Specific Benefits
 
 **Dev Mode Magic**: Quarkus automatically starts and manages external dependencies:
+
 ```bash
 mvn quarkus:dev
 ```
+
 This single command spins up:
+
 - PostgreSQL database for persistence
 - Kafka broker for event streaming
 - Your application with live reload
 - Integrated testing capabilities
 
 **Zero Configuration Complexity**: Focus on DDD concepts instead of infrastructure setup. Quarkus handles:
+
 - Database schema generation
 - Kafka topic creation
 - Dependency injection
@@ -90,6 +100,7 @@ This single command spins up:
 - JSON serialization
 
 **Real-World Relevance**: Learn patterns you'll use in production:
+
 - Reactive messaging with Kafka
 - Database transactions with Hibernate/Panache
 - RESTful API development with JAX-RS
@@ -99,18 +110,21 @@ This single command spins up:
 ## 📋 Prerequisites
 
 ### Required Knowledge
+
 - **Java 21+**: Comfortable with modern Java features (records, switch expressions)
 - **Basic OOP**: Understanding of classes, interfaces, and inheritance
 - **Web Concepts**: HTTP methods, JSON, REST APIs
 - **Database Basics**: SQL fundamentals and persistence concepts
 
 ### Development Environment
+
 - **Java 17 or higher** installed
 - **Maven 3.8+** for dependency management
 - **IDE** of choice (IntelliJ IDEA, VS Code, Eclipse)
 - **Docker** (optional - for running external services manually)
 
 ### No Prior Experience Needed
+
 - Domain-Driven Design concepts
 - Hexagonal Architecture
 - Quarkus framework
@@ -121,22 +135,23 @@ This single command spins up:
 
 This workshop is organized into **10 progressive steps**, each building upon the previous one:
 
-| Step | Concept | What You'll Build | Key Learning |
-|------|---------|-------------------|--------------|
-| **01** | [Events](01-Events.md) | `AttendeeRegisteredEvent` | Domain events as facts |
-| **02** | [Commands](02-Commands.md) | `RegisterAttendeeCommand` | Capturing business intentions |
-| **03** | [Return Values](03-Combining-Return-Values.md) | `AttendeeRegistrationResult` | Clean method signatures |
-| **04** | [Aggregates](04-Aggregates.md) | `Attendee` | Core business logic encapsulation |
-| **05** | [Entities](05-Entities.md) | `AttendeeEntity` | Persistence layer separation |
-| **06** | [Repositories](06-Repositories.md) | `AttendeeRepository` | Data access abstraction |
-| **07** | [Outbound Adapters](07-Outbound-Adaptes.md) | `AttendeeEventPublisher` | External system integration |
-| **08** | [Domain Services](08-Domain-Services.md) | `AttendeeService` | Workflow orchestration |
-| **09** | [DTOs](09-Data-Transfer-Objects.md) | `AttendeeDTO` | External representation |
-| **10** | [Inbound Adapters](10-Inbound-Adapters.md) | `AttendeeEndpoint` | HTTP interface completion |
+| Step   | Concept                                        | What You'll Build            | Key Learning                      |
+| ------ | ---------------------------------------------- | ---------------------------- | --------------------------------- |
+| **01** | [Events](01-Events.md)                         | `AttendeeRegisteredEvent`    | Domain events as facts            |
+| **02** | [Commands](02-Commands.md)                     | `RegisterAttendeeCommand`    | Capturing business intentions     |
+| **03** | [Return Values](03-Combining-Return-Values.md) | `AttendeeRegistrationResult` | Clean method signatures           |
+| **04** | [Aggregates](04-Aggregates.md)                 | `Attendee`                   | Core business logic encapsulation |
+| **05** | [Entities](05-Entities.md)                     | `AttendeeEntity`             | Persistence layer separation      |
+| **06** | [Repositories](06-Repositories.md)             | `AttendeeRepository`         | Data access abstraction           |
+| **07** | [Outbound Adapters](07-Outbound-Adaptes.md)    | `AttendeeEventPublisher`     | External system integration       |
+| **08** | [Domain Services](08-Domain-Services.md)       | `AttendeeService`            | Workflow orchestration            |
+| **09** | [DTOs](09-Data-Transfer-Objects.md)            | `AttendeeDTO`                | External representation           |
+| **10** | [Inbound Adapters](10-Inbound-Adapters.md)     | `AttendeeEndpoint`           | HTTP interface completion         |
 
 ### Learning Approach
 
 Each step follows a consistent pattern:
+
 - **🎯 TL;DR**: Quick implementation reference
 - **📖 Concept Explanation**: Why this pattern matters
 - **💻 Hands-On Implementation**: Code with detailed explanations
@@ -148,27 +163,33 @@ If you get stuck, do not hesitate to ask for help!
 ## 🚦 Getting Started
 
 ### 1. Clone the Workshop Repository
+
 ```bash
 git clone [workshop-repository-url]
 cd ddd-hexagonal-workshop
 ```
 
 ### 2. Verify Your Environment
+
 ```bash
 java --version    # Should show Java 17+
 mvn --version     # Should show Maven 3.8+
 ```
 
 ### 3. Start the Development Environment
+
 ```bash
 mvn quarkus:dev
 ```
+
 This starts Quarkus in development mode with live reload enabled.
 
 ### 4. Verify the Setup
+
 Open your browser to `http://localhost:8080` - you should see the Quarkus welcome page.
 
 ### 5. Begin the Workshop
+
 Start with [Step 1: Events](01-Events.md) and work through each step sequentially.
 
 ## 📁 Project Structure
@@ -202,24 +223,28 @@ This structure reflects DDD's emphasis on organizing code by **business capabili
 By completing this workshop, you will:
 
 ### Understand DDD Fundamentals
+
 - Distinguish between commands and events
 - Identify proper aggregate boundaries
 - Implement domain services for complex workflows
 - Apply the repository pattern correctly
 
 ### Master Hexagonal Architecture
+
 - Separate business logic from technical concerns
 - Create adapters for external system integration
 - Design clean interfaces between layers
 - Maintain testable, technology-independent code
 
 ### Build Production-Ready Systems
+
 - Handle errors gracefully across layers
 - Implement proper transaction boundaries
 - Design APIs following REST principles
 - Structure code for maintainability and evolution
 
 ### Gain Practical Experience
+
 - Work with modern Java frameworks (Quarkus)
 - Integrate with real external systems (Kafka, PostgreSQL)
 - Write tests at the appropriate levels
@@ -228,6 +253,7 @@ By completing this workshop, you will:
 ## 🤝 Workshop Philosophy
 
 This workshop emphasizes **learning by doing**. Each concept is introduced with:
+
 - **Real-world context** explaining why it matters
 - **Practical implementation** with complete working code
 - **Common pitfalls** and how to avoid them
@@ -245,6 +271,7 @@ This workshop emphasizes **learning by doing**. Each concept is introduced with:
 ## 🆘 Getting Help
 
 If you encounter issues:
+
 1. Check the **Testing Your Implementation** section in each step
 2. Verify your code matches the provided examples exactly
 3. Ensure Quarkus dev mode is running (`mvn quarkus:dev`)
