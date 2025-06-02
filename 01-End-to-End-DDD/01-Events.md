@@ -65,10 +65,36 @@ public record AttendeeRegisteredEvent(String email) {
 
 ## Testing Your Implementation
 
-There is a JUnit test, `AttendeeRegisteredEventTest.java` which can be run in your IDE or from the command line. The test checks that the `AttendeeRegisteredEvent` can be instantiated with an email address and that it behaves correctly as a record.  The test is commented out so that the class will compile.  To run it simply uncomment it and run:
+There is a JUnit test, `AttendeeRegisteredEventTest.java` which can be run in your IDE or from the command line. Update the test class to check that the `AttendeeRegisteredEvent` can be instantiated with an email address and that it behaves correctly as a record.  
+
+```java
+package dddhexagonalworkshop.conference.attendees.domain.events;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+public class AttendeeRegisteredEventTest {
+
+   @Test
+   public void testAttendeeRegisteredEventContainsAllFields() {
+       AttendeeRegisteredEvent event = new AttendeeRegisteredEvent("gandalfthegrey@istari.net");
+       assertNotNull(event);
+       assertNotNull(event.email());
+       assertEquals("gandalfthegrey@istari.net", event.email());
+   }
+}
+
+```
+
+To run the test stop Quarkus with "ctrl + C" and then "./mvnw test -Dtest=AttendeeRegisteredEventTest":
+
 
 ```bash
-mvn test -Dtest=AttendeeRegisteredEventTest
+ctrl + C
+
+/mvnw test -Dtest=AttendeeRegisteredEventTest
 ```
 
 The test should pass, confirming that the `AttendeeRegisteredEvent` record is correctly defined and can be instantiated with an email address.
