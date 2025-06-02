@@ -143,13 +143,13 @@ We'll build this system step-by-step, with each piece compiling as we go:
 
 | Step | Component                              | Focus                       |
 | ---- | -------------------------------------- | --------------------------- |
-| 01   | **Create the Address Value Object**    | Capture business facts      |
-| 02   | **Update the RegisterAttendeeCommand** | Represent business requests |
-| 03   | **Update the Attendee Aggregate**      | Package multiple outputs    |
-| 04   | **Update the AttendeeRegisteredEvent** | Core business logic         |
-| 05   | **Update the Persistence Layer**       | Database mapping            |
-| 06   | **Update the AttendeeService**         | Data access layer           |
-| 07   | **Update the AttendeeDTO**             | Messaging integration       |
+| [01](/02-Value-Objects/01-Value-Objects.md)   | **Create the Address Value Object**    | Capture business facts      |
+| [02](/02-Value-Objects/02-Update-the-Command.md)   | **Update the RegisterAttendeeCommand** | Represent business requests |
+| [03](/02-Value-Objects/03-Update-the-Aggregate.md)   | **Update the Attendee Aggregate**      | Package multiple outputs    |
+| [04](/02-Value-Objects/04-Update-the-Event.md)   | **Update the AttendeeRegisteredEvent** | Core business logic         |
+| [05](/02-Value-Objects/05-Update-Persistence.md)   | **Update the Persistence Layer**       | Database mapping            |
+| [06](/02-Value-Objects/06-Update-the-DTO.md)   | **Update the AttendeeService**         | Data access layer           |
+| [07](/02-Value-Objects/07-Update-the-Service.md)   | **Update the AttendeeDTO**             | Messaging integration       |
 
 ---
 
