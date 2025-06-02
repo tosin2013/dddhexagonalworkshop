@@ -19,6 +19,7 @@ public class Attendee {
     String email;
 
     private Attendee(String email) {
+        this.email = email;
     }
 
     public static AttendeeRegistrationResult registerAttendee(String email) {
