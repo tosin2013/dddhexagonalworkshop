@@ -181,7 +181,7 @@ public class RegisterAttendeeCommandTest {
 ```
 
 ```bash
-mvn test -Dtest=RegisterAttendeeCommandTest
+./mvnw test -Dtest=RegisterAttendeeCommandTest
 ```
 
 ## Connection to Other Components
