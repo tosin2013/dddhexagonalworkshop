@@ -27,7 +27,11 @@ public class AttendeeService {
     public AttendeeDTO registerAttendee(RegisterAttendeeCommand command) {
         // Execute domain logic to register the attendee
         AttendeeRegistrationResult result = Attendee.registerAttendee(
-                command.email());
+                command.email(),
+                command.firstName(),
+                command.lastName(),
+                command.address()
+        );
 
         // Persist the attendee within a transaction
         QuarkusTransaction.requiringNew().run(() -> {
@@ -38,7 +42,10 @@ public class AttendeeService {
         attendeeEventPublisher.publish(result.attendeeRegisteredEvent());
 
         // Return the DTO for the API response
-        return new AttendeeDTO(result.attendee().getEmail());
+        return new AttendeeDTO(
+                result.attendee().getEmail(),
+                result.attendee().getFullName()
+        );
     }
 }
 ```
