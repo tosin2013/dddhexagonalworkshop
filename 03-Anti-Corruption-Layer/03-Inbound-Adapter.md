@@ -213,22 +213,63 @@ public Response registerAttendees(SalesteamRegistrationRequest request) {
 Example curl command to test:
 
 ```bash
-curl -X POST http://localhost:8080/salesteam \
-  -H "Content-Type: application/json" \
-  -d '{
-    "customers": [
-      {
-        "firstName": "John",
-        "lastName": "Doe",
-        "email": "john.doe@example.com",
-        "employer": "Acme Corp",
-        "customerDetails": {
-          "dietaryRequirements": "VEGETARIAN",
-          "size": "L"
-        }
+```bash
+curl -X POST \
+  http://localhost:8080/salesteam \
+  -H 'Content-Type: application/json' \
+  -d '[
+    {
+      "firstName": "Frodo",
+      "lastName": "Baggins",
+      "email": "frodo.baggins@shire.com",
+      "employer": "Shire Council",
+      "customerDetails": {
+        "dietaryRequirements": "VEG",
+        "size": "S"
       }
-    ]
-  }'
+    },
+    {
+      "firstName": "Samwise",
+      "lastName": "Gamgee",
+      "email": "sam.gamgee@shire.com",
+      "employer": "Baggins Residence",
+      "customerDetails": {
+        "dietaryRequirements": "VEG",
+        "size": "M"
+      }
+    },
+    {
+      "firstName": "Gandalf",
+      "lastName": "The Grey",
+      "email": "gandalf@middleearth.com",
+      "employer": "Wandering Wizard",
+      "customerDetails": {
+        "dietaryRequirements": "NA",
+        "size": "L"
+      }
+    },
+    {
+      "firstName": "Aragorn",
+      "lastName": "Elessar",
+      "email": "aragorn@gondor.com",
+      "employer": "King of Gondor",
+      "customerDetails": {
+        "dietaryRequirements": "NA",
+        "size": "XL"
+      }
+    },
+    {
+      "firstName": "Legolas",
+      "lastName": "Greenleaf",
+      "email": "legolas@mirkwood.com",
+      "employer": "Mirkwood Forest",
+      "customerDetails": {
+        "dietaryRequirements": "VEG",
+        "size": "M"
+      }
+    }
+  ]'
+```
 ```
 
 ## Next Step
