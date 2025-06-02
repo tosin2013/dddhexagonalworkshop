@@ -659,5 +659,5 @@ A: Domain Services should handle cross-aggregate validation and business rules, 
 
 ## Next Steps
 
-In the next step, we'll create the `AttendeeEndpoint` REST adapter that serves as the inbound adapter for our hexagonal architecture. The endpoint will receive HTTP requests, convert them to commands, delegate to our domain service, and return appropriate HTTP responses, completing the end-to-end registration workflow.
+In the next step, we'll create the `AttendeeEndpoint` REST adapter that serves as the inbound adapter for our hexagonal architecture. The endpoint will receive HTTP requests, convert them to commands, delegate to our domain service, and return appropriate HTTP responses, completing the end-to-end registration workflow: [Step 9: Data Transfer Objects](09-Data-Transfer-Objects.md)
 
