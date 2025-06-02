@@ -176,5 +176,5 @@ mvn test -Dtest=AttendeeTest
 **A:** It depends. For event-sourced systems, immutable aggregates work well. For traditional CRUD, controlled mutability (like our example) is common.
 
 ### Next Steps
-In the next step, we'll create the AttendeeEntity that will persist an instance of an Attendee.
+In the next step, we'll create the AttendeeEntity that will persist an instance of an Attendee: **[Step 5: Entities](05-Entities.md)**
 
