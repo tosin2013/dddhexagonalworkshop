@@ -1,10 +1,23 @@
 # Step 4: Update the AttendeeRegisteredEvent
 
-## Overview
+## tl;dr
+
+```java
+package dddhexagonalworkshop.conference.attendees.domain.events;
+
+public record AttendeeRegisteredEvent(String email, String fullName) {
+}
+```
+
+## What We Are Building
 
 In this step, we'll update the `AttendeeRegisteredEvent` to include the attendee's full name. This demonstrates thoughtful event design - including relevant information while avoiding over-coupling between bounded contexts.
 
-## Understanding Domain Events
+## Learning Objectives
+
+- Understanding Domain Events
+
+## Why Domain Events Matter
 
 Domain Events are:
 
@@ -12,6 +25,8 @@ Domain Events are:
 - Used to integrate between bounded contexts
 - Should contain only the information needed by subscribers
 - Immutable once created
+
+The important thing to note here is that while we have updated the Domain Event with the Attendee's name, we have _not_ added the address.  We have decided not to share all of the attendees information with other Bounded Contexts.  If another Bounded Context needs the Attendee's address, for example, if something needs to be mailed to an individual attendee, we can implement a method that allows other parts of the system to query for the information. 
 
 ## Implementation
 
@@ -24,7 +39,7 @@ public record AttendeeRegisteredEvent(String email, String fullName) {
 }
 ```
 
-## Design Decisions
+## Key Design Decisions
 
 ### What We Include
 
@@ -62,4 +77,4 @@ This approach:
 
 ## Next Step
 
-Continue to [Step 5: Update the Persistence Layer](step5-update-persistence.md)
+Continue to [Step 5: Update the Persistence Layer](05-Update-Persistence.md)
