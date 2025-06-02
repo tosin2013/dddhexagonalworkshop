@@ -96,4 +96,4 @@ The DTO will automatically serialize to JSON like:
 
 ## Next Step
 
-Continue to [Step 7: Update the AttendeeService](step7-update-service.md)
+Continue to [Step 7: Update the AttendeeService](07-Update-the-DTO.md)
