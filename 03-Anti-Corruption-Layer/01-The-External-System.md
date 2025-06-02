@@ -16,7 +16,24 @@ External system models:
 
 ## External System Classes
 
-The classes implementing the Salesteam JSON document can be found in the `dddhexagonalworkshop.conference.attendees.integration.salesteam` package.
+The classes implementing the following fictional Salesteam JSON document:
+
+```json
+{
+  "customers": [
+    {
+      "firstName": "string",
+      "lastName": "string",
+      "email": "string",
+      "employer": "string",
+      "customerDetails": {
+        "dietaryRequirements": "VEGETARIAN|GLUTEN_FREE|NONE",
+        "size": "XS|S|M|L|XL|XXL"
+      }
+    }
+  ]
+}
+```
 
 ### Customer.java
 
@@ -59,7 +76,7 @@ External system's representation of dietary needs:
 package dddhexagonalworkshop.conference.attendees.integration.salesteam;
 
 public enum DietaryRequirements {
-    VEGETARIAN, GLUTEN_FREE, NONE;
+    VEG, GLF, NA;
 }
 ```
 
