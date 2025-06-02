@@ -136,4 +136,4 @@ public record Address(String street, String street2, String city, String stateOr
 
 ## Next Step
 
-Continue to [Step 2: Update the RegisterAttendeeCommand](step2-update-command.md)
+Continue to [Step 2: Update the RegisterAttendeeCommand](02-Update-Command.md)
