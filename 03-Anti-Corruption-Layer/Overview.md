@@ -1,4 +1,4 @@
-# Iteration 03: Integrating with External Systems with an Anti-Corruption Layer
+# Module 3: Integrating with External Systems with an Anti-Corruption Layer
 
 ## Overview
 
@@ -128,3 +128,5 @@ By the end of this iteration, you'll have:
 - **Domain Purity**: Keeping domain models focused on business concepts
 
 Let's get coding!
+
+First step: [01-The-External-System](01-The-External-System.md)
