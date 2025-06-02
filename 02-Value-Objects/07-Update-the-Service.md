@@ -1,5 +1,55 @@
 # Step 7: Update the AttendeeService
 
+## tl;dr
+
+```java
+package dddhexagonalworkshop.conference.attendees.domain.services;
+
+import dddhexagonalworkshop.conference.attendees.domain.aggregates.Attendee;
+import dddhexagonalworkshop.conference.attendees.infrastructure.AttendeeDTO;
+import dddhexagonalworkshop.conference.attendees.infrastructure.AttendeeEventPublisher;
+import dddhexagonalworkshop.conference.attendees.persistence.AttendeeRepository;
+import io.quarkus.narayana.jta.QuarkusTransaction;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+
+@ApplicationScoped
+public class AttendeeService {
+
+    @Inject
+    AttendeeRepository attendeeRepository;
+
+    @Inject
+    AttendeeEventPublisher attendeeEventPublisher;
+
+    @Transactional
+    public AttendeeDTO registerAttendee(RegisterAttendeeCommand command) {
+        // Execute domain logic to register the attendee
+        AttendeeRegistrationResult result = Attendee.registerAttendee(
+                command.email(),
+                command.firstName(),
+                command.lastName(),
+                command.address()
+        );
+
+        // Persist the attendee within a transaction
+        QuarkusTransaction.requiringNew().run(() -> {
+            attendeeRepository.persist(result.attendee());
+        });
+
+        // Notify the system that a new attendee has been registered
+        attendeeEventPublisher.publish(result.attendeeRegisteredEvent());
+
+        // Return the DTO for the API response
+        return new AttendeeDTO(
+                result.attendee().getEmail(),
+                result.attendee().getFullName()
+        );
+    }
+}
+```
+
 ## Overview
 
 In this final step, we'll update the `AttendeeService` to handle the new fields and coordinate the entire registration workflow. This demonstrates how application services orchestrate domain operations, persistence, and external integrations.
