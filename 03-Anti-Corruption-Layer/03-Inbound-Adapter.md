@@ -233,4 +233,4 @@ curl -X POST http://localhost:8080/salesteam \
 
 ## Next Step
 
-Continue to [Step 4: Update Domain Value Objects](step4-update-value-objects.md)
+Continue to [Step 4: Update Domain Value Objects](04-Value-Objects.md)
