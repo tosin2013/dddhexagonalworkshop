@@ -1,5 +1,14 @@
 Upda# Step 6: Update the AttendeeDTO
 
+## tl;dr
+
+```java
+package dddhexagonalworkshop.conference.attendees.infrastructure;
+
+public record AttendeeDTO(String email, String fullName) {
+}
+```
+
 ## Overview
 
 In this step, we'll update the `AttendeeDTO` that is used to transfer data between the service and the controller. This demonstrates how Data Transfer Objects (DTOs) provide a stable interface for external communication while hiding internal domain complexity.
