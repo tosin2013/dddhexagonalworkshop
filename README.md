@@ -109,12 +109,12 @@ A conference attendee registration microservice with:
 
 We'll build this system step-by-step, with each piece compiling as we go:
 
-| Iteration | Component                 | Focus                                                                 |
+| Module | Component                 | Focus                                                                 |
 | --------- | ------------------------- | --------------------------------------------------------------------- |
 | [01](/01-End-to-End-DDD/Overview.md)        | **End to End DDD**        | Implement a (very) basic workflow                                     |
-| 02        | **Value Objects**         | Add more detail to the basic workflow                                 |
-| 03        | **Anti-Corruption Layer** | Implement an Anti Corruption Layer to integrate with external systems |
-| 04        | **Testability**           | Focus on testing                                                      |
+| [02](/02-Value-Objects/Overview.md)        | **Value Objects**         | Add more detail to the basic workflow                                 |
+| [03](/03-Anti-Corruption-Layer.md)        | **Anti-Corruption Layer** | Implement an Anti Corruption Layer to integrate with external systems |
+| [04](/04-Testing/Overview.md)        | **Testability**           | Focus on testing                                                      |
 
 ---
 
@@ -124,16 +124,16 @@ We'll build this system step-by-step, with each piece compiling as we go:
 
 | Step | Component           | Focus                       |
 | ---- | ------------------- | --------------------------- |
-| 01   | **Events**          | Capture business facts      |
-| 02   | **Commands**        | Represent business requests |
-| 03   | **Result Objects**  | Combine multiple outputs    |
-| 04   | **Aggregates**      | Core business logic         |
-| 05   | **Entities**        | Database mapping            |
-| 06   | **Repositories**    | Data access layer           |
-| 07   | **Event Publisher** | Messaging integration       |
-| 08   | **Domain Services** | Workflow orchestration      |
-| 09   | **DTOs**            | API data contracts          |
-| 10   | **REST Endpoint**   | HTTP interface              |
+| [01](/01-End-to-End-DDD/01-Events.md)   | **Events**          | Capture business facts      |
+| [02](/01-End-to-End-DDD/02-Commands.md)   | **Commands**        | Represent business requests |
+| [03](/01-End-to-End-DDD/03-Combining-Return-Values.md)   | **Result Objects**  | Combine multiple outputs    |
+| [04](/01-End-to-End-DDD/04-Aggregates.md)   | **Aggregates**      | Core business logic         |
+| [05](/01-End-to-End-DDD/05-Entities.md)   | **Entities**        | Database mapping            |
+| [06](/01-End-to-End-DDD/06-Repositories.md)   | **Repositories**    | Data access layer           |
+| [07](/01-End-to-End-DDD/07-Outbound-Adapters.md)   | **Event Publisher** | Messaging integration       |
+| [08](/01-End-to-End-DDD/08-Application-Services.md)   | **Domain Services** | Workflow orchestration      |
+| [09](/01-End-to-End-DDD/09-Data-Transfer-Objects.md)   | **DTOs**            | API data contracts          |
+| [10](/01-End-to-End-DDD/10-Inbound-Adapters.md)   | **REST Endpoint**   | HTTP interface              |
 
 ---
 
