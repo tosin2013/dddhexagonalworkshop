@@ -57,7 +57,6 @@ public class Attendee {
 }
 ```
 
-
 ## Overview
 
 In this step, we'll update the `Attendee` aggregate model to include the new address field and first and last name fields. This demonstrates how to evolve domain aggregates while maintaining business logic encapsulation.
@@ -82,7 +81,7 @@ Value Objects describe the state of something else.
 
 ## What We Are Building
 
-We are implementing a Value Object for Address.  
+We are implementing a Value Object for Address.
 
 ## Implementation
 
@@ -152,7 +151,6 @@ public class Attendee {
 2. **Factory Method**: The `registerAttendee` static method serves as a factory method that encapsulates the creation logic
 3. **Business Behavior**: The `getFullName()` method demonstrates how aggregates can contain business behavior
 4. **Event Generation**: The registration process generates a domain event, following event-driven architecture principles
-
 
 ## Important Notes
 
