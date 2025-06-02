@@ -576,5 +576,5 @@ A: Not necessarily. You can have one adapter per messaging technology (e.g., Kaf
 
 ## Next Steps
 
-In the next step, we'll create the `AttendeeService` domain service that orchestrates the entire attendee registration workflow. The service will coordinate between the aggregate, repository, and event publisher, demonstrating how all the components work together in a clean, hexagonal architecture.
+In the next step, we'll create the `AttendeeService` domain service that orchestrates the entire attendee registration workflow. The service will coordinate between the aggregate, repository, and event publisher, demonstrating how all the components work together in a clean, hexagonal architecture: [Step 8: Application Services](08-Application-Services.md)
 
