@@ -129,4 +129,4 @@ By the end of this iteration, you'll have:
 
 Let's get coding!
 
-First step: [01-The-External-System](01-The-External-System.md)
+First step: [The External System](01-The-External-System.md)
