@@ -629,5 +629,5 @@ A: Prefer immutable DTOs (records) for thread safety and clarity. Use mutable DT
 
 ## Next Steps
 
-In the final step, we'll create the `AttendeeEndpoint` REST controller that serves as the inbound adapter for our hexagonal architecture. The endpoint will receive HTTP requests, convert them to commands, delegate to our domain service, transform results to DTOs, and return JSON responses, completing our end-to-end DDD implementation.
+In the final step, we'll create the `AttendeeEndpoint` REST controller that serves as the inbound adapter for our hexagonal architecture. The endpoint will receive HTTP requests, convert them to commands, delegate to our domain service, transform results to DTOs, and return JSON responses, completing our end-to-end DDD implementation: [Step 10: Inbound Adapters](10-Inbound-Adapters.md)
 
