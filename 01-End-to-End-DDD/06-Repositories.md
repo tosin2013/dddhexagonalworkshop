@@ -338,5 +338,5 @@ import java.util.Optional;
 
 ### Next Steps
 
-In the next section we will create a second Outbound Adaper, `AttendeeEventPublisher` to send messages to the rest of the system.
+In the next section we will create a second Outbound Adaper, `AttendeeEventPublisher` to send messages to the rest of the system: [Step 7: Outbound Adapters](07-Outbound-Adapters.md)
 
