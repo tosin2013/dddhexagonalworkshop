@@ -234,7 +234,8 @@ There are three ways to do the workshop:
 ```
 - Click on "Ports" and click on the globe icon in the row for port 8080, which is where Quarkus is running, and the application will open in a new browser tab
 
-![Open in Codespaces](01-End-to-End-DDD/open-repo-in-codespaces.png)
+<img src="01-End-to-End-DDD/open-repo-in-codespaces.png" alt="Open Repo in Codespaces" style="box-shadow: 3px 3px 3px gray;">
+
 ![Change Directory to Quarkus](01-End-to-End-DDD/clean-compile-quarkus-dev.png)
 ![Open in Codespaces](01-End-to-End-DDD/open-in-browser.png)
 
