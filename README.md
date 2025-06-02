@@ -153,19 +153,17 @@ We'll build this system step-by-step, with each piece compiling as we go:
 
 ---
 
-### Module 3 (7 Steps)
+### Module 3 (5 Steps)
 
 We'll build this system step-by-step, with each piece compiling as we go:
 
 | Step | Component                              | Focus                       |
 | ---- | -------------------------------------- | --------------------------- |
-| 01   | **Create the Address Value Object**    | Capture business facts      |
-| 02   | **Update the RegisterAttendeeCommand** | Represent business requests |
-| 03   | **Update the Attendee Aggregate**      | Package multiple outputs    |
-| 04   | **Update the AttendeeRegisteredEvent** | Core business logic         |
-| 05   | **Update the Persistence Layer**       | Database mapping            |
-| 06   | **Update the AttendeeService**         | Data access layer           |
-| 07   | **Update the AttendeeDTO**             | Messaging integration       |
+| [01](03-Anti-Corruption-Layer/01-The-External-System.md)   | **Create the Address Value Object**    | Capture business facts      |
+| [02](03-Anti-Corruption-Layer/02-Implement-a-Translator.md)   | **Update the RegisterAttendeeCommand** | Represent business requests |
+| [03](03-Anti-Corruption-Layer/03-Inbound-Adapter.md)   | **Update the Attendee Aggregate**      | Package multiple outputs    |
+| [04](03-Anti-Corruption-Layer/04-Value-Objects.md)   | **Update the AttendeeRegisteredEvent** | Core business logic         |
+| [05](03-Anti-Corruption-Layer/05-Update-the-Command.md)   | **Update the Persistence Layer**       | Database mapping            |
 
 
 ## Key Concepts We'll Experience
