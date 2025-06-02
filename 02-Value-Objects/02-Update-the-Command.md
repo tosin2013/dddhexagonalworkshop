@@ -41,4 +41,4 @@ public record RegisterAttendeeCommand(String email, String firstName, String las
 
 ## Next Step
 
-Continue to [Step 3: Update the Attendee Aggregate](step3-update-attendee.md)
+Continue to [Step 3: Update the Attendee Aggregate](03-Update-the-Aggregate.md)
