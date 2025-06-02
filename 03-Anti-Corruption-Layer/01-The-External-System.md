@@ -125,4 +125,4 @@ With an ACL:
 
 ## Next Step
 
-Continue to [Step 2: Implement the Anti-Corruption Layer Translator](step2-implement-translator.md)
+Continue to [Step 2: Implement the Anti-Corruption Layer Translator](02-Implement-a-Translator.md)
