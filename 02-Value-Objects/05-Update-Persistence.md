@@ -1,19 +1,20 @@
 # Step 5: Update the Persistence Layer
 
-## Overview
+## tl;dr
+
+We are creating an `AddressEntity` and changing `AttendeeEntity`, and `AttendeeRepository`.
+
+## What We Are Building
 
 In this step, we'll update the persistence layer to handle the new address fields. This demonstrates how to map complex domain objects to relational database structures while maintaining clean separation between domain and persistence concerns.
 
-## Hexagonal Architecture Principles
+## Learning Objectives
 
-The persistence layer:
+Earlier we mentioned that Value Objects do not have an identity.  In the logical sense, our `Address` does not have a unique identity of its' own because it only exists as part of an `Attendee`.  
 
-- Implements the repository port defined by the domain
-- Translates between domain objects and database entities
-- Handles the technical concerns of data storage
-- Keeps database concerns out of the domain
+However, we are choosing to model the `AddressEntity` as a separate table with a one-to-one mapping to our `AttendeeEntity`.  Relational databases and Domain Objects do not always cleanly overlap, which is called [the object-relational impedance mismatch]( https://en.wikipedia.org/wiki/Object%E2%80%93relational_impedance_mismatch).
 
-## Implementation Steps
+## Implementation
 
 ### Step 5.1: Create the AddressEntity
 
@@ -254,4 +255,4 @@ This will create two tables:
 
 ## Next Step
 
-Continue to [Step 6: Update the AttendeeDTO](step6-update-dto.md)
+Continue to [Step 6: Update the AttendeeDTO](06-Update-the-DTO.md)
