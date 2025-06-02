@@ -1,10 +1,25 @@
 # Step 1: Create the Address Value Object
 
-## Understanding Value Objects
+## tl;dr
+
+Create an `Address` Value Object:
+
+```java
+package dddhexagonalworkshop.conference.attendees.domain.valueobjects;
+
+public record Address(String street, String street2, String city, String stateOrProvince, String postCode, String country) {
+}
+```
+
+## Learning Objectives
+
+- Understanding Value Objects
+- Understand the differences between Entities an Value Objects
+- Implement a Value Object for `Address`
+  
+## Why Value Objects Matter
 
 Value Objects are objects that describe the state of something else. They are not Entities, which have continuity and identify something that is tracked over time.
-
-**Key Differences:**
 
 - **Value Objects** are equal based on their **value**
 - **Entities** are equal based on their **identifier**
@@ -118,13 +133,6 @@ public record Address(String street, String street2, String city, String stateOr
     }
 }
 ```
-
-## Key Learning Points
-
-1. **Immutability**: Using Java records ensures the Address value object is immutable
-2. **Validation**: Business rules are enforced at the domain level
-3. **Encapsulation**: Address data is kept together in a cohesive unit
-4. **Behavior**: The `getFormattedAddress()` method shows how value objects can contain behavior
 
 ## Next Step
 
