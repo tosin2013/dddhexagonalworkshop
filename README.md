@@ -111,7 +111,7 @@ We'll build this system step-by-step, with each piece compiling as we go:
 
 | Iteration | Component                 | Focus                                                                 |
 | --------- | ------------------------- | --------------------------------------------------------------------- |
-| 01        | **End to End DDD**        | Implement a (very) basic workflow                                     |
+| [01](/01-End-to-End-DDD/Overview.md)        | **End to End DDD**        | Implement a (very) basic workflow                                     |
 | 02        | **Value Objects**         | Add more detail to the basic workflow                                 |
 | 03        | **Anti-Corruption Layer** | Implement an Anti Corruption Layer to integrate with external systems |
 | 04        | **Testability**           | Focus on testing                                                      |
