@@ -220,4 +220,4 @@ These value objects can be enhanced with:
 
 ## Next Step
 
-Continue to [Step 5: Update the RegisterAttendeeCommand](step5-update-command.md)
+Continue to [Step 5: Update the RegisterAttendeeCommand](05-Update-the-Command.md)
