@@ -4,6 +4,8 @@
 
 ## TL;DR
 
+_If you want to get the application up and running as quickly as possible you can copy/paste the code into the stubbed classes without reading the rest of the material._
+
 Update AttendeeRegistrationResult so that it is constructed with both the Attendee aggregate and the AttendeeRegisteredEvent:
 
 ```java
@@ -18,6 +20,8 @@ import dddhexagonalworkshop.conference.attendees.domain.events.AttendeeRegistere
 public record AttendeeRegistrationResult(Attendee attendee, AttendeeRegisteredEvent attendeeRegisteredEvent) {
 }
 ```
+
+[Step 4: Aggregates](04-Aggregates.md)
 
 ## Learning Objectives
 
@@ -61,6 +65,7 @@ public record AttendeeRegistrationResult(Attendee attendee, AttendeeRegisteredEv
 The `AttendeeRegistrationResult` record is tested indirectly through the `AttendeeService` tests. Once you implement the `Attendee` aggregate in the next step, the `AttendeeRegistrationResult` will be used in the service layer, and you can run the tests to verify its functionality.
 
 ## Next Steps
-[**Step 4: Aggregates**](04-Aggregates.md)
+
+[Step 4: Aggregates](04-Aggregates.md)
 
 
