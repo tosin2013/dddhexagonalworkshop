@@ -3,6 +3,9 @@
 In Domain-Driven Design, all persistence is handled by repositories, but before we create the repository, we need a persistence entity. Entities represent specific instances of domain objects with database identities.
 
 ## tl;dr
+
+_If you want to get the application up and running as quickly as possible you can copy/paste the code into the stubbed classes without reading the rest of the material._
+
 Complete the `AttendeeEntity` class with the following code:
 
 ```java
@@ -90,6 +93,8 @@ import jakarta.persistence.*;
       }
   }
 ```
+
+[Step 6 Repositories](06-Repositories.md)
 
 ## Learning Objectives
 
@@ -342,5 +347,5 @@ We will test the `AttendeeEntity` in the `AttendeeRepositoryTest.java` class, wh
 **A:** For simple cases, yes. For complex scenarios, consider separate read/write models (CQRS pattern).
 
 ### Next Steps
-In the next step, we'll create the AttendeeRepository that bridges between our domain aggregates and these persistence entities. The repository will handle converting Attendee aggregates to AttendeeEntity objects for storage, and vice versa for retrieval, maintaining the clean separation between domain and persistence concerns: **[Step 6 Repositories](06-Repositories.md)**
+In the next step, we'll create the AttendeeRepository that bridges between our domain aggregates and these persistence entities. The repository will handle converting Attendee aggregates to AttendeeEntity objects for storage, and vice versa for retrieval, maintaining the clean separation between domain and persistence concerns: [Step 6 Repositories](06-Repositories.md)
 
