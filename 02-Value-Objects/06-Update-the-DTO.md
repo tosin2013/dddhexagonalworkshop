@@ -2,12 +2,16 @@ Upda# Step 6: Update the AttendeeDTO
 
 ## tl;dr
 
+_If you want to get the application up and running as quickly as possible you can copy/paste the code into the stubbed classes without reading the rest of the material._
+
 ```java
 package dddhexagonalworkshop.conference.attendees.infrastructure;
 
 public record AttendeeDTO(String email, String fullName) {
 }
 ```
+
+[Step 7: Update the AttendeeService](07-Update-the-DTO.md)
 
 ## Overview
 
