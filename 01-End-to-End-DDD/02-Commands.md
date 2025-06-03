@@ -2,6 +2,8 @@
 
 ## TL;DR
 
+_If you want to get the application up and running as quickly as possible you can copy/paste the code into the stubbed classes without reading the rest of the material._
+
 Add a String email parameter to RegisterAttendeeCommand:
 
 ```java
@@ -30,8 +32,9 @@ public record RegisterAttendeeCommand(String email) {
     }
 }
 ```
-
 _Note_: We are only adding a single parameter, "email," because this first iteration is a quick overview.
+
+[Step 3: Combining Return Values](03-Combining-Return-Values.md)
 
 ## Learning Objectives
 - Understand how Commands encapsulate business intentions and requests for action
@@ -220,5 +223,5 @@ A: You don't! Commands are immutable. Instead, create a new command with the upd
 
 ### Next Steps
 
-In the next step, we'll create the `AttendeeRegistrationResult` that will package together the outputs of processing this command - both the created `Attendee` and the `AttendeeRegisteredEvent` that needs to be published: [**Step 3: Combining Return Values**](03-Combining-Return-Values.md)
+In the next step, we'll create the `AttendeeRegistrationResult` that will package together the outputs of processing this command - both the created `Attendee` and the `AttendeeRegisteredEvent` that needs to be published: [Step 3: Combining Return Values](03-Combining-Return-Values.md)
 
