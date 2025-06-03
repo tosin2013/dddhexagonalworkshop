@@ -2,6 +2,9 @@
 
 ## tl;dr
 
+_If you want to get the application up and running as quickly as possible you can copy/paste the code into the stubbed classes without reading the rest of the material._
+
+Add a String email parameter to AttendeeRegisteredEvent.java:
 Create an `Address` Value Object:
 
 ```java
@@ -10,6 +13,8 @@ package dddhexagonalworkshop.conference.attendees.domain.valueobjects;
 public record Address(String street, String street2, String city, String stateOrProvince, String postCode, String country) {
 }
 ```
+
+[Step 2: Update the RegisterAttendeeCommand](02-Update-Command.md)
 
 ## Learning Objectives
 
