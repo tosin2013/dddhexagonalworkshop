@@ -2,7 +2,7 @@
 
 ## tl;dr
 
-We are creating an `AddressEntity` and changing `AttendeeEntity`, and `AttendeeRepository`.
+We are creating an `AddressEntity` and changing `AttendeeEntity`, and `AttendeeRepository` so there is too much for a tl;dr.  You have to read the whole page.
 
 ## What We Are Building
 
