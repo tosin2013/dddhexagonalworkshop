@@ -1,5 +1,23 @@
 # Step 2: Update the RegisterAttendeeCommand
 
+## tl;dr
+
+_If you want to get the application up and running as quickly as possible you can copy/paste the code into the stubbed classes without reading the rest of the material._
+
+Update the `RegisterAttendeeCommand` to include the enhanced attendee information:
+
+```java
+package dddhexagonalworkshop.conference.attendees.domain.services;
+
+import dddhexagonalworkshop.conference.attendees.domain.valueobjects.Address;
+
+public record RegisterAttendeeCommand(String email, String firstName, String lastName, Address address) {
+}
+```
+
+[Step 3: Update the Attendee Aggregate](03-Update-the-Aggregate.md)
+
+
 ## Overview
 
 In this step, we'll update the `RegisterAttendeeCommand` to include the new address field along with first and last name fields. This demonstrates how commands evolve to capture new business requirements while maintaining the command pattern.
