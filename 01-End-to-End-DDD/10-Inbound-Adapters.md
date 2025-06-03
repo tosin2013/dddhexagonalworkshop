@@ -2,6 +2,8 @@
 
 ## tl;dr
 
+_If you want to get the application up and running as quickly as possible you can copy/paste the code into the stubbed classes without reading the rest of the material._
+
 Inbound adapters translate between external protocols and domain operations. Our REST endpoint handles HTTP concerns while delegating business logic to domain services:
 
 ```java
