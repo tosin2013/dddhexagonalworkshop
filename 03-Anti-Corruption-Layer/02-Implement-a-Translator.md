@@ -24,9 +24,9 @@ Create the `SalesteamToDomainTranslator` class:
 ```java
 package dddhexagonalworkshop.conference.attendees.integration.salesteam;
 
-import dddhexagonalworkshop.conference.attendees.domain.services.RegisterAttendeeCommand;
-import dddhexagonalworkshop.conference.attendees.domain.valueobjects.MealPreference;
 import dddhexagonalworkshop.conference.attendees.domain.valueobjects.TShirtSize;
+import dddhexagonalworkshop.conference.attendees.domain.valueobjects.MealPreference;
+import dddhexagonalworkshop.conference.attendees.domain.services.RegisterAttendeeCommand;
 
 import java.util.List;
 
@@ -38,11 +38,9 @@ public class SalesteamToDomainTranslator {
                         customer.email(),
                         customer.firstName(),
                         customer.lastName(),
-                        null, // No address provided by Salesteam
+                        null,
                         mapDietaryRequirements(customer.customerDetails().dietaryRequirements()),
-                        mapTShirtSize(customer.customerDetails().size())
-                ))
-                .toList();
+                        mapTShirtSize(customer.customerDetails().size()))).toList();
     }
 
     private static MealPreference mapDietaryRequirements(DietaryRequirements dietaryRequirements) {
@@ -50,9 +48,9 @@ public class SalesteamToDomainTranslator {
             return MealPreference.NONE;
         }
         return switch (dietaryRequirements) {
-            case VEGETARIAN -> MealPreference.VEGETARIAN;
-            case GLUTEN_FREE -> MealPreference.GLUTEN_FREE;
-            case NONE -> MealPreference.NONE;
+            case VEG -> MealPreference.VEGETARIAN;
+            case GLF -> MealPreference.GLUTEN_FREE;
+            case NA -> MealPreference.NONE;
         };
     }
 
@@ -61,12 +59,13 @@ public class SalesteamToDomainTranslator {
             return null;
         }
         return switch (size) {
-            case XS -> TShirtSize.S;  // XS maps to S (no XS in our domain)
-            case S -> TShirtSize.S;
-            case M -> TShirtSize.M;
-            case L -> TShirtSize.L;
-            case XL -> TShirtSize.XL;
-            case XXL -> TShirtSize.XXL;
+            case Size.XS -> TShirtSize.S;
+            case Size.S -> TShirtSize.S;
+            case Size.M -> TShirtSize.M;
+            case Size.L -> TShirtSize.L;
+            case Size.XL -> TShirtSize.XL;
+            case Size.XXL -> TShirtSize.XXL;
+            default -> null;
         };
     }
 }
