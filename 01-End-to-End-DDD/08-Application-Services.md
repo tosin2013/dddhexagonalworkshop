@@ -2,6 +2,8 @@
 
 ## tl;dr
 
+_If you want to get the application up and running as quickly as possible you can copy/paste the code into the stubbed classes without reading the rest of the material._
+
 There are three types of Services in DDD: Application Services, Domain Services, and Infrastructure Services.
 Domain Services implement functionality that doesn't have a natural home in any single Aggregate. They coordinate workflows across multiple domain objects and handle cross-Aggregate business rules.
 
@@ -48,6 +50,8 @@ public class AttendeeService {
     }
 }
 ```
+
+[Step 9: Data Transfer Objects](09-Data-Transfer-Objects.md)
 
 ## Learning Objectives
 - **Understand** Domain Services as workflow orchestrators in the domain layer
