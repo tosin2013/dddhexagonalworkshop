@@ -1,5 +1,6 @@
 package dddhexagonalworkshop.conference.attendees.integration.salesteam;
 
+import dddhexagonalworkshop.conference.attendees.domain.services.RegisterAttendeeCommand;
 import dddhexagonalworkshop.conference.attendees.domain.services.AttendeeService;
 import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
@@ -23,6 +24,12 @@ public class SalesteamEndpoint {
     @POST
     public Response registerAttendees(SalesteamRegistrationRequest salesteamRegistrationRequest) {
         Log.debugf("Registering attendees for %s", salesteamRegistrationRequest);
+
+        List<RegisterAttendeeCommand> commands = SalesteamToDomainTranslator.translate(
+                salesteamRegistrationRequest.customers()
+        );
+
+        commands.forEach(attendeeService::registerAttendee);
 
         return Response.accepted().build();
     }

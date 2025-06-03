@@ -25,6 +25,10 @@ public class AttendeeEntity {
     protected AttendeeEntity() {
     }
 
+    protected AttendeeEntity(String email) {
+        this.email = email;
+    }
+
     protected AttendeeEntity(String email, AddressEntity address) {
         this.email = email;
         this.address = address;
