@@ -11,7 +11,7 @@ public record AttendeeDTO(String email, String fullName) {
 }
 ```
 
-[Step 7: Update the AttendeeService](07-Update-the-DTO.md)
+[Step 7: Update the AttendeeService](07-Update-the-Service.md)
 
 ## Overview
 
@@ -100,4 +100,4 @@ The DTO will automatically serialize to JSON like:
 
 ## Next Step
 
-Continue to [Step 7: Update the AttendeeService](07-Update-the-DTO.md)
+Continue to [Step 7: Update the AttendeeService](07-Update-the-Service.md)
