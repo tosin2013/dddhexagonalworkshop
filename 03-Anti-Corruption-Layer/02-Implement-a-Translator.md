@@ -4,7 +4,7 @@
 
 In this step, we'll implement the `SalesteamToDomainTranslator` class, which is the heart of our Anti-Corruption Layer. This translator converts external system data into our domain model, protecting our domain from external changes and terminology.
 
-***__Note_***: We have 2 new fields in our Attendee, MealPreference and TShirtSize.  These have been added to better illustrate the translation
+***_Note_***: We have 2 new fields in our Attendee, MealPreference and TShirtSize.  These have been added to better illustrate the translation
 
 
 ## Understanding Translation in ACL
