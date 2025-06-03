@@ -97,7 +97,7 @@ To run the test stop Quarkus with "ctrl + C" and then "./mvnw test -Dtest=Attend
 ```bash
 ctrl + C
 
-/mvnw test -Dtest=AttendeeRegisteredEventTest
+./mvnw test -Dtest=AttendeeRegisteredEventTest
 ```
 
 The test should pass, confirming that the `AttendeeRegisteredEvent` record is correctly defined and can be instantiated with an email address.
