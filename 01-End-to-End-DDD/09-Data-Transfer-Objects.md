@@ -4,6 +4,8 @@
 
 ## tl;dr
 
+_If you want to get the application up and running as quickly as possible you can copy/paste the code into the stubbed classes without reading the rest of the material._
+
 DTOs are used to transfer data between layers, especially when the data structure differs from the domain model. Our AttendeeDTO provides a clean external representation for JSON serialization.
 
 ```java
@@ -26,6 +28,8 @@ package dddhexagonalworkshop.conference.attendees.infrastructure;
 public record AttendeeDTO(String email) {
 }
 ```
+
+[Step 10: Inbound Adapters](10-Inbound-Adapters.md)
 
 ## Learning Objectives
 - **Understand** DTOs as the boundary between domain and presentation layers
