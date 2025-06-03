@@ -131,7 +131,7 @@ public class AttendeeTest {
 ```
 
 ```bash
-mvn test -Dtest=AttendeeTest
+./mvnw test -Dtest=AttendeeTest
 ```
 
 ## Deeper Dive
@@ -165,19 +165,27 @@ mvn test -Dtest=AttendeeTest
 - CancelRegistrationCommand → Attendee.cancelRegistration()
 
 ### Real-World Considerations
+
 **Performance:** Aggregates should be designed for the most common access patterns. Don't load huge object graphs if you only need basic information.
+
 **Concurrency:** In production, you'll need to handle concurrent modifications using techniques like optimistic locking or event sourcing.
+
 **Evolution:** As business rules change, aggregates evolve. The centralized logic makes changes easier to implement and test.
 
 ### Common Questions
+
 **Q:** Should aggregates have dependencies on other aggregates?
-**A:** No! Aggregates should not directly reference other aggregates. Use domain services or events for cross-aggregate operations.
+
+**A:** No.  It is a best practice to have a single Aggregate per Bounded Context.  If you can't narrow a Bounded Context to a single Aggregate, strive for as few Aggregates as possible.
+
 **Q:** How big should an aggregate be?
+
 **A:** As small as possible while maintaining consistency. If you find yourself loading lots of data you don't need, consider splitting the aggregate.
+
 **Q:** Can aggregates call external services?
-**A:** Generally no. Aggregates should contain pure business logic. Use domain services for operations that need external dependencies.
-**Q:** Should aggregates be mutable or immutable?
-**A:** It depends. For event-sourced systems, immutable aggregates work well. For traditional CRUD, controlled mutability (like our example) is common.
+
+**A:** They shouldn't, no. Aggregates should contain pure business logic. Use domain services for operations that need external dependencies.  Your workshop authors like Aggregates that can be tested with only JUnit without any Mocks or Stubs which limits the implementation to business logic.  There is an argument to be made that Aggregates should be able to call other methods so keep in mind that the workshop authors are not the last word in DDD!
+
 
 ### Next Steps
 In the next step, we'll create the AttendeeEntity that will persist an instance of an Attendee: [Step 5: Entities](05-Entities.md)
