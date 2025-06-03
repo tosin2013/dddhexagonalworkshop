@@ -2,6 +2,7 @@
 
 ## TL;DR
 
+_If you want to get the application up and running as quickly as possible you can copy/paste the code into the stubbed classes without reading the rest of the material._
 Add a String email parameter to AttendeeRegisteredEvent.java:
 
 ```java
@@ -10,6 +11,8 @@ package dddhexagonalworkshop.conference.attendees.domain.events;
 public record AttendeeRegisteredEvent(String email) {
 }
 ```
+
+[Step 2: Commands](02-Commands.md)
 
 ## Learning Objectives
 
