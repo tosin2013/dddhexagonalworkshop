@@ -57,6 +57,8 @@ public class Attendee {
 }
 ```
 
+[Step 4: Update the AttendeeRegisteredEvent](04-Update-the-Event.md)
+
 ## Overview
 
 In this step, we'll update the `Attendee` aggregate model to include the new address field and first and last name fields. This demonstrates how to evolve domain aggregates while maintaining business logic encapsulation.
