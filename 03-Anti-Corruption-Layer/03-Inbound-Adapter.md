@@ -7,6 +7,7 @@ In this step, we'll implement the `SalesteamEndpoint` class, which provides a RE
 ## Understanding Integration Endpoints
 
 Integration endpoints:
+
 - **Accept** external system data in their format
 - **Coordinate** with Anti-Corruption Layer for translation
 - **Delegate** to domain services for business logic
@@ -14,6 +15,17 @@ Integration endpoints:
 - **Handle** bulk operations efficiently
 
 ## Implementation
+
+First we need to model the Salesteam payload, which is an Array of Customer objects. We only need a Java record because Quarkus will handle marshalling the objects from JSON:
+
+```java
+package dddhexagonalworkshop.conference.attendees.integration.salesteam;
+
+import java.util.List;
+
+public record SalesteamRegistrationRequest(List<Customer> customers) {
+}
+```
 
 Create the `SalesteamEndpoint` class:
 
@@ -48,9 +60,9 @@ public class SalesteamEndpoint {
         List<RegisterAttendeeCommand> commands = SalesteamToDomainTranslator.translate(
             salesteamRegistrationRequest.customers()
         );
-        
+
         commands.forEach(attendeeService::registerAttendee);
-        
+
         return Response.accepted().build();
     }
 }
@@ -67,6 +79,7 @@ public class SalesteamEndpoint {
 ```
 
 **Design Choices:**
+
 - **Specific path**: `/salesteam` clearly indicates this is for Salesteam integration
 - **JSON handling**: Accepts and produces JSON for modern API integration
 - **RESTful design**: Uses POST for bulk creation operations
@@ -79,6 +92,7 @@ AttendeeService attendeeService;
 ```
 
 **Benefits:**
+
 - **Loose coupling**: Endpoint doesn't create service instances
 - **Testability**: Easy to mock AttendeeService for testing
 - **Framework integration**: Leverages Quarkus dependency injection
@@ -90,6 +104,7 @@ public Response registerAttendees(SalesteamRegistrationRequest salesteamRegistra
 ```
 
 **Workflow:**
+
 1. **Accept request**: Receive bulk registration data
 2. **Log processing**: Track integration activity
 3. **Translate data**: Convert external model to domain commands
@@ -105,6 +120,7 @@ List<RegisterAttendeeCommand> commands = SalesteamToDomainTranslator.translate(
 ```
 
 **Key Points:**
+
 - **Clean separation**: Endpoint doesn't handle translation logic
 - **Single responsibility**: Translation is delegated to specialist class
 - **Type safety**: Works with strongly-typed command objects
@@ -116,6 +132,7 @@ commands.forEach(attendeeService::registerAttendee);
 ```
 
 **Processing Strategy:**
+
 - **Method reference**: Clean, functional approach to processing
 - **Individual transactions**: Each registration is processed separately
 - **Error isolation**: Failures in one registration don't affect others
@@ -127,6 +144,7 @@ return Response.accepted().build();
 ```
 
 **HTTP Semantics:**
+
 - **202 Accepted**: Indicates request was accepted for processing
 - **Asynchronous processing**: Implies processing may continue after response
 - **No content**: Simple acknowledgment without detailed response data
@@ -145,6 +163,7 @@ public record SalesteamRegistrationRequest(List<Customer> customers) {
 ```
 
 This record:
+
 - **Wraps** the customer list in a proper request object
 - **Matches** the expected JSON structure from Salesteam
 - **Provides** type safety for the endpoint parameter
@@ -152,18 +171,22 @@ This record:
 ## Integration Patterns Demonstrated
 
 ### 1. **Adapter Pattern**
+
 - Endpoint adapts external HTTP requests to domain operations
 - Translates between REST and domain service interfaces
 
 ### 2. **Facade Pattern**
+
 - Endpoint provides simplified interface to complex domain operations
 - Hides internal complexity from external systems
 
 ### 3. **Batch Processing**
+
 - Efficiently handles multiple registrations in single request
 - Reduces network overhead for bulk operations
 
 ### 4. **Separation of Concerns**
+
 - Endpoint handles HTTP concerns
 - Translator handles data conversion
 - Service handles business logic
@@ -177,11 +200,11 @@ For production systems, enhance with:
 public Response registerAttendees(SalesteamRegistrationRequest request) {
     try {
         Log.infof("Processing %d customer registrations", request.customers().size());
-        
+
         List<RegisterAttendeeCommand> commands = SalesteamToDomainTranslator.translate(
             request.customers()
         );
-        
+
         List<String> errors = new ArrayList<>();
         for (RegisterAttendeeCommand command : commands) {
             try {
@@ -191,7 +214,7 @@ public Response registerAttendees(SalesteamRegistrationRequest request) {
                 errors.add("Failed to register " + command.email() + ": " + e.getMessage());
             }
         }
-        
+
         if (errors.isEmpty()) {
             return Response.accepted().build();
         } else {
@@ -212,7 +235,7 @@ public Response registerAttendees(SalesteamRegistrationRequest request) {
 
 Example curl command to test:
 
-```bash
+````bash
 ```bash
 curl -X POST \
   http://localhost:8080/salesteam \
@@ -269,9 +292,11 @@ curl -X POST \
       }
     }
   ]'
-```
+````
+
 ```
 
 ## Next Step
 
 Continue to [Step 4: Update Domain Value Objects](04-Value-Objects.md)
+```
