@@ -2,12 +2,18 @@
 
 ## tl;dr
 
+_If you want to get the application up and running as quickly as possible you can copy/paste the code into the stubbed classes without reading the rest of the material._
+
+Update the `AttendeeRegisteredEvent` with the attendee's full name:
+
 ```java
 package dddhexagonalworkshop.conference.attendees.domain.events;
 
 public record AttendeeRegisteredEvent(String email, String fullName) {
 }
 ```
+
+[Step 5: Update the Persistence Layer](05-Update-Persistence.md)
 
 ## What We Are Building
 
