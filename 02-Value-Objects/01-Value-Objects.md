@@ -14,7 +14,7 @@ public record Address(String street, String street2, String city, String stateOr
 }
 ```
 
-[Step 2: Update the RegisterAttendeeCommand](02-Update-Command.md)
+[Step 2: Update the RegisterAttendeeCommand](02-Update-the-Command.md)
 
 ## Learning Objectives
 
@@ -141,4 +141,4 @@ public record Address(String street, String street2, String city, String stateOr
 
 ## Next Step
 
-Continue to [Step 2: Update the RegisterAttendeeCommand](02-Update-Command.md)
+Continue to [Step 2: Update the RegisterAttendeeCommand](02-Update-the-Command.md)
