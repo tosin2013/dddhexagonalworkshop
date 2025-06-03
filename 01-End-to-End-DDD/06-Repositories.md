@@ -2,6 +2,8 @@
 
 ## tl;dr
 
+_If you want to get the application up and running as quickly as possible you can copy/paste the code into the stubbed classes without reading the rest of the material._
+
 Repositories represent all objects of a certain type as a conceptual set (usually emulated). They act like collections, except with more elaborate querying capability. Objects of the appropriate type are added and removed, and the machinery behind the repository inserts them or deletes them from the database.
 
 ```java
@@ -51,6 +53,8 @@ import java.util.Optional;
 }
 
 ```
+
+[Step 7: Outbound Adapters](07-Outbound-Adapters.md)
 
 ### Learning Objectives
 
