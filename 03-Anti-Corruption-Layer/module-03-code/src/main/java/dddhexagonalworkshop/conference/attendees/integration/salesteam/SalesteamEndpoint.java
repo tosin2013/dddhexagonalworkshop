@@ -18,19 +18,8 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class SalesteamEndpoint {
 
-    @Inject
-    AttendeeService attendeeService;
-
     @POST
     public Response registerAttendees(SalesteamRegistrationRequest salesteamRegistrationRequest) {
-        Log.debugf("Registering attendees for %s", salesteamRegistrationRequest);
-
-        List<RegisterAttendeeCommand> commands = SalesteamToDomainTranslator.translate(
-                salesteamRegistrationRequest.customers()
-        );
-
-        commands.forEach(attendeeService::registerAttendee);
-
         return Response.accepted().build();
     }
 }
