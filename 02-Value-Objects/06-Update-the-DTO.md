@@ -1,4 +1,4 @@
-Upda# Step 6: Update the AttendeeDTO
+# Step 6: Update the AttendeeDTO
 
 ## tl;dr
 
