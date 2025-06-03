@@ -2,6 +2,8 @@
 
 ## tl;dr
 
+_If you want to get the application up and running as quickly as possible you can copy/paste the code into the stubbed classes without reading the rest of the material._
+
 Update `AttendeeEventPublisher` to send messages to Kafka.  We are going to use the Microprofile `Channel` and `Emitter` classes to avoid any about Kafka specific details.
 
 ```java
@@ -41,6 +43,7 @@ public class AttendeeEventPublisher {
 }
 ```
 
+[Step 8: Application Services](08-Application-Services.md)
 
 ## Learning Objectives
 - **Understand** Outbound Adapters as the bridge between domain events and external systems
