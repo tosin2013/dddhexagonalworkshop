@@ -1,4 +1,4 @@
-# Module 1 Summary: DDD Fundamentals in Practice
+# Module 1 Summary: End to End DDD
 
 ## 🎉 Congratulations!
 
