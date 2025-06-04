@@ -268,7 +268,7 @@ External World → REST → Domain Logic → Events → External Systems
 
 ---
 
-## Hands-on-Keyaboards Checklist 
+## Hands-on-Keyboards Checklist 
 
 There are 2 ways to do the workshop:
 
