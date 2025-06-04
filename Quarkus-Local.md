@@ -5,7 +5,7 @@
 3. In the terminal change into the module directory, `dddhexagonalworkshop/01-End-to-End-DDD/module-01-code`
 
 ```bash
-cd 01-End-to-End-DDD
+cd 01-End-to-End-DDD/module-01-code
 ```
 
 4. Start Quarkus:
