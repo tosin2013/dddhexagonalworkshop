@@ -6,6 +6,24 @@ In this iteration we will integrate with a fictitious external service, "Saleste
 
 There are multiple apporaches for integrating with external systems.  We will be using an Anticorruption Layer which is the most defensive pattern and completely isolates our Bounded Context from the external system.
 
+***_Note_***: our Domain Model has been extended for this Module with two new classes, MealPreference and TShirtSize. Both classes can be found in the `dddhexagonalworkshop.conference.attendees.domain.valueobjects` package. 
+
+```java
+package dddhexagonalworkshop.conference.attendees.domain.valueobjects;
+
+public enum MealPreference {
+    NONE, VEGETARIAN, GLUTEN_FREE;
+}
+```
+
+```java
+package dddhexagonalworkshop.conference.attendees.domain.valueobjects;
+
+public enum TShirtSize {
+    S, M, L, XL, XXL;
+}
+```
+
 ## DDD Concepts Covered
 
 - **Anticorruption Layer**: A protective boundary between our domain model and external systems
