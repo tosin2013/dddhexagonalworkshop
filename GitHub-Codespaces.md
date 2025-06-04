@@ -27,20 +27,20 @@ cd module-01-code
 
 ![Fork the repo](assets/codespaces-01.png)
 
-![Open Codespaces](assets/codespaces-01.png)
+![Open Codespaces](assets/codespaces-02.png)
 
-![Change directories](assets/codespaces-01.png)
+![Change directories](assets/codespaces-03.png)
 
-![Change directories](assets/codespaces-01.png)
+![Change directories](assets/codespaces-04.png)
 
-![Start Quarkus](assets/codespaces-01.png)
+![Start Quarkus](assets/codespaces-05.png)
 
-![Ignore the popup](assets/codespaces-01.png)
+![Ignore the popup](assets/codespaces-06.png)
 
-![Click on Ports tab](assets/codespaces-01.png)
+![Click on Ports tab](assets/codespaces-07.png)
 
-![Open 8080](assets/codespaces-01.png)
+![Open 8080](assets/codespaces-08.png)
 
-![View the web page](assets/codespaces-01.png)
+![View the web page](assets/codespaces-09.png)
 
-![Fork the repo](assets/codespaces-01.png)
+![Fork the repo](assets/codespaces-10.png)
