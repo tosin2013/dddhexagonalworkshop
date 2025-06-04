@@ -135,6 +135,7 @@ Understanding the flow of data through hexagonal architecture is crucial for pro
 | **Content Negotiation** | Handle different response formats | JSON, XML, CSV responses |
 | **Rate Limiting** | Protect domain from overload | Request throttling, circuit breakers |
 
+Most of these responsibilites are handled by your framework.  It is a principle of Domain Driven Design that your application not be too reliant upon frameworks.  We agree that framework code should be as transparent as possible, which is why we are using Quarkus, but we absolutely want to use frameworks to make our lives easier!
 
 Next: [Module 1 Summary](Summary.md)
 
