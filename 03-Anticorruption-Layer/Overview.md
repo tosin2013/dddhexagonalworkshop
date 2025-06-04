@@ -1,12 +1,14 @@
-# Module 3: Integrating with External Systems with an Anti-Corruption Layer
+# Module 3: Integrating with External Systems with an Anticorruption Layer
 
 ## Overview
 
 In this iteration we will integrate with a fictitious external service, "Salesteam," that registers customers and sends the registrations over in bulk. We will implement an **Anti-Corruption Layer (ACL)** to ensure that our domain model remains clean and unaffected by the external system's data structure.
 
+There are multiple apporaches for integrating with external systems.  We will be using an Anticorruption Layer which is the most defensive pattern and completely isolates our Bounded Context from the external system.
+
 ## DDD Concepts Covered
 
-- **Anti-Corruption Layer**: A protective boundary between our domain model and external systems
+- **Anticorruption Layer**: A protective boundary between our domain model and external systems
 - **Model Translation**: Converting external concepts to domain concepts
 - **Integration Patterns**: How external systems can integrate with bounded contexts
 - **Domain Protection**: Maintaining domain integrity when integrating with external systems
@@ -40,15 +42,6 @@ The ACL will:
 - **Protect** our domain from external system changes
 - **Maintain** clean separation between bounded contexts
 - **Enable** independent evolution of our domain model
-
-## Technology Stack
-
-**Quarkus** (https://quarkus.io) continues to provide:
-
-- Built-in support for REST endpoints
-- JSON serialization and deserialization
-- Dependency injection
-- `Dev Mode` with automatic infrastructure setup
 
 ## Project Structure
 
@@ -99,28 +92,7 @@ This iteration is divided into the following steps:
 4. **[Step 4: Update Domain Value Objects](step4-update-value-objects.md)**
 5. **[Step 5: Update the RegisterAttendeeCommand](step5-update-command.md)**
 
-## How to Use This Workshop
-
-As you progress through the workshop, you will fill in the missing pieces of code in the appropriate packages. The workshop authors have stubbed out the classes so that you can focus on the Domain Driven Design concepts as much as possible and Java and framework concepts as little as possible.
-
-You can:
-
-- Type in the code line by line
-- Copy and paste the code provided into your IDE
-- Combine both approaches as you see fit
-
-The goal is to understand the concepts and how they fit together in a DDD context.
-
-## Expected Outcome
-
-By the end of this iteration, you'll have:
-
-- A solid understanding of Anti-Corruption Layer patterns
-- Experience with model translation between external and domain models
-- A working integration that protects your domain model
-- Knowledge of how to maintain domain integrity when integrating with external systems
-
-## Key Learning Points
+## Key Learning Objectives
 
 - **Boundary Protection**: How ACL protects domain models from external influence
 - **Model Translation**: Converting between different data representations
