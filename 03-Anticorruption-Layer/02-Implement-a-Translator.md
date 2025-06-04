@@ -2,19 +2,19 @@
 
 ## Overview
 
-In this step, we'll implement the `SalesteamToDomainTranslator` class, which is the heart of our Anticorruption Layer. This translator converts external system data into our domain model, protecting our domain from external changes and terminology.
+In this step, we'll implement a class, `SalesteamToDomainTranslator`, that translates Salesteams model into ours. This translator converts external system data into our domain model, protecting our domain from external changes and terminology.
 
 ***_Note_***: We have 2 new fields in our Attendee, MealPreference and TShirtSize.  These have been added to better illustrate the translation
 
 
-## Understanding Translation in ACL
+## Why Translation Matters
 
 The translator:
 
 - **Converts** external models to domain commands
 - **Maps** external terminology to domain concepts
 - **Handles** differences in data structure and representation
-- **Protects** the domain from external system changes
+- **Protects** our domain from external system changes
 - **Centralizes** integration logic in one place
 
 ## Implementation
@@ -82,22 +82,16 @@ public static List<RegisterAttendeeCommand> translate(List<Customer> customers)
 **Design Choices:**
 
 - **Static method**: Simple utility function for translation
-- **Batch processing**: Handles lists of customers efficiently
-- **Command pattern**: Converts to domain commands rather than domain objects directly
+- **Commands**: Converts to commands to fit with the existing registion workflow
 - **Stream API**: Leverages functional programming for clean transformation
 
 ### 2. Address Handling
 
-```java
-null, // No address provided by Salesteam
-```
+Salesteam does not provide an Address.
 
 **Strategic Decision:**
 
-- Salesteam doesn't provide address information
-- We set address to `null` rather than creating a default
-- This preserves data integrity - we don't make up missing information
-- Future enhancement could prompt for address collection separately
+We use no address rather than creating a default for all Salesteam registrations.  This is a business decision, not a technical decision.  We have said that all business logic, or invariants, belong in the Aggregate.  In this case, we are preventing the Aggregate from having any knowledge of the integration with Salesteam, but we are making sure that _only logic related to integration with Salesteam_ is in this package. 
 
 ### 3. Dietary Requirements Mapping
 
@@ -110,7 +104,6 @@ private static MealPreference mapDietaryRequirements(DietaryRequirements dietary
 - **One-to-one mapping**: External enums map directly to domain enums
 - **Null safety**: Handles null values gracefully
 - **Default handling**: Null external values become `MealPreference.NONE`
-- **Switch expression**: Modern Java syntax for clean mapping
 
 ### 4. T-Shirt Size Mapping
 
