@@ -4,7 +4,6 @@
 
 We value your feedback, and your submission is anonymous: https://bit.ly/4kHVKSo
 
-QR Code:
 
 ![QR Code](assets/bit.ly_4kHVKSo.png)
 
