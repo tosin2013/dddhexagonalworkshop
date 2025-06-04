@@ -276,6 +276,43 @@ There are 2 ways to do the workshop:
 
 - Quarkus' Dev Mode on your laptop: [Quarkus Local](Quarkus-Local.md)
 
+  Why Quarkus
+
+### Why Quarkus?
+
+- **⚡ Supersonic, Subatomic Java**: Incredibly fast startup times and low memory usage
+- **🔧 Developer Experience**: Live reload during development - see changes instantly
+- **🐳 Container First**: Built for Kubernetes and cloud deployment from the ground up
+- **📦 Unified Configuration**: Single configuration model for all extensions
+- **🎯 Standards-Based**: Built on proven standards like JAX-RS, CDI, and JPA
+
+Most importantly, Quarkus gets out of your way, allowing you to focus on your code.
+
+Your workshop authors work for Red Hat, the company behind Quarkus, but we believe that Quarkus is the best choice because it allows you to focus on implementing Domain-Driven Design (DDD) concepts without worrying about boilerplate code or complex configurations.
+
+### Workshop-Specific Benefits
+
+**Dev Mode Magic**: Quarkus automatically starts and manages external dependencies:
+
+```bash
+./mvnw quarkus:dev
+```
+
+This single command spins up:
+
+- PostgreSQL database for persistence
+- Kafka broker for event streaming
+- Your application with live reload
+- Integrated testing capabilities
+
+**Zero Configuration Complexity**: Focus on DDD concepts instead of infrastructure setup. Quarkus handles:
+
+- Database schema generation
+- Kafka topic creation
+- Dependency injection
+- REST endpoint configuration
+- JSON serialization
+
 ## Get Started!
 
 [01 End to End DDD](01-End-to-End-DDD/README.md)
