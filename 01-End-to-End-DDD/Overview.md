@@ -64,76 +64,10 @@ Model your domain with appropriate object types that reflect business concepts.
 
 This workshop uses **[Quarkus](https://quarkus.io)**, a modern Java framework designed for cloud-native applications. Quarkus provides several advantages for this workshop:
 
-### Why Quarkus?
 
-- **⚡ Supersonic, Subatomic Java**: Incredibly fast startup times and low memory usage
-- **🔧 Developer Experience**: Live reload during development - see changes instantly
-- **🐳 Container First**: Built for Kubernetes and cloud deployment from the ground up
-- **📦 Unified Configuration**: Single configuration model for all extensions
-- **🎯 Standards-Based**: Built on proven standards like JAX-RS, CDI, and JPA
+## 🗺️ Module Structure
 
-Most importantly, Quarkus gets out of your way, allowing you to focus on your code.
-
-Your workshop authors work for Red Hat, the company behind Quarkus, but we believe that Quarkus is the best choice because it allows you to focus on implementing Domain-Driven Design (DDD) concepts without worrying about boilerplate code or complex configurations.
-
-### Workshop-Specific Benefits
-
-**Dev Mode Magic**: Quarkus automatically starts and manages external dependencies:
-
-```bash
-mvn quarkus:dev
-```
-
-This single command spins up:
-
-- PostgreSQL database for persistence
-- Kafka broker for event streaming
-- Your application with live reload
-- Integrated testing capabilities
-
-**Zero Configuration Complexity**: Focus on DDD concepts instead of infrastructure setup. Quarkus handles:
-
-- Database schema generation
-- Kafka topic creation
-- Dependency injection
-- REST endpoint configuration
-- JSON serialization
-
-**Real-World Relevance**: Learn patterns you'll use in production:
-
-- Reactive messaging with Kafka
-- Database transactions with Hibernate/Panache
-- RESTful API development with JAX-RS
-- Health checks and metrics
-- Native compilation readiness
-
-## 📋 Prerequisites
-
-### Required Knowledge
-
-- **Java 21+**: Comfortable with modern Java features (records, switch expressions)
-- **Basic OOP**: Understanding of classes, interfaces, and inheritance
-- **Web Concepts**: HTTP methods, JSON, REST APIs
-- **Database Basics**: SQL fundamentals and persistence concepts
-
-### Development Environment
-
-- **Java 17 or higher** installed
-- **Maven 3.8+** for dependency management
-- **IDE** of choice (IntelliJ IDEA, VS Code, Eclipse)
-- **Docker** (optional - for running external services manually)
-
-### No Prior Experience Needed
-
-- Domain-Driven Design concepts
-- Hexagonal Architecture
-- Quarkus framework
-- Event-driven systems
-- Kafka or messaging systems
-
-## 🗺️ Workshop Structure
-
-This workshop is organized into **10 progressive steps**, each building upon the previous one:
+This module is organized into **10 progressive steps**, each building upon the previous one:
 
 | Step   | Concept                                        | What You'll Build            | Key Learning                      |
 | ------ | ---------------------------------------------- | ---------------------------- | --------------------------------- |
@@ -152,135 +86,42 @@ This workshop is organized into **10 progressive steps**, each building upon the
 
 Each step follows a consistent pattern:
 
-- **🎯 TL;DR**: Quick implementation reference
+- **🎯 TL;DR**: a quick implementation reference with no explaination
 - **📖 Concept Explanation**: Why this pattern matters
 - **💻 Hands-On Implementation**: Code with detailed explanations
 - **🧪 Testing Guidance**: Verify your implementation
-- **🤔 Real-World Considerations**: Production concerns and alternatives
+- **🤔 Other Considerations**: Production concerns and alternatives
 
 If you get stuck, do not hesitate to ask for help!
 
-## 🚦 Getting Started
-
-### 1. Clone the Workshop Repository
-
-```bash
-git clone [workshop-repository-url]
-cd ddd-hexagonal-workshop
-```
-
-### 2. Verify Your Environment
-
-```bash
-java --version    # Should show Java 17+
-mvn --version     # Should show Maven 3.8+
-```
-
-### 3. Start the Development Environment
-
-```bash
-mvn quarkus:dev
-```
-
-This starts Quarkus in development mode with live reload enabled.
-
-### 4. Verify the Setup
-
-Open your browser to `http://localhost:8080` - you should see the Quarkus welcome page.
-
-### 5. Begin the Workshop
-
-Start with [Step 1: Events](01-Events.md) and work through each step sequentially.
-
-## 📁 Project Structure
-
-The workshop uses a clean, DDD-aligned package structure:
-
-```
-src/main/java/dddhexagonalworkshop/conference/attendees/
-├── domain/                          # Pure business logic
-│   ├── aggregates/                  # Domain aggregates
-│   │   └── Attendee.java
-│   ├── events/                      # Domain events
-│   │   └── AttendeeRegisteredEvent.java
-│   └── services/                    # Domain services & commands
-│       ├── AttendeeService.java
-│       ├── RegisterAttendeeCommand.java
-│       └── AttendeeRegistrationResult.java
-├── infrastructure/                  # External integrations
-│   ├── AttendeeEndpoint.java       # REST adapter
-│   ├── AttendeeDTO.java            # Data transfer objects
-│   └── AttendeeEventPublisher.java  # Kafka adapter
-└── persistence/                     # Database layer
-    ├── AttendeeEntity.java         # JPA entity
-    └── AttendeeRepository.java     # Data access
-```
-
-This structure reflects DDD's emphasis on organizing code by **business capability** rather than technical layers.
-
 ## 🎓 Learning Objectives
 
-By completing this workshop, you will:
+At the end of this module completing this module, you will:
 
-### Understand DDD Fundamentals
+### Have Touched Many DDD Fundamentals
 
 - Distinguish between commands and events
 - Identify proper aggregate boundaries
 - Implement domain services for complex workflows
 - Apply the repository pattern correctly
 
-### Master Hexagonal Architecture
+### Use a Hexagonal Architecture
 
 - Separate business logic from technical concerns
 - Create adapters for external system integration
 - Design clean interfaces between layers
 - Maintain testable, technology-independent code
 
-### Build Production-Ready Systems
-
-- Handle errors gracefully across layers
-- Implement proper transaction boundaries
-- Design APIs following REST principles
-- Structure code for maintainability and evolution
-
-### Gain Practical Experience
-
-- Work with modern Java frameworks (Quarkus)
-- Integrate with real external systems (Kafka, PostgreSQL)
-- Write tests at the appropriate levels
-- Apply patterns you'll use in professional development
-
-## 🤝 Workshop Philosophy
-
-This workshop emphasizes **learning by doing**. Each concept is introduced with:
-
-- **Real-world context** explaining why it matters
-- **Practical implementation** with complete working code
-- **Common pitfalls** and how to avoid them
-- **Testing strategies** to ensure correctness
-- **Evolution considerations** for long-term maintenance
-
-## 💡 Tips for Success
-
-1. **Follow the sequence**: Each step builds on previous ones - don't skip ahead
-2. **Read the explanations**: Understanding the "why" is as important as the "how"
-3. **Experiment**: Try variations and see what breaks (and why)
-4. **Test frequently**: Run tests after each step to catch issues early
-5. **Ask questions**: The concepts are meant to be discussed and debated
-
 ## 🆘 Getting Help
 
 If you encounter issues:
 
-1. Check the **Testing Your Implementation** section in each step
+1. Check the code in **model-01-soltuion** 
 2. Verify your code matches the provided examples exactly
-3. Ensure Quarkus dev mode is running (`mvn quarkus:dev`)
-4. Look for error messages in the console output
+3. Look for error messages in the console output
 
 ## 🎉 Ready to Begin?
 
-Great! Start your DDD journey with [**Step 1: Events**](01-Events.md) and begin building your understanding of domain-driven design through practical implementation.
-
-Remember: the goal isn't just to complete the code, but to understand the principles that will help you build better software systems throughout your career.
+Great! Start your DDD journey with [**Step 1: Events**](01-Events.md) 
 
 Happy coding! 🚀
