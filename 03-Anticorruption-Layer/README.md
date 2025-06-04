@@ -2,14 +2,14 @@
 
 This Module is divided into the following steps.
 
-**[Overview](Overview.md)**
+[Overview](Overview.md)
 
-**[Step 1: Review Existing External System Classes](step1-review-external-classes.md)**
+[Step 1: Review Existing External System Classes](01-The-External-System.md)
 
-**[Step 2: Implement the Anti-Corruption Layer Translator](step2-implement-translator.md)**
+[Step 2: Implement the Anti-Corruption Layer Translator](02-Implement-a-Translator.md)
 
-**[Step 3: Implement the Integration Endpoint](step3-implement-endpoint.md)**
+[Step 3: Implement the Integration Endpoint](03-Inbound-Adapter.md)
 
-**[Step 4: Update Domain Value Objects](step4-update-value-objects.md)**
+[Step 4: Update Domain Value Objects](04-Value-Objects.md)
 
-**[Step 5: Update the RegisterAttendeeCommand](step5-update-command.md)**
+[Step 5: Update the RegisterAttendeeCommand](05-Update-the-Command.md)
