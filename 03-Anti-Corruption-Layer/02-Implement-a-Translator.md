@@ -1,8 +1,8 @@
-# Step 2: Implement the Anti-Corruption Layer Translator
+# Step 2: Implement the Anticorruption Layer Translator
 
 ## Overview
 
-In this step, we'll implement the `SalesteamToDomainTranslator` class, which is the heart of our Anti-Corruption Layer. This translator converts external system data into our domain model, protecting our domain from external changes and terminology.
+In this step, we'll implement the `SalesteamToDomainTranslator` class, which is the heart of our Anticorruption Layer. This translator converts external system data into our domain model, protecting our domain from external changes and terminology.
 
 ***_Note_***: We have 2 new fields in our Attendee, MealPreference and TShirtSize.  These have been added to better illustrate the translation
 
@@ -125,7 +125,7 @@ case XS -> TShirtSize.S;  // XS maps to S (no XS in our domain)
 - **Data preservation**: All other sizes map directly
 - **Null handling**: Preserves null values appropriately
 
-## Anti-Corruption Layer Principles Demonstrated
+## Anticorruption Layer Principles Demonstrated
 
 ### 1. **Terminology Translation**
 
