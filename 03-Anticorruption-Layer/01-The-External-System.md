@@ -2,21 +2,22 @@
 
 ## Overview
 
-In this step, we'll review the existing classes that represent the Salesteam external system's data model. These classes have been stubbed out for you and demonstrate how external systems often have their own terminology and data structures that differ from our domain model.
+This module is based on integrating with a fictional partner named "Salesteam."  Salesteam provides a service that registers conference attendees.  They, of course, have their Ubiquitous Language, which is different from ours.  We will integrate with Salesteam using an Anticorruption layer, which is the most defensive of integration patterns.
+
+In this step, we'll review the existing classes that represent the Salesteam external system's data model. These classes have been stubbed out for you so you don't need to implement them; just review them so that you are familiar before continuing.
 
 ## Understanding External System Models
 
-External system models:
+The Salesteam system:
 
-- Use **their own terminology** (Customer vs Attendee)
-- Have **different data structures** than our domain
+- Uses **its' own terminology** (Customer vs Attendee)
+- Has **different data structures** than our domain
 - May have **different business rules** and constraints
-- **Change independently** of our system
-- Require **translation** to work with our domain
+- **Changes independently** of our system
 
 ## External System Classes
 
-The classes implementing the following fictional Salesteam JSON document:
+The following classes implement this JSON payload:
 
 ```json
 {
@@ -82,9 +83,7 @@ public enum DietaryRequirements {
 
 **Key Observations:**
 
-- Limited set of dietary options
-- May not match our domain's meal preference model exactly
-- Uses "NONE" instead of other possible defaults
+- The `DietaryRequirements` does not match our `MealPreference`
 
 ### Size.java
 
@@ -101,8 +100,8 @@ public enum Size {
 **Key Observations:**
 
 - Includes XS size that our domain might not support
-- May need mapping to our T-shirt size model
 - Different enum values than our domain model
+- Will require mapping to our T-shirt size model
 
 ## Differences from Our Domain
 
@@ -115,27 +114,21 @@ public enum Size {
 ### Structural Differences
 
 - External system groups dietary and size info in `CustomerDetails`
-- Our domain likely has these as separate value objects
 - External system includes `employer` which may not be stored in our domain
 
-### Data Representation
 
-- External enums may have different values than our domain enums
-- External system may have more or fewer options
-- Default values might be different
+## Why Anticorruption Layer Matters
 
-## Why Anti-Corruption Layer is Needed
-
-Without an ACL:
+Without an anticorruption layer:
 
 - Our domain would be **contaminated** by external terminology
-- Domain model would **depend** on external system changes
+- Our domain model would **depend** on external system changes
 - Business logic would be **mixed** with integration concerns
 - Testing would be **complicated** by external dependencies
 
-With an ACL:
+By implementing an anticorruption layer:
 
-- Domain model stays **pure** and focused on business concepts
+- Our domain model stays **pure** using only our own ubiquitous language
 - External changes are **isolated** to the integration layer
 - **Clean separation** between integration and domain concerns
 - **Independent evolution** of domain and external systems
