@@ -1,26 +1,20 @@
-# Domain-Driven Design with Hexagonal Architecture Workshop
+# Module 1: End to End Domain Driven Design
 
-Welcome to the **Domain-Driven Design (DDD) with Hexagonal Architecture Workshop**! This hands-on workshop will guide you through implementing core DDD concepts while building a real-world conference attendee registration system using Java and Quarkus.
+## 🎯 Overview
 
-## 🎯 Workshop Overview
-
-This workshop is for anyone who likes to get their hands on a keyboard as part of the learning process. Your project authors believe that architecture is best learned through practice, and this workshop provides a structured way to apply Domain-Driven Design (DDD) principles in a practical context.
-
-In this introductory workshop, you'll learn to apply Domain-Driven Design principles by building a microservice for managing conference attendee registrations. You'll implement the complete workflow from receiving HTTP requests to persisting data and publishing events, all while maintaining clean architectural boundaries.
+In the first module we will build an end to end workflow for conference attendee registration.  The module is designed to introduce DDD concepts by getting your hands on a keyboard and applying Domain-Driven Design (DDD) principles in a practical context.
 
 ### What You'll Build
 
-By the end of this workshop, you will have implemented an attendee registration system that demonstrates:
+By the end of this module, you will have implemented an attendee registration system that demonstrates:
 
 - **Domain-Driven Design**: Business-focused modeling and implementation
 - **Event-Driven Communication**: Asynchronous integration through domain events
 - **Hexagonal Architecture**: Creation of loosely coupled application components that can be easily composed; also known as ports and adapters
-- **RESTful API Design**: Modern HTTP endpoint implementation
-- **Database Integration**: Persistent storage with proper domain/persistence separation
 
 ## 🏗️ Architecture Overview
 
-This workshop implements the **Hexagonal Architecture** (Ports and Adapters) pattern, ensuring your business logic remains independent of external technologies:
+This module starts with a REST endpoint and implements business logic, persistence, and messaging:
 
 ```
 External World → Inbound Adapters → Domain Layer → Outbound Adapters → External Systems
@@ -55,15 +49,6 @@ Provide a collection-like interface for accessing and persisting aggregates, abs
 ### 🔌 **Adapters**
 
 Integration points between the domain and external systems (REST APIs, databases, message queues).
-
-### 📦 **Value Objects**
-
-Model your domain with appropriate object types that reflect business concepts.
-
-## 🚀 About Quarkus
-
-This workshop uses **[Quarkus](https://quarkus.io)**, a modern Java framework designed for cloud-native applications. Quarkus provides several advantages for this workshop:
-
 
 ## 🗺️ Module Structure
 
