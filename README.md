@@ -276,8 +276,6 @@ There are 2 ways to do the workshop:
 
 - Quarkus' Dev Mode on your laptop: [Quarkus Local](Quarkus-Local.md)
 
-  Why Quarkus
-
 ### Why Quarkus?
 
 - **⚡ Supersonic, Subatomic Java**: Incredibly fast startup times and low memory usage
@@ -289,6 +287,8 @@ There are 2 ways to do the workshop:
 Most importantly, Quarkus gets out of your way, allowing you to focus on your code.
 
 Your workshop authors work for Red Hat, the company behind Quarkus, but we believe that Quarkus is the best choice because it allows you to focus on implementing Domain-Driven Design (DDD) concepts without worrying about boilerplate code or complex configurations.
+
+[Quarkus Website](https://quarkus.io/)
 
 ### Workshop-Specific Benefits
 
