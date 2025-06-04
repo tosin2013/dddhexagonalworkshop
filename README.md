@@ -1,14 +1,69 @@
-# Domain Driven Design and Hexagonal Architecture Hands-On Workshop
+# Domain-Driven Design with Hexagonal Architecture Workshop
 
-## Welcome to this Hands-On Workshop!
+Welcome to the **Domain-Driven Design (DDD) with Hexagonal Architecture Workshop**! This hands-on workshop will guide you through implementing core DDD concepts while building a demo registration system for conference attendees.
 
 This workshop is for anyone who likes to get their hands on a keyboard as part of the learning process. Your project authors believe that architecture is best learned through practice, and this workshop provides a structured way to apply Domain-Driven Design (DDD) principles in a practical context.
 
 There is a great deal of theory in Domain Driven Design. This workshop was built because while the authors love talking about software architecture (their colleagues will verify), they also like getting their hands dirty with code. In fact, your workshop authors believe that it is impossible to understand software architecture **_without_** getting your hands on a keyboard and implementing the ideas.
 
-### What We Will Build Today
+## 🎯 Workshop Overview
 
-By the end of this workshop, we will have a **working attendee registration system** that demonstrates core Domain-Driven Design (DDD) patterns using a Hexagonal Architecture at its' core. We will be able to register attendees via a REST API, with events published to Kafka and data persisted to PostgreSQL.
+This workshop is for anyone who likes to get their hands on a keyboard as part of the learning process. Your project authors believe that architecture is best learned through practice, and this workshop provides a structured way to apply Domain-Driven Design (DDD) principles in a practical context.
+
+In this introductory workshop, you'll learn to apply Domain-Driven Design principles by building a microservice for managing conference attendee registrations. You'll implement the complete workflow from receiving HTTP requests to persisting data and publishing events, all while maintaining clean architectural boundaries.
+
+### What We'll Build
+
+By the end of this workshop, you will have implemented an attendee registration system that demonstrates:
+
+- **Domain-Driven Design**: Business-focused modeling and implementation
+- **Event-Driven Communication**: Asynchronous integration through domain events
+- **Hexagonal Architecture**: Creation of loosely coupled application components that can be easily composed; also known as ports and adapters
+- **Inbound Adapters**: HTTP endpoint implementation
+- **Outbound Adapters**: Persistent storage with proper domain/persistence separation and messaging with Kafka
+
+## 🏗️ Architecture Overview
+
+This workshop implements the **Hexagonal Architecture** (Ports and Adapters) pattern, ensuring your business logic remains independent of external technologies:
+
+```
+External World → Inbound Adapters → Domain Layer → Outbound Adapters → External Systems
+     ↓                ↓               ↓              ↓                    ↓
+HTTP Requests → REST Endpoints    → Business Logic   → Event Publisher    → Kafka
+                                    Aggregates       → Repository         → Database
+```
+
+## 📚 Core DDD Concepts Covered
+
+### 🎪 **Aggregates**
+
+The heart of DDD - business entities that encapsulate logic and maintain consistency within their boundaries.
+
+### 📋 **Events & Commands**
+
+- **Events**: Record facts that have already occurred (immutable) and most importantly _what the business cares about_.
+- **Commands**: Represent intentions to change state (can fail)
+
+### 🔧 **Application Services**
+
+Orchestrate business workflows that don't naturally belong in a single aggregate.
+
+### 📦 **Entities**
+
+Model your domain with appropriate object types that reflect business concepts.
+
+### 🗃️ **Repositories**
+
+Provide a collection-like interface for accessing and persisting aggregates, abstracting database details.
+
+### 🔌 **Adapters**
+
+Integration points between the domain and external systems (REST APIs, databases, message queues).
+
+### 📦 **Value Objects**
+
+Model your domain with appropriate object types that reflect business concepts.
+
 
 ### Our Learning Strategy
 
@@ -29,7 +84,7 @@ import java.net.URI;
 
 
 /**
- * "The application is blissfully ignorant of the nature of the input device. When the application has something to send out, it sends it out through a port to an adapter, which creates the appropriate signals needed by the receiving technology (human or automated). The application has a semantically sound interaction with the adapters on all sides of it, without actually knowing the nature of the things on the other side of the adapters."
+ * "The application is blissfully ignorant of the nature of the input device. When the application has something to send out, it sends it out through a port to an adapter,   * which creates the appropriate signals needed by the receiving technology (human or automated). The application has a semantically sound interaction with the adapters on   * all sides of it, without actually knowing the nature of the things on the other side of the adapters."
  * Alistair Cockburn, Hexagonal Architecture, 2005.
  *
  */
@@ -55,7 +110,7 @@ import java.net.URI;
 
 
 /**
- * "The application is blissfully ignorant of the nature of the input device. When the application has something to send out, it sends it out through a port to an adapter, which creates the appropriate signals needed by the receiving technology (human or automated). The application has a semantically sound interaction with the adapters on all sides of it, without actually knowing the nature of the things on the other side of the adapters."
+ * "The application is blissfully ignorant of the nature of the input device. When the application has something to send out, it sends it out through a port to an adapter,   * which creates the appropriate signals needed by the receiving technology (human or automated). The application has a semantically sound interaction with the adapters on   * all sides of it, without actually knowing the nature of the things on the other side of the adapters."
  * Alistair Cockburn, Hexagonal Architecture, 2005.
  *
  */
@@ -105,7 +160,7 @@ A conference attendee registration microservice with:
 - **Database persistence** for attendee data
 - **Clean architecture** that separates concerns
 
-### The Journey (4 Modules)
+### The Journey (3 Modules)
 
 We'll build this system step-by-step, with each piece compiling as we go:
 
@@ -215,11 +270,10 @@ External World → REST → Domain Logic → Events → External Systems
 
 ## Hands-on-Keyaboards Checklist 
 
-There are three ways to do the workshop:
+There are 2 ways to do the workshop:
 
 - GitHub Codespace
 - Quarkus' Dev Mode on your laptop
-- Quarkus and Docker Compose on your laptop
 
 ### GitHub Codespaces
 
