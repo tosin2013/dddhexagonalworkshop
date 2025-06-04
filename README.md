@@ -1,4 +1,4 @@
-# Domain-Driven Design with Hexagonal Architecture Workshop
+# A Hands On Introduction to Domain-Driven Design and Hexagonal Architecture Workshop
 
 Welcome to the **Domain-Driven Design (DDD) with Hexagonal Architecture Workshop**! This hands-on workshop will guide you through implementing core DDD concepts while building a demo registration system for conference attendees.
 
