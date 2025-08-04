@@ -1,0 +1,36 @@
+---
+apiVersion: org.eclipse.che/v2
+kind: CheCluster
+metadata:
+  name: devspaces
+  namespace: openshift-devspaces
+spec:
+  components:
+    cheServer:
+      debug: false
+      logLevel: INFO
+    metrics:
+      enable: true
+  containerRegistry: {}
+  devEnvironments:
+    startTimeoutSeconds: 600
+    secondsOfRunBeforeIdling: 1800
+    maxNumberOfWorkspacesPerUser: 5
+    maxNumberOfRunningWorkspacesPerUser: 3
+    containerBuildConfiguration:
+      openShiftSecurityContextConstraint: container-build
+    disableContainerBuildCapabilities: false
+    defaultEditor: che-incubator/che-code/latest
+    defaultNamespace:
+      autoProvision: true
+      template: <username>-devspaces
+    secondsOfInactivityBeforeIdling: 1800
+    storage:
+      pvcStrategy: per-workspace
+  gitServices: {}
+  networking:
+    auth:
+      gateway:
+        configLabels:
+          app: che
+          component: che-gateway-config

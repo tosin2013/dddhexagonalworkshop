@@ -1,0 +1,10 @@
+# AI
+repomix*
+
+# OS stuff
+.DS_Store
+
+
+# Java
+*/target/
+.mcp-adr-cache

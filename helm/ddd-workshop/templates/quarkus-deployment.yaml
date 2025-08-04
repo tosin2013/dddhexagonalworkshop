@@ -1,0 +1,134 @@
+{{- if .Values.quarkus.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ddd-workshop.fullname" . }}-quarkus
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "ddd-workshop.labels" . | nindent 4 }}
+    component: quarkus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "ddd-workshop.selectorLabels" . | nindent 6 }}
+      component: quarkus
+  template:
+    metadata:
+      labels:
+        {{- include "ddd-workshop.selectorLabels" . | nindent 8 }}
+        component: quarkus
+    spec:
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: {{ include "ddd-workshop.serviceAccountName" . }}
+      {{- end }}
+      {{- if .Values.podSecurityContext.enabled }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- end }}
+      initContainers:
+        - name: wait-for-postgresql
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.postgresql.image }}:{{ .Values.postgresql.tag }}"
+          command:
+            - sh
+            - -c
+            - |
+              echo "Waiting for PostgreSQL to be ready..."
+              until pg_isready -h {{ include "ddd-workshop.fullname" . }}-postgresql -p {{ .Values.postgresql.service.port }} -U {{ .Values.postgresql.username }}; do
+                echo "PostgreSQL is unavailable - sleeping"
+                sleep 2
+              done
+              echo "PostgreSQL is ready!"
+          resources:
+            limits:
+              memory: 128Mi
+              cpu: 100m
+            requests:
+              memory: 64Mi
+              cpu: 50m
+        - name: wait-for-kafka
+          {{- if contains "bitnami" .Values.kafka.image }}
+          image: "{{ .Values.kafka.image }}:{{ .Values.kafka.tag }}"
+          {{- else }}
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.kafka.image }}:{{ .Values.kafka.tag }}"
+          {{- end }}
+          command:
+            - sh
+            - -c
+            - |
+              echo "Waiting for Kafka to be ready..."
+              sleep 10
+              echo "Kafka should be ready!"
+          resources:
+            limits:
+              memory: 128Mi
+              cpu: 100m
+            requests:
+              memory: 64Mi
+              cpu: 50m
+      containers:
+        - name: quarkus
+          image: "{{ .Values.quarkus.image }}:{{ .Values.quarkus.tag }}"
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          {{- if .Values.securityContext.enabled }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.quarkus.service.port }}
+              protocol: TCP
+            {{- if .Values.quarkus.debug.enabled }}
+            - name: debug
+              containerPort: {{ .Values.quarkus.debug.port }}
+              protocol: TCP
+            {{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "ddd-workshop.fullname" . }}-quarkus-config
+            - secretRef:
+                name: {{ include "ddd-workshop.fullname" . }}-quarkus-secret
+          livenessProbe:
+            httpGet:
+              path: /q/health/live
+              port: http
+            initialDelaySeconds: 60
+            timeoutSeconds: 10
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /q/health/ready
+              port: http
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          resources:
+            {{- toYaml .Values.quarkus.resources | nindent 12 }}
+          volumeMounts:
+            - name: m2-repository
+              mountPath: /home/user/.m2
+            - name: workspace
+              mountPath: /projects
+      volumes:
+        - name: m2-repository
+          emptyDir: {}
+        - name: workspace
+          emptyDir: {}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+{{- end }}

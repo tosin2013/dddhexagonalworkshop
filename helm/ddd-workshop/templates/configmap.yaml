@@ -1,0 +1,80 @@
+{{- if .Values.postgresql.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "ddd-workshop.fullname" . }}-postgresql-config
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "ddd-workshop.labels" . | nindent 4 }}
+    component: postgresql
+data:
+  POSTGRESQL_DATABASE: {{ .Values.postgresql.database | quote }}
+  POSTGRESQL_USER: {{ .Values.postgresql.username | quote }}
+---
+{{- end }}
+
+{{- if .Values.kafka.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "ddd-workshop.fullname" . }}-kafka-config
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "ddd-workshop.labels" . | nindent 4 }}
+    component: kafka
+data:
+  # Bitnami Kafka configuration
+  KAFKA_CFG_NODE_ID: {{ .Values.kafka.config.brokerId | quote }}
+  KAFKA_CFG_PROCESS_ROLES: "controller,broker"
+  KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: "1@localhost:9093"
+  KAFKA_CFG_LISTENERS: "PLAINTEXT://:9092,CONTROLLER://:9093"
+  KAFKA_CFG_ADVERTISED_LISTENERS: "PLAINTEXT://localhost:9092"
+  KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT"
+  KAFKA_CFG_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+  KAFKA_CFG_INTER_BROKER_LISTENER_NAME: "PLAINTEXT"
+  KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR: {{ .Values.kafka.config.offsetsTopicReplicationFactor | quote }}
+  KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: {{ .Values.kafka.config.transactionStateLogReplicationFactor | quote }}
+  KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR: {{ .Values.kafka.config.transactionStateLogMinIsr | quote }}
+  KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: {{ .Values.kafka.config.autoCreateTopicsEnable | quote }}
+  KAFKA_CFG_LOG_FLUSH_INTERVAL_MESSAGES: {{ .Values.kafka.config.logFlushIntervalMessages | quote }}
+  KAFKA_CFG_LOG_FLUSH_INTERVAL_MS: {{ .Values.kafka.config.logFlushIntervalMs | quote }}
+  KAFKA_CFG_LOG_RETENTION_HOURS: {{ .Values.kafka.config.logRetentionHours | quote }}
+  KAFKA_CFG_LOG_SEGMENT_BYTES: "1073741824"
+  KAFKA_CFG_LOG_RETENTION_CHECK_INTERVAL_MS: "300000"
+---
+{{- end }}
+
+{{- if .Values.quarkus.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "ddd-workshop.fullname" . }}-quarkus-config
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "ddd-workshop.labels" . | nindent 4 }}
+    component: quarkus
+data:
+  QUARKUS_DATASOURCE_DB_KIND: "postgresql"
+  QUARKUS_DATASOURCE_USERNAME: {{ .Values.postgresql.username | quote }}
+  QUARKUS_DATASOURCE_JDBC_URL: "jdbc:postgresql://{{ include "ddd-workshop.fullname" . }}-postgresql:{{ .Values.postgresql.service.port }}/{{ .Values.postgresql.database }}"
+  KAFKA_BOOTSTRAP_SERVERS: "{{ include "ddd-workshop.fullname" . }}-kafka:{{ .Values.kafka.service.port }}"
+  QUARKUS_HTTP_HOST: "0.0.0.0"
+  QUARKUS_HTTP_PORT: {{ .Values.quarkus.service.port | quote }}
+  MAVEN_OPTS: {{ .Values.quarkus.env.mavenOpts | quote }}
+---
+{{- end }}
+
+{{- if .Values.devSpaces.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "ddd-workshop.fullname" . }}-devfile
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "ddd-workshop.labels" . | nindent 4 }}
+    component: devspaces
+data:
+  devfile.yaml: |
+{{ .Files.Get "devfile.yaml" | indent 4 }}
+---
+{{- end }}

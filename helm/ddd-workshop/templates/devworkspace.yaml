@@ -1,0 +1,151 @@
+{{- if .Values.devSpaces.enabled }}
+apiVersion: workspace.devfile.io/v1alpha2
+kind: DevWorkspace
+metadata:
+  name: {{ include "ddd-workshop.fullname" . }}-workspace
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "ddd-workshop.labels" . | nindent 4 }}
+    component: devspaces
+  annotations:
+    controller.devfile.io/storage-type: ephemeral
+    controller.devfile.io/devworkspace-config.name: {{ include "ddd-workshop.fullname" . }}-devworkspace-config
+spec:
+  started: true
+  routingClass: che
+  template:
+    schemaVersion: {{ .Values.devSpaces.devfileVersion }}
+    metadata:
+      name: {{ .Values.devSpaces.workspace.name }}
+      displayName: {{ .Values.devSpaces.workspace.displayName | quote }}
+      description: {{ .Values.devSpaces.workspace.description | quote }}
+      tags:
+        - Java
+        - Quarkus
+        - DDD
+        - Hexagonal Architecture
+        - PostgreSQL
+        - Kafka
+      projectType: "Quarkus"
+      language: "Java"
+      version: "1.0.0"
+
+    projects:
+      - name: ddd-workshop
+        git:
+          remotes:
+            origin: "https://github.com/jeremyrdavis/dddhexagonalworkshop.git"
+          checkoutFrom:
+            revision: main
+
+    variables:
+      QUARKUS_MEMORY_LIMIT: {{ .Values.quarkus.resources.limits.memory | quote }}
+      {{- if .Values.devSpaces.workspace.variables }}
+      {{- range $key, $value := .Values.devSpaces.workspace.variables }}
+      {{ $key }}: {{ $value | quote }}
+      {{- end }}
+      {{- end }}
+
+    components:
+      # Quarkus Development Container - connects to external infrastructure
+      - name: quarkus-dev
+        container:
+          image: "{{ .Values.quarkus.image }}:{{ .Values.quarkus.tag }}"
+          memoryLimit: "$(QUARKUS_MEMORY_LIMIT)"
+          cpuLimit: {{ .Values.quarkus.resources.limits.cpu | quote }}
+          cpuRequest: {{ .Values.quarkus.resources.requests.cpu | quote }}
+          memoryRequest: {{ .Values.quarkus.resources.requests.memory | quote }}
+          env:
+            - name: QUARKUS_DATASOURCE_DB_KIND
+              value: postgresql
+            - name: QUARKUS_DATASOURCE_USERNAME
+              value: {{ .Values.postgresql.username | quote }}
+            - name: QUARKUS_DATASOURCE_PASSWORD
+              value: {{ .Values.postgresql.password | quote }}
+            - name: QUARKUS_DATASOURCE_JDBC_URL
+              value: jdbc:postgresql://{{ include "ddd-workshop.fullname" . }}-postgresql.{{ .Values.global.namespace }}.svc.cluster.local:5432/{{ .Values.postgresql.database }}
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: {{ include "ddd-workshop.fullname" . }}-kafka.{{ .Values.global.namespace }}.svc.cluster.local:9092
+            - name: MP_MESSAGING_CONNECTOR_SMALLRYE_KAFKA_BOOTSTRAP_SERVERS
+              value: {{ include "ddd-workshop.fullname" . }}-kafka.{{ .Values.global.namespace }}.svc.cluster.local:9092
+            - name: QUARKUS_HTTP_HOST
+              value: 0.0.0.0
+            - name: QUARKUS_HTTP_PORT
+              value: {{ .Values.quarkus.service.port | quote }}
+            - name: MAVEN_OPTS
+              value: {{ .Values.quarkus.env.mavenOpts | quote }}
+          endpoints:
+            - name: quarkus-dev
+              targetPort: {{ .Values.quarkus.service.port }}
+              exposure: public
+              protocol: http
+              attributes:
+                discoverable: "true"
+                urlRewriteSupported: "true"
+            {{- if .Values.quarkus.debug.enabled }}
+            - name: debug
+              targetPort: {{ .Values.quarkus.debug.port }}
+              exposure: internal
+              attributes:
+                discoverable: "false"
+            {{- end }}
+          volumeMounts:
+            - name: m2-repository
+              path: /home/user/.m2
+          workingDir: /projects
+          sourceMapping: /projects
+
+      # Maven Repository Volume
+      - name: m2-repository
+        volume:
+          ephemeral: true
+
+    commands:
+      # Service connectivity check
+      - id: check-services
+        exec:
+          label: "Check Infrastructure Services"
+          component: quarkus-dev
+          workingDir: ${PROJECT_SOURCE}
+          commandLine: |
+            echo "🔍 Checking infrastructure services..."
+            echo "📊 PostgreSQL: {{ include "ddd-workshop.fullname" . }}-postgresql.{{ .Values.global.namespace }}.svc.cluster.local:5432"
+            echo "📨 Kafka: {{ include "ddd-workshop.fullname" . }}-kafka.{{ .Values.global.namespace }}.svc.cluster.local:9092"
+            echo "✅ Services configured!"
+          group:
+            kind: build
+
+      # Development Commands
+      - id: dev-run
+        exec:
+          label: "Start Quarkus Development Mode"
+          component: quarkus-dev
+          workingDir: ${PROJECT_SOURCE}
+          commandLine: "./mvnw quarkus:dev -Dquarkus.http.host=0.0.0.0"
+          group:
+            kind: run
+            isDefault: true
+
+      - id: compile
+        exec:
+          label: "Compile Project"
+          component: quarkus-dev
+          workingDir: ${PROJECT_SOURCE}
+          commandLine: "./mvnw compile"
+          group:
+            kind: build
+
+      - id: test
+        exec:
+          label: "Run Tests"
+          component: quarkus-dev
+          workingDir: ${PROJECT_SOURCE}
+          commandLine: "./mvnw test"
+          group:
+            kind: test
+
+    events:
+      postStart:
+        - "check-services"
+---
+{{- end }}

@@ -1,0 +1,25 @@
+{
+  "recommendations": [
+    "redhat.java",
+    "redhat.vscode-quarkus",
+    "redhat.vscode-microprofile",
+    "redhat.vscode-yaml",
+    "redhat.vscode-xml",
+    "ms-vscode.vscode-json",
+    "vscjava.vscode-java-debug",
+    "vscjava.vscode-java-test",
+    "vscjava.vscode-maven",
+    "vscjava.vscode-java-dependency",
+    "ms-vscode.vscode-typescript-next",
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-eslint",
+    "bradlc.vscode-tailwindcss",
+    "ms-vscode.vscode-docker",
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+    "redhat.vscode-openshift-connector",
+    "gitpod.gitpod-desktop"
+  ],
+  "unwantedRecommendations": [
+    "ms-vscode.vscode-typescript"
+  ]
+}

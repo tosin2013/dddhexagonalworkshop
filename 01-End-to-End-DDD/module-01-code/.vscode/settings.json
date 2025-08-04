@@ -1,0 +1,28 @@
+{
+    "java.home": "/usr/lib/jvm/java-21-openjdk",
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-21",
+            "path": "/usr/lib/jvm/java-21-openjdk"
+        }
+    ],
+    "java.debug.settings.enableRunDebugCodeLens": true,
+    "java.debug.settings.hotCodeReplace": "auto",
+    "java.debug.settings.vmArgs": "-Xmx1g -XX:+UseG1GC",
+    
+    "quarkus.tools.debug.host": "0.0.0.0",
+    "quarkus.tools.debug.port": 5005,
+    "quarkus.tools.validation.enabled": true,
+    
+    "maven.executable.path": "./mvnw",
+    "maven.terminal.useJavaHome": true,
+    
+    "files.exclude": {
+        "**/target": true,
+        "**/.m2": true
+    },
+    
+    "workshop.module.name": "module-01-code",
+    "workshop.goldenPath.version": "1.0.0",
+    "workshop.performance.liveReload.targetMs": 5000
+}

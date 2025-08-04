@@ -1,0 +1,93 @@
+{{- if .Values.kafka.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ddd-workshop.fullname" . }}-kafka
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "ddd-workshop.labels" . | nindent 4 }}
+    component: kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "ddd-workshop.selectorLabels" . | nindent 6 }}
+      component: kafka
+  template:
+    metadata:
+      labels:
+        {{- include "ddd-workshop.selectorLabels" . | nindent 8 }}
+        component: kafka
+    spec:
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: {{ include "ddd-workshop.serviceAccountName" . }}
+      {{- end }}
+      {{- if .Values.podSecurityContext.enabled }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: kafka
+          {{- if contains "bitnami" .Values.kafka.image }}
+          image: "{{ .Values.kafka.image }}:{{ .Values.kafka.tag }}"
+          {{- else }}
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.kafka.image }}:{{ .Values.kafka.tag }}"
+          {{- end }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          {{- if .Values.securityContext.enabled }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: kafka
+              containerPort: 9092
+              protocol: TCP
+            - name: kafka-ui
+              containerPort: 9021
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: {{ include "ddd-workshop.fullname" . }}-kafka-config
+          livenessProbe:
+            tcpSocket:
+              port: 9092
+            initialDelaySeconds: 60
+            timeoutSeconds: 10
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: 9092
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          resources:
+            {{- toYaml .Values.kafka.resources | nindent 12 }}
+          volumeMounts:
+            - name: kafka-data
+              mountPath: /var/lib/kafka/data
+      volumes:
+        - name: kafka-data
+          {{- if .Values.kafka.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "ddd-workshop.fullname" . }}-kafka-pvc
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+{{- end }}

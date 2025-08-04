@@ -1,0 +1,68 @@
+# Development environment overrides
+environment: development
+
+# Updated image references for development
+postgresql:
+  image: rhel9/postgresql-16
+  tag: latest
+
+kafka:
+  image: bitnami/kafka
+  tag: "3.6"
+
+# Reduced resource limits for development
+postgresql:
+  resources:
+    limits:
+      memory: 256Mi
+      cpu: 100m
+    requests:
+      memory: 128Mi
+      cpu: 50m
+
+kafka:
+  resources:
+    limits:
+      memory: 512Mi
+      cpu: 200m
+    requests:
+      memory: 256Mi
+      cpu: 100m
+
+quarkus:
+  enabled: false  # Quarkus runs in Dev Spaces workspace, not as separate deployment
+  resources:
+    limits:
+      memory: 512Mi
+      cpu: 250m
+    requests:
+      memory: 256Mi
+      cpu: 125m
+  debug:
+    enabled: true
+
+# Enable debug ports exposure
+devSpaces:
+  workspace:
+    variables:
+      ENABLE_DEBUG_PORTS: "true"
+      POSTGRES_EXPOSE_PORT: "true"
+
+# Relaxed resource quotas for development
+resourceQuota:
+  hard:
+    requests.cpu: "500m"
+    requests.memory: 1Gi
+    limits.cpu: "1"
+    limits.memory: 2Gi
+
+# Development-specific route
+route:
+  host: ddd-workshop-dev.apps.cluster.example.com
+
+# Disable security constraints for easier development
+podSecurityContext:
+  enabled: false
+
+securityContext:
+  enabled: false

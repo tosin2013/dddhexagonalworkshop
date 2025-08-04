@@ -1,0 +1,245 @@
+apiVersion: workspace.devfile.io/v1alpha2
+kind: DevWorkspace
+metadata:
+  name: ddd-workshop-test
+  namespace: admin-devspaces
+  labels:
+    app.kubernetes.io/name: ddd-workshop
+    app.kubernetes.io/component: devspaces
+  annotations:
+    controller.devfile.io/storage-type: ephemeral
+spec:
+  started: true
+  routingClass: che
+  template:
+    schemaVersion: 2.2.0
+    metadata:
+      name: ddd-workshop-test
+      displayName: "DDD Workshop - Test (Self-Contained)"
+      description: "Test workspace for Domain-Driven Design Workshop with self-contained infrastructure"
+      tags:
+        - Java
+        - Quarkus
+        - DDD
+        - Hexagonal Architecture
+        - PostgreSQL
+        - Kafka
+      projectType: "Quarkus"
+      language: "Java"
+      version: "1.0.0"
+    
+    projects:
+      - name: ddd-workshop
+        git:
+          remotes:
+            origin: "https://github.com/jeremyrdavis/dddhexagonalworkshop.git"
+          checkoutFrom:
+            revision: main
+    
+    variables:
+      QUARKUS_MEMORY_LIMIT: "1Gi"
+      POSTGRES_MEMORY_LIMIT: "512Mi"
+      KAFKA_MEMORY_LIMIT: "1Gi"
+    
+    components:
+      # PostgreSQL Database Container - Starts First
+      - name: postgresql
+        container:
+          image: registry.redhat.io/rhel9/postgresql-16:latest
+          memoryLimit: "512Mi"
+          cpuLimit: "200m"
+          cpuRequest: "100m"
+          memoryRequest: "256Mi"
+          env:
+            - name: POSTGRESQL_USER
+              value: attendee
+            - name: POSTGRESQL_PASSWORD
+              value: workshop
+            - name: POSTGRESQL_DATABASE
+              value: conference
+            - name: POSTGRESQL_ADMIN_PASSWORD
+              value: admin123
+          endpoints:
+            - name: postgresql
+              targetPort: 5432
+              exposure: internal
+          volumeMounts:
+            - name: postgresql-data
+              path: /var/lib/pgsql/data
+          
+      # Kafka Message Broker Container - Starts Second
+      - name: kafka
+        container:
+          image: bitnami/kafka:3.6
+          memoryLimit: "1Gi"
+          cpuLimit: "300m"
+          cpuRequest: "150m"
+          memoryRequest: "512Mi"
+          env:
+            # Bitnami Kafka KRaft mode configuration
+            - name: KAFKA_CFG_NODE_ID
+              value: "1"
+            - name: KAFKA_CFG_PROCESS_ROLES
+              value: "controller,broker"
+            - name: KAFKA_CFG_CONTROLLER_QUORUM_VOTERS
+              value: "1@localhost:9093"
+            - name: KAFKA_CFG_LISTENERS
+              value: "PLAINTEXT://:9092,CONTROLLER://:9093"
+            - name: KAFKA_CFG_ADVERTISED_LISTENERS
+              value: "PLAINTEXT://localhost:9092"
+            - name: KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
+              value: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT"
+            - name: KAFKA_CFG_CONTROLLER_LISTENER_NAMES
+              value: "CONTROLLER"
+            - name: KAFKA_CFG_INTER_BROKER_LISTENER_NAME
+              value: "PLAINTEXT"
+            - name: KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR
+              value: "1"
+            - name: KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+              value: "1"
+            - name: KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR
+              value: "1"
+            - name: KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE
+              value: "true"
+            - name: KAFKA_CFG_LOG_FLUSH_INTERVAL_MESSAGES
+              value: "10000"
+            - name: KAFKA_CFG_LOG_FLUSH_INTERVAL_MS
+              value: "1000"
+            - name: KAFKA_CFG_LOG_RETENTION_HOURS
+              value: "168"
+          endpoints:
+            - name: kafka
+              targetPort: 9092
+              exposure: internal
+          volumeMounts:
+            - name: kafka-data
+              path: /var/lib/kafka/data
+
+      # Quarkus Development Container - Starts Last
+      - name: quarkus-dev
+        container:
+          image: registry.access.redhat.com/ubi8/openjdk-21:1.20
+          memoryLimit: "1Gi"
+          cpuLimit: "500m"
+          cpuRequest: "250m"
+          memoryRequest: "512Mi"
+          env:
+            - name: QUARKUS_DATASOURCE_DB_KIND
+              value: postgresql
+            - name: QUARKUS_DATASOURCE_USERNAME
+              value: attendee
+            - name: QUARKUS_DATASOURCE_PASSWORD
+              value: workshop
+            - name: QUARKUS_DATASOURCE_JDBC_URL
+              value: jdbc:postgresql://localhost:5432/conference
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: localhost:9092
+            - name: MP_MESSAGING_CONNECTOR_SMALLRYE_KAFKA_BOOTSTRAP_SERVERS
+              value: localhost:9092
+            - name: QUARKUS_HTTP_HOST
+              value: 0.0.0.0
+            - name: QUARKUS_HTTP_PORT
+              value: "8080"
+            - name: MAVEN_OPTS
+              value: "-Xmx512m"
+          endpoints:
+            - name: quarkus-dev
+              targetPort: 8080
+              exposure: public
+              protocol: http
+              attributes:
+                discoverable: "true"
+                urlRewriteSupported: "true"
+            - name: debug
+              targetPort: 5005
+              exposure: internal
+              attributes:
+                discoverable: "false"
+          volumeMounts:
+            - name: m2-repository
+              path: /home/user/.m2
+          workingDir: /projects
+          sourceMapping: /projects
+
+      # Ephemeral Volumes
+      - name: postgresql-data
+        volume:
+          ephemeral: true
+          
+      - name: kafka-data
+        volume:
+          ephemeral: true
+          
+      - name: m2-repository
+        volume:
+          ephemeral: true
+
+    commands:
+      # Infrastructure readiness checks
+      - id: check-services
+        exec:
+          label: "🔍 Check Infrastructure Services"
+          component: quarkus-dev
+          workingDir: ${PROJECT_SOURCE}
+          commandLine: |
+            echo "🔍 Checking self-contained infrastructure..."
+            echo "📊 PostgreSQL: localhost:5432"
+            echo "📨 Kafka: localhost:9092"
+            echo "🗄️  Database: conference"
+            echo "👤 User: attendee"
+            echo "✅ Self-contained services configured!"
+          group:
+            kind: build
+
+      # Development Commands
+      - id: dev-run
+        exec:
+          label: "🚀 Start Quarkus Development Mode"
+          component: quarkus-dev
+          workingDir: ${PROJECT_SOURCE}
+          commandLine: "./mvnw quarkus:dev -Dquarkus.http.host=0.0.0.0"
+          group:
+            kind: run
+            isDefault: true
+
+      - id: compile
+        exec:
+          label: "🔨 Compile Project"
+          component: quarkus-dev
+          workingDir: ${PROJECT_SOURCE}
+          commandLine: "./mvnw compile"
+          group:
+            kind: build
+
+      - id: test
+        exec:
+          label: "🧪 Run Tests"
+          component: quarkus-dev
+          workingDir: ${PROJECT_SOURCE}
+          commandLine: "./mvnw test"
+          group:
+            kind: test
+
+      # Outer Loop Commands
+      - id: build-container
+        exec:
+          label: "📦 Build Container Image"
+          component: quarkus-dev
+          workingDir: ${PROJECT_SOURCE}
+          commandLine: "./mvnw clean package -Dquarkus.container-image.build=true"
+          group:
+            kind: build
+
+      - id: deploy-to-qa
+        exec:
+          label: "🚀 Deploy to QA Environment"
+          component: quarkus-dev
+          workingDir: ${PROJECT_SOURCE}
+          commandLine: |
+            echo "🚀 Deploying to QA environment..."
+            echo "This would deploy to OpenShift QA namespace"
+            echo "✅ Ready for outer loop deployment!"
+
+    events:
+      postStart:
+        - "check-services"

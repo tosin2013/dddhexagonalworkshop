@@ -1,0 +1,183 @@
+apiVersion: workspace.devfile.io/v1alpha2
+kind: DevWorkspace
+metadata:
+  name: ddd-workshop-external
+  namespace: admin-devspaces
+  labels:
+    app.kubernetes.io/name: ddd-workshop
+    app.kubernetes.io/component: devspaces
+  annotations:
+    controller.devfile.io/storage-type: ephemeral
+spec:
+  started: true
+  routingClass: che
+  template:
+    schemaVersion: 2.2.0
+    metadata:
+      name: ddd-workshop-external
+      displayName: "DDD Workshop - External Services"
+      description: "Test workspace connecting to external OpenShift infrastructure services"
+      tags:
+        - Java
+        - Quarkus
+        - DDD
+        - Hexagonal Architecture
+        - PostgreSQL
+        - Kafka
+      projectType: "Quarkus"
+      language: "Java"
+      version: "1.0.0"
+    
+    projects:
+      - name: ddd-workshop
+        git:
+          remotes:
+            origin: "https://github.com/jeremyrdavis/dddhexagonalworkshop.git"
+          checkoutFrom:
+            revision: main
+    
+    components:
+      # Quarkus Development Container - connects to external services
+      - name: quarkus-dev
+        container:
+          image: registry.access.redhat.com/ubi8/openjdk-21:1.20
+          memoryLimit: "1Gi"
+          cpuLimit: "500m"
+          cpuRequest: "250m"
+          memoryRequest: "512Mi"
+          env:
+            - name: QUARKUS_DATASOURCE_DB_KIND
+              value: postgresql
+            - name: QUARKUS_DATASOURCE_USERNAME
+              value: user01
+            - name: QUARKUS_DATASOURCE_PASSWORD
+              value: workshop_user01
+            - name: QUARKUS_DATASOURCE_JDBC_URL
+              value: jdbc:postgresql://ddd-workshop-user01-postgresql.ddd-workshop-user01.svc.cluster.local:5432/conference_user01
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: ddd-workshop-user01-kafka.ddd-workshop-user01.svc.cluster.local:9092
+            - name: MP_MESSAGING_CONNECTOR_SMALLRYE_KAFKA_BOOTSTRAP_SERVERS
+              value: ddd-workshop-user01-kafka.ddd-workshop-user01.svc.cluster.local:9092
+            - name: QUARKUS_HTTP_HOST
+              value: 0.0.0.0
+            - name: QUARKUS_HTTP_PORT
+              value: "8080"
+            - name: MAVEN_OPTS
+              value: "-Xmx512m"
+          endpoints:
+            - name: quarkus-dev
+              targetPort: 8080
+              exposure: public
+              protocol: http
+              attributes:
+                discoverable: "true"
+                urlRewriteSupported: "true"
+            - name: debug
+              targetPort: 5005
+              exposure: internal
+              attributes:
+                discoverable: "false"
+          volumeMounts:
+            - name: m2-repository
+              path: /home/user/.m2
+          workingDir: /projects
+          sourceMapping: /projects
+
+      # Maven Repository Volume
+      - name: m2-repository
+        volume:
+          ephemeral: true
+
+    commands:
+      # Infrastructure connectivity check
+      - id: check-services
+        exec:
+          label: "🔍 Check External Infrastructure Services"
+          component: quarkus-dev
+          workingDir: ${PROJECT_SOURCE}
+          commandLine: |
+            echo "🔍 Checking external infrastructure services..."
+            echo "📊 PostgreSQL: ddd-workshop-user01-postgresql.ddd-workshop-user01.svc.cluster.local:5432"
+            echo "📨 Kafka: ddd-workshop-user01-kafka.ddd-workshop-user01.svc.cluster.local:9092"
+            echo "🗄️  Database: conference_user01"
+            echo "👤 User: user01"
+            echo "✅ External services configured!"
+          group:
+            kind: build
+
+      # Development Commands
+      - id: dev-run
+        exec:
+          label: "🚀 Start Quarkus Development Mode"
+          component: quarkus-dev
+          workingDir: ${PROJECT_SOURCE}
+          commandLine: "./mvnw quarkus:dev -Dquarkus.http.host=0.0.0.0"
+          group:
+            kind: run
+            isDefault: true
+
+      - id: compile
+        exec:
+          label: "🔨 Compile Project"
+          component: quarkus-dev
+          workingDir: ${PROJECT_SOURCE}
+          commandLine: "./mvnw compile"
+          group:
+            kind: build
+
+      - id: test
+        exec:
+          label: "🧪 Run Tests"
+          component: quarkus-dev
+          workingDir: ${PROJECT_SOURCE}
+          commandLine: "./mvnw test"
+          group:
+            kind: test
+
+      # Connectivity Tests
+      - id: test-database
+        exec:
+          label: "🔍 Test Database Connection"
+          component: quarkus-dev
+          workingDir: ${PROJECT_SOURCE}
+          commandLine: |
+            echo "Testing PostgreSQL connection..."
+            curl -s http://localhost:8080/health/ready | grep -q "UP" && echo "✅ Database connection OK" || echo "❌ Database connection failed"
+
+      - id: test-kafka
+        exec:
+          label: "🔍 Test Kafka Connection"
+          component: quarkus-dev
+          workingDir: ${PROJECT_SOURCE}
+          commandLine: |
+            echo "Testing Kafka connection..."
+            echo "Kafka broker: ddd-workshop-user01-kafka.ddd-workshop-user01.svc.cluster.local:9092"
+
+      # Outer Loop Commands
+      - id: build-container
+        exec:
+          label: "📦 Build Container Image"
+          component: quarkus-dev
+          workingDir: ${PROJECT_SOURCE}
+          commandLine: "./mvnw clean package -Dquarkus.container-image.build=true"
+          group:
+            kind: build
+
+      - id: deploy-to-qa
+        exec:
+          label: "🚀 Deploy to QA Environment"
+          component: quarkus-dev
+          workingDir: ${PROJECT_SOURCE}
+          commandLine: |
+            echo "🚀 Deploying to QA environment..."
+            echo "Building application..."
+            ./mvnw clean package -DskipTests
+            echo "Creating QA deployment..."
+            oc new-app --name=ddd-workshop-qa --binary --strategy=source
+            oc start-build ddd-workshop-qa --from-dir=. --follow
+            oc expose service/ddd-workshop-qa
+            echo "✅ Deployed to QA! Check: oc get route ddd-workshop-qa"
+
+    events:
+      postStart:
+        - "check-services"

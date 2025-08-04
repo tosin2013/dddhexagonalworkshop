@@ -1,0 +1,373 @@
+schemaVersion: 2.2.0
+metadata:
+  name: ddd-hexagonal-workshop
+  displayName: "DDD Hexagonal Architecture Workshop"
+  description: "OpenShift Dev Spaces environment for Domain-Driven Design and Hexagonal Architecture Workshop"
+  tags:
+    - Java
+    - Quarkus
+    - DDD
+    - Hexagonal Architecture
+    - PostgreSQL
+    - Kafka
+  projectType: "Quarkus"
+  language: "Java"
+  version: "1.0.0"
+
+variables:
+  # Research-validated resource configurations
+  QUARKUS_MEMORY_LIMIT: "1Gi"
+  QUARKUS_MEMORY_REQUEST: "512Mi"  # Added for better resource management
+  # Sidecar Pattern: Per-user service instances (ADR-0002)
+  POSTGRES_SERVICE_HOST: "localhost"  # Sidecar container in same pod
+  KAFKA_SERVICE_HOST: "localhost"     # Sidecar container in same pod
+  ENABLE_DEBUG_PORTS: "true"
+  # Golden Path Configuration - DO NOT MODIFY
+  GOLDEN_PATH_VERSION: "1.0.0"
+
+components:
+  # Quarkus Development Container - connects to infrastructure services
+  - name: quarkus-dev
+    container:
+      image: registry.access.redhat.com/ubi8/openjdk-21:1.20
+      memoryLimit: "$(QUARKUS_MEMORY_LIMIT)"
+      memoryRequest: "$(QUARKUS_MEMORY_REQUEST)"
+      cpuLimit: "500m"
+      cpuRequest: "250m"
+      # Golden Path: Research-validated resource configuration
+      env:
+        - name: QUARKUS_DATASOURCE_DB_KIND
+          value: postgresql
+        - name: QUARKUS_DATASOURCE_USERNAME
+          value: attendee
+        - name: QUARKUS_DATASOURCE_PASSWORD
+          value: workshop
+        - name: QUARKUS_DATASOURCE_JDBC_URL
+          value: jdbc:postgresql://$(POSTGRES_SERVICE_HOST):5432/conference
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: $(KAFKA_SERVICE_HOST):9092
+        - name: MP_MESSAGING_CONNECTOR_SMALLRYE_KAFKA_BOOTSTRAP_SERVERS
+          value: $(KAFKA_SERVICE_HOST):9092
+        # Golden Path: Standardized service connectivity
+        - name: QUARKUS_HTTP_HOST
+          value: 0.0.0.0
+        - name: QUARKUS_HTTP_PORT
+          value: "8080"
+        - name: MAVEN_OPTS
+          value: "-Xmx512m"
+      endpoints:
+        - name: quarkus-dev
+          targetPort: 8080
+          exposure: public
+          protocol: http
+          attributes:
+            discoverable: "true"
+            urlRewriteSupported: "true"
+        - name: debug
+          targetPort: 5005
+          exposure: internal
+          attributes:
+            discoverable: "false"
+      volumeMounts:
+        - name: m2-repository
+          path: /home/user/.m2
+      workingDir: /projects
+      sourceMapping: /projects
+
+  # Maven Repository Volume
+  - name: m2-repository
+    volume:
+      ephemeral: true
+
+  # PostgreSQL Sidecar Container (ADR-0002: Per-user data isolation)
+  - name: postgresql
+    container:
+      image: registry.redhat.io/rhel9/postgresql-16:latest
+      memoryLimit: "512Mi"
+      memoryRequest: "256Mi"  # Research-validated optimization
+      cpuLimit: "200m"
+      cpuRequest: "100m"
+      env:
+        - name: POSTGRESQL_USER
+          value: attendee
+        - name: POSTGRESQL_PASSWORD
+          value: workshop
+        - name: POSTGRESQL_DATABASE
+          value: conference
+        - name: POSTGRESQL_ADMIN_PASSWORD
+          value: admin123
+        - name: POSTGRESQL_SHARED_BUFFERS
+          value: "64MB"  # Tuned for container environment
+        - name: POSTGRESQL_WORK_MEM
+          value: "4MB"   # Conservative for low-intensity workload
+      endpoints:
+        - name: postgresql
+          targetPort: 5432
+          exposure: none  # Internal to workspace only
+      volumeMounts:
+        - name: postgresql-data
+          path: /var/lib/pgsql/data
+
+  # Kafka Sidecar Container (ADR-0002: Per-user event streaming)
+  - name: kafka
+    container:
+      image: bitnami/kafka:3.6
+      memoryLimit: "1Gi"
+      memoryRequest: "512Mi"  # Research-validated optimization
+      cpuLimit: "300m"
+      cpuRequest: "150m"
+      env:
+        - name: KAFKA_CFG_NODE_ID
+          value: "1"
+        - name: KAFKA_CFG_PROCESS_ROLES
+          value: "controller,broker"
+        - name: KAFKA_CFG_CONTROLLER_QUORUM_VOTERS
+          value: "1@localhost:9093"
+        - name: KAFKA_CFG_LISTENERS
+          value: "PLAINTEXT://:9092,CONTROLLER://:9093"
+        - name: KAFKA_CFG_ADVERTISED_LISTENERS
+          value: "PLAINTEXT://localhost:9092"
+        - name: KAFKA_CFG_CONTROLLER_LISTENER_NAMES
+          value: "CONTROLLER"
+        - name: KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
+          value: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT"
+        - name: KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE
+          value: "true"
+        - name: KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR
+          value: "1"
+        - name: KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+          value: "1"
+        - name: KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR
+          value: "1"
+        - name: KAFKA_HEAP_OPTS
+          value: "-Xmx256m -Xms256m"  # JVM tuning: 50% of memory request
+      endpoints:
+        - name: kafka
+          targetPort: 9092
+          exposure: none  # Internal to workspace only
+      volumeMounts:
+        - name: kafka-data
+          path: /bitnami/kafka
+
+  # PostgreSQL Data Volume
+  - name: postgresql-data
+    volume:
+      ephemeral: true
+
+  # Kafka Data Volume
+  - name: kafka-data
+    volume:
+      ephemeral: true
+
+commands:
+  # IDE Setup Commands
+  - id: setup-vscode
+    exec:
+      label: "Setup VS Code Extensions and Settings"
+      component: quarkus-dev
+      commandLine: |
+        echo "Setting up VS Code for Quarkus development..."
+        mkdir -p .vscode
+        cp /projects/config/vscode-extensions.json .vscode/extensions.json 2>/dev/null || echo "Extensions config not found"
+        cp /projects/config/vscode-settings.json .vscode/settings.json 2>/dev/null || echo "Settings config not found"
+        echo "VS Code setup complete!"
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: build
+
+  # Development Commands
+  - id: dev-run
+    exec:
+      label: "Start Quarkus Development Mode"
+      component: quarkus-dev
+      workingDir: ${PROJECT_SOURCE}
+      commandLine: "./mvnw quarkus:dev -Dquarkus.http.host=0.0.0.0"
+      group:
+        kind: run
+        isDefault: true
+
+  - id: dev-debug
+    exec:
+      label: "Start Quarkus Development Mode with Debug"
+      component: quarkus-dev
+      workingDir: ${PROJECT_SOURCE}
+      commandLine: "./mvnw quarkus:dev -Dquarkus.http.host=0.0.0.0 -Ddebug=5005"
+      group:
+        kind: debug
+
+  - id: compile
+    exec:
+      label: "Compile Project"
+      component: quarkus-dev
+      workingDir: ${PROJECT_SOURCE}
+      commandLine: "./mvnw compile"
+      group:
+        kind: build
+
+  - id: test
+    exec:
+      label: "Run Tests"
+      component: quarkus-dev
+      workingDir: ${PROJECT_SOURCE}
+      commandLine: "./mvnw test"
+      group:
+        kind: test
+
+  - id: package
+    exec:
+      label: "Package Application"
+      component: quarkus-dev
+      workingDir: ${PROJECT_SOURCE}
+      commandLine: "./mvnw package"
+      group:
+        kind: build
+
+  # Infrastructure Commands
+  - id: check-postgresql
+    exec:
+      label: "Check PostgreSQL Status"
+      component: postgresql
+      commandLine: "pg_isready -h localhost -p 5432 -U attendee"
+      group:
+        kind: run
+
+  - id: check-kafka
+    exec:
+      label: "Check Kafka Status"
+      component: kafka
+      commandLine: "kafka-broker-api-versions.sh --bootstrap-server localhost:9092"
+      group:
+        kind: run
+
+  # Module Navigation Commands
+  - id: module-01
+    exec:
+      label: "Navigate to Module 01 - End-to-End DDD"
+      component: quarkus-dev
+      workingDir: ${PROJECT_SOURCE}/01-End-to-End-DDD/module-01-code
+      commandLine: "echo 'Switched to Module 01 - End-to-End DDD'"
+      group:
+        kind: run
+
+  - id: module-02
+    exec:
+      label: "Navigate to Module 02 - Value Objects"
+      component: quarkus-dev
+      workingDir: ${PROJECT_SOURCE}/02-Value-Objects/module-02-code
+      commandLine: "echo 'Switched to Module 02 - Value Objects'"
+      group:
+        kind: run
+
+  - id: module-03
+    exec:
+      label: "Navigate to Module 03 - Anti-Corruption Layer"
+      component: quarkus-dev
+      workingDir: ${PROJECT_SOURCE}/03-Anticorruption-Layer/module-03-code
+      commandLine: "echo 'Switched to Module 03 - Anti-Corruption Layer'"
+      group:
+        kind: run
+
+events:
+  # Startup sequence - PostgreSQL -> Kafka -> Quarkus
+  preStart:
+    - "wait-for-postgresql"
+    - "wait-for-kafka"
+    - "init-maven-cache"
+
+  postStart:
+    - "compile-project"
+
+  # Custom event commands for startup sequence
+  - id: wait-for-postgresql
+    exec:
+      label: "Wait for PostgreSQL service to be ready"
+      component: quarkus-dev
+      commandLine: |
+        echo "Waiting for PostgreSQL sidecar to be available..."
+        until nc -z localhost 5432; do
+          echo "PostgreSQL sidecar is unavailable - sleeping"
+          sleep 2
+        done
+        echo "PostgreSQL sidecar is ready!"
+
+  - id: wait-for-kafka
+    exec:
+      label: "Wait for Kafka service to be ready"
+      component: quarkus-dev
+      commandLine: |
+        echo "Waiting for Kafka sidecar to be available..."
+        until nc -z localhost 9092; do
+          echo "Kafka sidecar is unavailable - sleeping"
+          sleep 3
+        done
+        echo "Kafka sidecar is ready!"
+
+  - id: init-maven-cache
+    exec:
+      label: "Initialize Maven repository cache"
+      component: quarkus-dev
+      workingDir: ${PROJECT_SOURCE}
+      commandLine: |
+        echo "Initializing Maven repository cache..."
+        if [ -f "pom.xml" ]; then
+          ./mvnw dependency:resolve-sources -q
+        else
+          echo "No pom.xml found in root, checking module directories..."
+          for module in 01-End-to-End-DDD/module-01-code 02-Value-Objects/module-02-code 03-Anticorruption-Layer/module-03-code; do
+            if [ -f "$module/pom.xml" ]; then
+              echo "Resolving dependencies for $module"
+              cd "$module" && ./mvnw dependency:resolve-sources -q && cd - >/dev/null
+            fi
+          done
+        fi
+        echo "Maven cache initialized!"
+
+  - id: compile-project
+    exec:
+      label: "Compile project after startup"
+      component: quarkus-dev
+      workingDir: ${PROJECT_SOURCE}
+      commandLine: |
+        echo "Compiling project..."
+        if [ -f "pom.xml" ]; then
+          ./mvnw compile -q
+        else
+          echo "No pom.xml found in root, checking module directories..."
+          for module in 01-End-to-End-DDD/module-01-code 02-Value-Objects/module-02-code 03-Anticorruption-Layer/module-03-code; do
+            if [ -f "$module/pom.xml" ]; then
+              echo "Compiling $module"
+              cd "$module" && ./mvnw compile -q && cd - >/dev/null
+            fi
+          done
+        fi
+        echo "Project compilation complete!"
+
+# Golden Path Validation Commands
+  - id: validate-golden-path
+    exec:
+      label: "Validate Golden Path Configuration"
+      component: quarkus-dev
+      commandLine: |
+        echo "=== Golden Path Configuration Validation ==="
+        echo "Version: $(GOLDEN_PATH_VERSION)"
+        echo "PostgreSQL Service: $(POSTGRES_SERVICE_HOST):5432"
+        echo "Kafka Service: $(KAFKA_SERVICE_HOST):9092"
+        echo "Memory Request: $(QUARKUS_MEMORY_REQUEST)"
+        echo "Memory Limit: $(QUARKUS_MEMORY_LIMIT)"
+        echo "=== Validation Complete ==="
+      group:
+        kind: run
+
+  - id: check-infrastructure-connectivity
+    exec:
+      label: "Check Infrastructure Services Connectivity"
+      component: quarkus-dev
+      commandLine: |
+        echo "Testing sidecar services connectivity..."
+        echo "PostgreSQL sidecar connectivity:"
+        nc -zv $(POSTGRES_SERVICE_HOST) 5432 || echo "PostgreSQL sidecar connection failed"
+        echo "Kafka sidecar connectivity:"
+        nc -zv $(KAFKA_SERVICE_HOST) 9092 || echo "Kafka sidecar connection failed"
+        echo "Sidecar connectivity check complete!"
+      group:
+        kind: run

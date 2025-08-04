@@ -1,0 +1,30 @@
+{
+    "java.home": "/usr/lib/jvm/java-21-openjdk",
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-21",
+            "path": "/usr/lib/jvm/java-21-openjdk"
+        }
+    ],
+    "java.debug.settings.enableRunDebugCodeLens": true,
+    "java.debug.settings.hotCodeReplace": "auto",
+    
+    "quarkus.tools.debug.host": "0.0.0.0",
+    "quarkus.tools.debug.port": 5005,
+    
+    "maven.executable.path": "./mvnw",
+    
+    "files.watcherExclude": {
+        "**/target/**": true,
+        "**/.m2/**": true
+    },
+    
+    "search.exclude": {
+        "**/target": true,
+        "**/.m2": true
+    },
+    
+    "workshop.goldenPath.version": "1.0.0",
+    "workshop.services.postgresql.host": "ddd-workshop-postgresql.ddd-workshop.svc.cluster.local",
+    "workshop.services.kafka.host": "ddd-workshop-kafka.ddd-workshop.svc.cluster.local"
+}

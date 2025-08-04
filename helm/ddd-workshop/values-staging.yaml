@@ -1,0 +1,69 @@
+# Staging environment overrides
+environment: staging
+
+# Production-like resources for staging
+postgresql:
+  resources:
+    limits:
+      memory: 512Mi
+      cpu: 200m
+    requests:
+      memory: 256Mi
+      cpu: 100m
+
+kafka:
+  resources:
+    limits:
+      memory: 1Gi
+      cpu: 300m
+    requests:
+      memory: 512Mi
+      cpu: 150m
+
+quarkus:
+  resources:
+    limits:
+      memory: 1Gi
+      cpu: 500m
+    requests:
+      memory: 512Mi
+      cpu: 250m
+  debug:
+    enabled: false
+
+# Disable debug features in staging
+devSpaces:
+  workspace:
+    variables:
+      ENABLE_DEBUG_PORTS: "false"
+      POSTGRES_EXPOSE_PORT: "false"
+
+# Enable monitoring in staging
+monitoring:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+
+# Staging-specific route
+route:
+  host: ddd-workshop-staging.apps.cluster.example.com
+
+# Enable security contexts
+podSecurityContext:
+  enabled: true
+
+securityContext:
+  enabled: true
+
+# Enable network policies
+networkPolicy:
+  enabled: true
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: openshift-devspaces
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ddd-workshop-staging

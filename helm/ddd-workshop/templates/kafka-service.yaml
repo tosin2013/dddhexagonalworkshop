@@ -1,0 +1,46 @@
+{{- if .Values.kafka.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ddd-workshop.fullname" . }}-kafka
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "ddd-workshop.labels" . | nindent 4 }}
+    component: kafka
+spec:
+  type: {{ .Values.kafka.service.type }}
+  ports:
+    - port: {{ .Values.kafka.service.port }}
+      targetPort: kafka
+      protocol: TCP
+      name: kafka
+    - port: 9021
+      targetPort: kafka-ui
+      protocol: TCP
+      name: kafka-ui
+  selector:
+    {{- include "ddd-workshop.selectorLabels" . | nindent 4 }}
+    component: kafka
+---
+{{- end }}
+
+{{- if and .Values.kafka.enabled .Values.kafka.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "ddd-workshop.fullname" . }}-kafka-pvc
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "ddd-workshop.labels" . | nindent 4 }}
+    component: kafka
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.kafka.persistence.size }}
+  {{- if .Values.kafka.persistence.storageClass }}
+  storageClassName: {{ .Values.kafka.persistence.storageClass }}
+  {{- end }}
+---
+{{- end }}

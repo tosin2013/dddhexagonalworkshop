@@ -1,0 +1,53 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "quarkus:dev",
+            "type": "shell",
+            "command": "./mvnw",
+            "args": ["quarkus:dev", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.debug.enabled=true"],
+            "group": "build",
+            "isBackground": true,
+            "problemMatcher": [
+                {
+                    "pattern": [
+                        {
+                            "regexp": "\\b\\B",
+                            "file": 1,
+                            "location": 2,
+                            "message": 3
+                        }
+                    ],
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": "^.*Scanning for projects.*",
+                        "endsPattern": "^.*Quarkus .* started in .*\\. Listening on:.*"
+                    }
+                }
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "quarkus:test",
+            "type": "shell",
+            "command": "./mvnw",
+            "args": ["test"],
+            "group": "test",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "maven:compile",
+            "type": "shell",
+            "command": "./mvnw",
+            "args": ["compile"],
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        }
+    ]
+}

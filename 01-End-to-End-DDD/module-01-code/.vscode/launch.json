@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug Quarkus Application",
+            "request": "attach",
+            "hostName": "localhost",
+            "port": 5005,
+            "timeout": 30000,
+            "preLaunchTask": "quarkus:dev"
+        },
+        {
+            "type": "java",
+            "name": "Launch Quarkus Application",
+            "request": "launch",
+            "mainClass": "io.quarkus.runner.GeneratedMain",
+            "args": "",
+            "vmArgs": "-Dquarkus.http.host=0.0.0.0 -Dquarkus.debug.enabled=true",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "serverReadyAction": {
+                "pattern": "started in \\d+\\.\\d+s",
+                "uriFormat": "http://localhost:8080",
+                "action": "openExternally"
+            }
+        }
+    ]
+}

@@ -1,0 +1,24 @@
+apiVersion: v2
+name: ddd-workshop
+description: A Helm chart for DDD Hexagonal Architecture Workshop on OpenShift
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+home: https://github.com/jeremyrdavis/dddhexagonalworkshop
+sources:
+  - https://github.com/jeremyrdavis/dddhexagonalworkshop.git
+maintainers:
+  - name: Tosin Akinsoho
+    email: takinosh@redhat.com
+keywords:
+  - ddd
+  - hexagonal-architecture
+  - quarkus
+  - postgresql
+  - kafka
+  - openshift
+  - dev-spaces
+annotations:
+  category: Development
+  licenses: Apache-2.0
+dependencies: []

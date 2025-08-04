@@ -1,0 +1,165 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: control-plane-monitoring-config
+  namespace: ddd-workshop
+  labels:
+    app: control-plane-monitoring
+    component: monitoring
+data:
+  prometheus-rules.yaml: |
+    groups:
+    - name: ddd-workshop-control-plane
+      rules:
+      # etcd write latency monitoring (< 100ms target from research)
+      - alert: EtcdHighWriteLatency
+        expr: histogram_quantile(0.95, rate(etcd_disk_wal_fsync_duration_seconds_bucket[5m])) > 0.1
+        for: 2m
+        labels:
+          severity: warning
+          component: etcd
+        annotations:
+          summary: "etcd write latency is high"
+          description: "etcd 95th percentile write latency is {{ $value }}s, exceeding 100ms threshold"
+          
+      # API server response time tracking
+      - alert: APIServerHighLatency
+        expr: histogram_quantile(0.95, rate(apiserver_request_duration_seconds_bucket{verb!="WATCH"}[5m])) > 1
+        for: 2m
+        labels:
+          severity: warning
+          component: apiserver
+        annotations:
+          summary: "API server response time is high"
+          description: "API server 95th percentile response time is {{ $value }}s"
+          
+      # Worker node resource utilization
+      - alert: WorkerNodeHighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 0.85
+        for: 5m
+        labels:
+          severity: warning
+          component: worker-node
+        annotations:
+          summary: "Worker node memory usage is high"
+          description: "Worker node {{ $labels.instance }} memory usage is {{ $value | humanizePercentage }}"
+          
+      # Dev Spaces workspace monitoring
+      - alert: DevSpacesWorkspaceFailures
+        expr: increase(devworkspace_failed_total[10m]) > 2
+        for: 1m
+        labels:
+          severity: critical
+          component: devspaces
+        annotations:
+          summary: "Multiple Dev Spaces workspace failures detected"
+          description: "{{ $value }} workspace failures in the last 10 minutes"
+
+  grafana-dashboard.json: |
+    {
+      "dashboard": {
+        "id": null,
+        "title": "DDD Workshop - Control Plane Monitoring",
+        "tags": ["ddd-workshop", "control-plane"],
+        "timezone": "browser",
+        "panels": [
+          {
+            "id": 1,
+            "title": "etcd Write Latency (Research Target: <100ms)",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.95, rate(etcd_disk_wal_fsync_duration_seconds_bucket[5m])) * 1000",
+                "legendFormat": "95th percentile (ms)"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "thresholds": {
+                  "steps": [
+                    {"color": "green", "value": null},
+                    {"color": "yellow", "value": 50},
+                    {"color": "red", "value": 100}
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 2,
+            "title": "API Server Response Time",
+            "type": "timeseries",
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.95, rate(apiserver_request_duration_seconds_bucket{verb!=\"WATCH\"}[5m]))",
+                "legendFormat": "95th percentile"
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "title": "Worker Node Memory Utilization",
+            "type": "timeseries",
+            "targets": [
+              {
+                "expr": "(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100",
+                "legendFormat": "{{ instance }}"
+              }
+            ]
+          },
+          {
+            "id": 4,
+            "title": "Dev Spaces Workspace Status",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "sum(devworkspace_running_total)",
+                "legendFormat": "Running Workspaces"
+              },
+              {
+                "expr": "sum(devworkspace_failed_total)",
+                "legendFormat": "Failed Workspaces"
+              }
+            ]
+          }
+        ],
+        "time": {
+          "from": "now-1h",
+          "to": "now"
+        },
+        "refresh": "30s"
+      }
+    }
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: ddd-workshop-control-plane
+  namespace: ddd-workshop
+  labels:
+    app: control-plane-monitoring
+spec:
+  selector:
+    matchLabels:
+      app: ddd-workshop
+  endpoints:
+  - port: metrics
+    interval: 30s
+    path: /metrics
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: control-plane-metrics
+  namespace: ddd-workshop
+  labels:
+    app: control-plane-monitoring
+spec:
+  ports:
+  - name: metrics
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: control-plane-monitoring

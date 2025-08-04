@@ -1,0 +1,175 @@
+# Default values for ddd-workshop
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+global:
+  namespace: ddd-workshop
+  imageRegistry: registry.redhat.io
+  imagePullPolicy: IfNotPresent
+
+# PostgreSQL Configuration
+postgresql:
+  enabled: true
+  image: rhel9/postgresql-16
+  tag: latest
+  resources:
+    limits:
+      memory: 512Mi
+      cpu: 200m
+    requests:
+      memory: 256Mi
+      cpu: 100m
+  database: conference
+  username: attendee
+  password: workshop
+  adminPassword: admin123
+  persistence:
+    enabled: false
+    storageClass: ""
+    size: 1Gi
+  service:
+    type: ClusterIP
+    port: 5432
+  expose:
+    enabled: false
+
+# Kafka Configuration
+kafka:
+  enabled: true
+  image: bitnami/kafka
+  tag: "3.6"
+  resources:
+    limits:
+      memory: 1Gi
+      cpu: 300m
+    requests:
+      memory: 512Mi
+      cpu: 150m
+  persistence:
+    enabled: false
+    storageClass: ""
+    size: 2Gi
+  service:
+    type: ClusterIP
+    port: 9092
+  config:
+    brokerId: 1
+    offsetsTopicReplicationFactor: 1
+    transactionStateLogReplicationFactor: 1
+    transactionStateLogMinIsr: 1
+    autoCreateTopicsEnable: true
+    logFlushIntervalMessages: 10000
+    logFlushIntervalMs: 1000
+    logRetentionHours: 168
+
+# Quarkus Application Configuration
+quarkus:
+  enabled: true
+  image: registry.access.redhat.com/ubi8/openjdk-21
+  tag: "1.20"
+  resources:
+    limits:
+      memory: 1Gi
+      cpu: 500m
+    requests:
+      memory: 512Mi
+      cpu: 250m
+  service:
+    type: ClusterIP
+    port: 8080
+  debug:
+    enabled: true
+    port: 5005
+  env:
+    mavenOpts: "-Xmx512m"
+
+# OpenShift Dev Spaces Configuration
+devSpaces:
+  enabled: true
+  devfileVersion: "2.2.0"
+  # Development pattern: "self-contained" or "external-services"
+  pattern: "self-contained"  # self-contained = containers in workspace, external-services = connect to cluster services
+  workspace:
+    name: ddd-workshop
+    displayName: "DDD Hexagonal Architecture Workshop"
+    description: "OpenShift Dev Spaces environment for Domain-Driven Design and Hexagonal Architecture Workshop"
+    variables:
+      PROJECT_SOURCE: "/projects/ddd-workshop"
+
+# Route Configuration for OpenShift
+route:
+  enabled: true
+  host: ""
+  tls:
+    enabled: true
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+
+# Resource Quotas and Limits
+resourceQuota:
+  enabled: true
+  hard:
+    requests.cpu: "1"
+    requests.memory: 2Gi
+    limits.cpu: "2"
+    limits.memory: 4Gi
+    persistentvolumeclaims: "3"
+
+# Network Policies
+networkPolicy:
+  enabled: false
+  ingress: []
+  egress: []
+
+# Pod Security Context - Let OpenShift assign appropriate values
+podSecurityContext:
+  enabled: false
+  # fsGroup: auto-assigned by OpenShift
+  # runAsUser: auto-assigned by OpenShift
+  # runAsGroup: auto-assigned by OpenShift
+  # runAsNonRoot: true (enforced by SCC)
+
+# Security Context - Let OpenShift assign appropriate values
+securityContext:
+  enabled: false
+  # allowPrivilegeEscalation: false (enforced by SCC)
+  # readOnlyRootFilesystem: false
+  # runAsNonRoot: true (enforced by SCC)
+  # runAsUser: auto-assigned by OpenShift
+  capabilities:
+    drop:
+      - ALL
+
+# Service Account
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+# Monitoring and Observability
+monitoring:
+  enabled: false
+  serviceMonitor:
+    enabled: false
+    interval: 30s
+    scrapeTimeout: 10s
+
+# Autoscaling
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+# Node Selection
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# Additional labels and annotations
+commonLabels: {}
+commonAnnotations: {}
+
+# Environment-specific overrides
+environment: development
