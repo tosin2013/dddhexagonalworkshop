@@ -634,6 +634,27 @@ This single command spins up:
 - REST endpoint configuration
 - JSON serialization
 
+## 📚 Documentation
+
+### Deployment Guides
+
+- **[Workshop Deployment Guide](docs/DEPLOYMENT_GUIDE.md)**: Multi-user workshop setup and management
+  - HTPasswd user creation and management
+  - OpenShift Dev Spaces configuration
+  - Resource monitoring and troubleshooting
+  - **Use for**: Workshop facilitators, educational environments
+
+- **[Production Deployment Guide](docs/PRODUCTION_DEPLOYMENT.md)**: Application deployment for dev/staging/prod
+  - Helm chart customization
+  - Environment-specific configurations
+  - Production monitoring and scaling
+  - **Use for**: DevOps teams, application deployment
+
+### Additional Resources
+
+- **[OpenShift Dev Spaces Guide](docs/OPENSHIFT_DEV_SPACES.md)**: Complete Dev Spaces usage guide
+- **[Complete Environment Setup](docs/devfile-complete-setup-guide.md)**: Devfile configuration details
+
 ## Get Started!
 
 [01 End to End DDD](01-End-to-End-DDD/README.md)
