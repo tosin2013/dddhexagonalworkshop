@@ -711,10 +711,4 @@ monitoring:
     interval: 15s
 ```
 
-## Support
 
-For issues and questions:
-
-- **Repository**: https://github.com/jeremyrdavis/dddhexagonalworkshop
-- **Author**: Tosin Akinsoho <takinosh@redhat.com>
-- **Documentation**: Check the `docs/` directory for additional guides
