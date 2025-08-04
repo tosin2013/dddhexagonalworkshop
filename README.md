@@ -15,7 +15,6 @@ https://devspaces.apps.<your-cluster-domain>#https://github.com/tosin2013/dddhex
 ```
 
 **Setup Guide:** See [Complete Environment Setup Guide](docs/devfile-complete-setup-guide.md)
-
 ## 🎯 Workshop Overview
 
 This workshop is for anyone who likes to get their hands on a keyboard as part of the learning process. Your project authors believe that architecture is best learned through practice, and this workshop provides a structured way to apply Domain-Driven Design (DDD) principles in a practical context.
@@ -278,6 +277,7 @@ External World → REST → Domain Logic → Events → External Systems
 
 ---
 
+<<<<<<< HEAD
 ## Workshop Environment Options
 
 There are 3 ways to do the workshop:
@@ -587,6 +587,16 @@ oc delete checluster devspaces -n openshift-devspaces
 oc delete namespace openshift-devspaces
 ```
 
+=======
+## Hands-on-Keyboards Checklist 
+
+There are 2 ways to do the workshop:
+
+- GitHub Codespace: [GitHub Codespaces](GitHub-Codespaces.md)
+
+- Quarkus' Dev Mode on your laptop: [Quarkus Local](Quarkus-Local.md)
+
+>>>>>>> f861209fcd2da931cc03efb6207550f58a118e05
 ### Why Quarkus?
 
 - **⚡ Supersonic, Subatomic Java**: Incredibly fast startup times and low memory usage
