@@ -88,12 +88,27 @@ This section provides comprehensive instructions for deploying the DDD Hexagonal
 
 ### Overview
 
+The multi-user deployment uses **two main scripts**:
+
+1. **`create-workshop-users.sh`**: Creates HTPasswd users and namespaces
+   - Creates OpenShift users with HTPasswd authentication
+   - Creates user-specific namespaces (`user1-devspaces`, `user2-devspaces`, etc.)
+   - Sets up RBAC and resource quotas
+   - Uses positional parameters: `./scripts/create-workshop-users.sh [USER_PREFIX] [NUM_USERS] [PASSWORD]`
+
+2. **`deploy-multi-user-workshop.sh`**: Deploys workshop environments
+   - Deploys DevWorkspaces and workshop infrastructure
+   - Supports multiple input methods (files, counts, lists)
+   - Uses flag-based parameters: `--users-file`, `--count`, `--users`
+
+### What Gets Created
+
 The multi-user deployment creates:
-- **OpenShift Dev Spaces operator** for cloud-native development environments
-- **Individual user namespaces** with isolated resources
-- **Complete workshop environments** with Java 21, PostgreSQL, and Kafka
-- **User management** and access control
-- **Resource quotas** and limits per user
+- **HTPasswd users** in OpenShift authentication
+- **User namespaces** with pattern `{username}-devspaces`
+- **DevWorkspaces** for each user with complete development environment
+- **Resource quotas** and limits per user namespace
+- **RBAC** with proper permissions for workshop activities
 
 ### Multi-User Resource Requirements
 
@@ -138,48 +153,43 @@ oc get csv -n openshift-operators | grep devspaces
 
 ### Step 2: Create User Infrastructure
 
-#### 2.1 Generate User List
-Create a user list file with workshop participants:
+#### 2.1 Create Workshop Users
+The script uses positional parameters to create users:
 
 ```bash
-# Create users.txt with one username per line
-cat > users.txt << 'EOF'
-user1
-user2
-user3
-user4
-user5
-user10
-user15
-user20
-EOF
+# Basic usage: ./scripts/create-workshop-users.sh [USER_PREFIX] [NUM_USERS] [PASSWORD]
+
+# Create 5 users (user1-user5) with default password
+./scripts/create-workshop-users.sh user 5 workshop123
+
+# Create 20 users (user1-user20) with custom password
+./scripts/create-workshop-users.sh user 20 mypassword
+
+# Create users with different prefix (student1-student10)
+./scripts/create-workshop-users.sh student 10 workshop123
 ```
 
-#### 2.2 Deploy User Infrastructure
-```bash
-# Deploy infrastructure for all users
-./scripts/create-workshop-users.sh --users-file users.txt
-
-# Or deploy for specific number of users
-./scripts/create-workshop-users.sh --count 20
-```
-
+#### 2.2 What the Script Creates
 This script creates:
-- **User namespaces**: `ddd-workshop-user1`, `ddd-workshop-user2`, etc.
-- **Resource quotas**: CPU, memory, and storage limits per user
-- **RBAC**: Proper permissions for each user
-- **Network policies**: Isolation between user environments
+- **HTPasswd Authentication**: Users in OpenShift's htpasswd identity provider
+- **User namespaces**: `user1-devspaces`, `user2-devspaces`, etc.
+- **Resource quotas**: CPU, memory, and storage limits per user namespace
+- **RBAC**: Service accounts, roles, and role bindings for each user
+- **Workshop labels**: Proper labeling for workshop management
 
 #### 2.3 Verify User Infrastructure
 ```bash
-# Check all user namespaces
-oc get namespaces | grep ddd-workshop-user
+# Check all user namespaces (actual naming pattern)
+oc get namespaces | grep devspaces
 
 # Verify resource quotas
 oc get resourcequota -A | grep ddd-workshop
 
-# Check RBAC
-oc get rolebindings -n ddd-workshop-user1
+# Check RBAC for a specific user
+oc get rolebindings -n user1-devspaces
+
+# List all workshop users
+oc get users | grep user
 ```
 
 ### Step 3: Deploy Workshop Environments
@@ -194,6 +204,9 @@ oc get rolebindings -n ddd-workshop-user1
 
 # Or deploy for specific users
 ./scripts/deploy-multi-user-workshop.sh --users "user1,user2,user3"
+
+# Dry run to see what would be created
+./scripts/deploy-multi-user-workshop.sh --dry-run --count 5
 ```
 
 #### 3.2 Verify Workspace Deployment
@@ -206,6 +219,9 @@ watch 'oc get devworkspace -A | grep ddd-workshop'
 
 # Check workspace events
 oc get events -A | grep devworkspace
+
+# Check specific user workspace
+oc get devworkspace -n user1-devspaces
 ```
 
 ### Step 4: User Access and URLs
@@ -217,17 +233,26 @@ oc get events -A | grep devworkspace
 
 # Or generate URLs for specific count
 ./scripts/deploy-multi-user-workshop.sh --generate-urls --count 20
+
+# The create-workshop-users.sh script also displays access information
+./scripts/create-workshop-users.sh user 20 workshop123
 ```
 
 #### 4.2 User Access Pattern
-Each user gets a unique Dev Spaces URL:
+Each user gets access to Dev Spaces with their credentials:
 ```
-# User-specific Dev Spaces URLs
-https://devspaces.apps.<cluster-domain>/#https://github.com/tosin2013/dddhexagonalworkshop.git&devfilePath=devfile-complete.yaml
+# Dev Spaces URL (shared for all users)
+https://devspaces.apps.<cluster-domain>
 
-# User credentials (if using HTPasswd)
+# User credentials (created by create-workshop-users.sh)
 Username: user1, user2, user3, etc.
-Password: <workshop-password>
+Password: workshop123 (or custom password)
+
+# Repository URL for workspace creation
+https://github.com/tosin2013/dddhexagonalworkshop.git
+
+# User namespaces (created automatically)
+user1-devspaces, user2-devspaces, etc.
 ```
 
 ### Step 5: Workshop Management
@@ -239,22 +264,26 @@ oc get devworkspace -A | grep ddd-workshop
 
 # View resource usage
 oc adm top nodes
-oc adm top pods -A | grep ddd-workshop
+oc adm top pods -A | grep devspaces
 
 # Monitor workspace health
 watch 'oc get devworkspace -A -o custom-columns=NAME:.metadata.name,NAMESPACE:.metadata.namespace,PHASE:.status.phase,STARTED:.spec.started'
+
+# Check user namespaces
+oc get namespaces | grep devspaces
 ```
 
 #### 5.2 User Support Commands
 ```bash
-# Restart specific user workspace
-oc delete devworkspace ddd-workshop-user5 -n ddd-workshop-user5
+# Restart specific user workspace (check actual workspace name first)
+oc get devworkspace -n user5-devspaces
+oc delete devworkspace <workspace-name> -n user5-devspaces
 
 # Check user logs
 oc logs -f deployment/devworkspace-controller -n openshift-devspaces
 
 # Reset user environment by deleting and recreating workspace
-oc delete devworkspace ddd-workshop-user5 -n ddd-workshop-user5
+oc delete devworkspace <workspace-name> -n user5-devspaces
 ./scripts/deploy-multi-user-workshop.sh --users "user5"
 ```
 
@@ -262,37 +291,54 @@ oc delete devworkspace ddd-workshop-user5 -n ddd-workshop-user5
 
 #### 6.1 Add More Users During Workshop
 ```bash
-# Add additional users
-echo -e "user21\nuser22\nuser23" >> users.txt
-./scripts/create-workshop-users.sh --users-file users.txt --incremental
+# Add additional users using create-workshop-users.sh
+# Note: This will add to existing htpasswd, but you need to specify total count
+./scripts/create-workshop-users.sh user 25 workshop123  # Creates user1-user25
+
+# Then deploy workspaces for new users
+./scripts/deploy-multi-user-workshop.sh --users "user21,user22,user23,user24,user25"
+
+# Or use incremental deployment
+./scripts/deploy-multi-user-workshop.sh --incremental --count 25
 ```
 
 #### 6.2 Resource Monitoring
 ```bash
 # Monitor cluster resources
-watch 'oc adm top nodes && echo "---" && oc adm top pods -A | grep ddd-workshop | head -10'
+watch 'oc adm top nodes && echo "---" && oc adm top pods -A | grep devspaces | head -10'
 
-# Check resource quotas
-oc get resourcequota -A -o custom-columns=NAMESPACE:.metadata.namespace,CPU-USED:.status.used.cpu,CPU-LIMIT:.status.hard.cpu,MEMORY-USED:.status.used.memory,MEMORY-LIMIT:.status.hard.memory
+# Check resource quotas for user namespaces
+oc get resourcequota -A | grep ddd-workshop
+
+# Detailed resource quota view
+oc get resourcequota -A -o custom-columns=NAMESPACE:.metadata.namespace,CPU-USED:.status.used.cpu,CPU-LIMIT:.status.hard.cpu,MEMORY-USED:.status.used.memory,MEMORY-LIMIT:.status.hard.memory | grep devspaces
 ```
 
 ### Step 7: Workshop Cleanup
 
 #### 7.1 Clean Up User Environments
 ```bash
-# Remove all user workspaces
-./scripts/create-workshop-users.sh --cleanup --users-file users.txt
+# Remove all user workspaces using deploy script
+./scripts/deploy-multi-user-workshop.sh --cleanup --users-file users.txt
 
 # Or remove specific users
-./scripts/create-workshop-users.sh --cleanup --users "user1,user2,user3"
+./scripts/deploy-multi-user-workshop.sh --cleanup --users "user1,user2,user3"
+
+# Note: create-workshop-users.sh doesn't have cleanup flags
+# You need to manually remove users from htpasswd if needed
 ```
 
 #### 7.2 Complete Cleanup
 ```bash
-# Remove all workshop resources
-for ns in $(oc get ns | grep ddd-workshop-user | awk '{print $1}'); do
+# Remove all workshop user namespaces (correct pattern)
+for ns in $(oc get ns | grep '\-devspaces' | awk '{print $1}'); do
   oc delete namespace $ns
 done
+
+# Remove users from htpasswd (manual process)
+# oc get secret htpasswd -n openshift-config -o jsonpath='{.data.htpasswd}' | base64 -d > /tmp/htpasswd
+# Edit /tmp/htpasswd to remove users
+# oc create secret generic htpasswd --from-file=htpasswd=/tmp/htpasswd --dry-run=client -o yaml | oc replace -f - -n openshift-config
 
 # Remove Dev Spaces operator (optional)
 oc delete subscription devspaces -n openshift-operators
@@ -314,11 +360,14 @@ oc patch resourcequota user-quota -n ddd-workshop-user1 --patch '{"spec":{"hard"
 
 **2. Workspace Startup Failures**
 ```bash
-# Check workspace events
-oc get events -n ddd-workshop-user1 --sort-by='.lastTimestamp'
+# Check workspace events (use correct namespace pattern)
+oc get events -n user1-devspaces --sort-by='.lastTimestamp'
 
-# Restart workspace
-oc delete devworkspace ddd-workshop-user1 -n ddd-workshop-user1
+# List workspaces in user namespace
+oc get devworkspace -n user1-devspaces
+
+# Restart workspace (get actual workspace name first)
+oc delete devworkspace <workspace-name> -n user1-devspaces
 ```
 
 **3. Network Connectivity Issues**
@@ -327,7 +376,7 @@ oc delete devworkspace ddd-workshop-user1 -n ddd-workshop-user1
 oc get networkpolicy -A | grep ddd-workshop
 
 # Test connectivity between services
-oc exec -it <pod-name> -n ddd-workshop-user1 -- nc -zv localhost 5432
+oc exec -it <pod-name> -n user1-devspaces -- nc -zv localhost 5432
 ```
 
 ### Best Practices for Multi-User Workshops
