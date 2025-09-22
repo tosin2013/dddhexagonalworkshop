@@ -59,7 +59,7 @@ components:
       cpuLimit: "200m"
       cpuRequest: "100m"
       env:
-       - name: POSTGRESQL_USER
+        - name: POSTGRESQL_USER
           value: "quarkus"
         - name: POSTGRESQL_PASSWORD
           value: "quarkus"
