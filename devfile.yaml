@@ -73,7 +73,7 @@ components:
           value: "2MB"
         - name: POSTGRESQL_MAX_CONNECTIONS
           value: "50"
-       endpoints:
+      endpoints:
         - name: postgresql
           targetPort: 5432
           exposure: none
