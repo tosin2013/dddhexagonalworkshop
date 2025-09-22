@@ -41,15 +41,10 @@ components:
         - name: http-8080
           targetPort: 8080
           exposure: public
-          protocol: http
-          attributes:
-            discoverable: "true"
-            urlRewriteSupported: "true"
+          protocol: https
         - name: debug
           targetPort: 5005
           exposure: internal
-          attributes:
-            discoverable: "false"
       volumeMounts:
         - name: m2
           path: /home/jboss/.m2
@@ -64,20 +59,6 @@ components:
       cpuLimit: "200m"
       cpuRequest: "100m"
       env:
-        - name: POSTGRESQL_USER
-          value: "attendee"
-        - name: POSTGRESQL_PASSWORD
-          value: "workshop"
-        - name: POSTGRESQL_DATABASE
-          value: "conference"
-        - name: POSTGRESQL_ADMIN_PASSWORD
-          value: "admin123"
-        - name: POSTGRESQL_SHARED_BUFFERS
-          value: "32MB"
-        - name: POSTGRESQL_WORK_MEM
-          value: "2MB"
-        - name: POSTGRESQL_MAX_CONNECTIONS
-          value: "50"
       endpoints:
         - name: postgresql
           targetPort: 5432
