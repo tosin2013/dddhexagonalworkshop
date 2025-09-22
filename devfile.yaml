@@ -59,7 +59,21 @@ components:
       cpuLimit: "200m"
       cpuRequest: "100m"
       env:
-      endpoints:
+       - name: POSTGRESQL_USER
+          value: "quarkus"
+        - name: POSTGRESQL_PASSWORD
+          value: "quarkus"
+        - name: POSTGRESQL_DATABASE
+          value: "quarkus"
+        - name: POSTGRESQL_ADMIN_PASSWORD
+          value: "quarkus"
+        - name: POSTGRESQL_SHARED_BUFFERS
+          value: "32MB"
+        - name: POSTGRESQL_WORK_MEM
+          value: "2MB"
+        - name: POSTGRESQL_MAX_CONNECTIONS
+          value: "50"
+       endpoints:
         - name: postgresql
           targetPort: 5432
           exposure: none
