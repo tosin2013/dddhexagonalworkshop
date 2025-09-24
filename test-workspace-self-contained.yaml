@@ -52,11 +52,11 @@ spec:
           memoryRequest: "256Mi"
           env:
             - name: POSTGRESQL_USER
-              value: attendee
+              value: quarkus
             - name: POSTGRESQL_PASSWORD
-              value: workshop
+              value: quarkus
             - name: POSTGRESQL_DATABASE
-              value: conference
+              value: quarkus
             - name: POSTGRESQL_ADMIN_PASSWORD
               value: admin123
           endpoints:
@@ -127,9 +127,9 @@ spec:
             - name: QUARKUS_DATASOURCE_DB_KIND
               value: postgresql
             - name: QUARKUS_DATASOURCE_USERNAME
-              value: attendee
+              value: quarkus
             - name: QUARKUS_DATASOURCE_PASSWORD
-              value: workshop
+              value: quarkus
             - name: QUARKUS_DATASOURCE_JDBC_URL
               value: jdbc:postgresql://localhost:5432/conference
             - name: KAFKA_BOOTSTRAP_SERVERS
@@ -186,7 +186,7 @@ spec:
             echo "📊 PostgreSQL: localhost:5432"
             echo "📨 Kafka: localhost:9092"
             echo "🗄️  Database: conference"
-            echo "👤 User: attendee"
+            echo "👤 User: quarkus"
             echo "✅ Self-contained services configured!"
           group:
             kind: build

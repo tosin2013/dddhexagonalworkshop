@@ -93,11 +93,11 @@ QUARKUS_DEV --> SERVICES_DEV
         cpu: "500m"
     env:
       - name: POSTGRESQL_USER
-        value: attendee
+        value: quarkus
       - name: POSTGRESQL_PASSWORD
-        value: workshop
+        value: quarkus
       - name: POSTGRESQL_DATABASE
-        value: conference
+        value: quarkus
       - name: POSTGRESQL_SHARED_BUFFERS
         value: "64MB"    # Tuned for container environment
       - name: POSTGRESQL_WORK_MEM
