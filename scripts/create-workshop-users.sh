@@ -217,7 +217,8 @@ if oc get route devspaces -n openshift-devspaces >/dev/null 2>&1; then
 elif oc get checluster devspaces -n openshift-devspaces >/dev/null 2>&1; then
     DEVSPACES_URL=$(oc get checluster devspaces -n openshift-devspaces -o jsonpath='{.status.cheURL}' 2>/dev/null)
 else
-    DEVSPACES_URL="https://devspaces.apps.${CLUSTER_DOMAIN}"
+    # CLUSTER_DOMAIN already includes "apps.", so just prepend "devspaces."
+    DEVSPACES_URL="https://devspaces.${CLUSTER_DOMAIN}"
 fi
 
 # Get OpenShift console URL dynamically

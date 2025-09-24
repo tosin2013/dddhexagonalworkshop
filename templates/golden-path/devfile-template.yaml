@@ -39,9 +39,9 @@ components:
         - name: QUARKUS_DATASOURCE_DB_KIND
           value: postgresql
         - name: QUARKUS_DATASOURCE_USERNAME
-          value: attendee
+          value: quarkus
         - name: QUARKUS_DATASOURCE_PASSWORD
-          value: workshop
+          value: quarkus
         - name: QUARKUS_DATASOURCE_JDBC_URL
           value: jdbc:postgresql://$(POSTGRES_SERVICE_HOST):5432/conference
         - name: KAFKA_BOOTSTRAP_SERVERS
