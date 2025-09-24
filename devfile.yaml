@@ -41,15 +41,10 @@ components:
         - name: http-8080
           targetPort: 8080
           exposure: public
-          protocol: http
-          attributes:
-            discoverable: "true"
-            urlRewriteSupported: "true"
+          protocol: https
         - name: debug
           targetPort: 5005
           exposure: internal
-          attributes:
-            discoverable: "false"
       volumeMounts:
         - name: m2
           path: /home/jboss/.m2
@@ -65,13 +60,13 @@ components:
       cpuRequest: "100m"
       env:
         - name: POSTGRESQL_USER
-          value: "attendee"
+          value: "quarkus"
         - name: POSTGRESQL_PASSWORD
-          value: "workshop"
+          value: "quarkus"
         - name: POSTGRESQL_DATABASE
-          value: "conference"
+          value: "quarkus"
         - name: POSTGRESQL_ADMIN_PASSWORD
-          value: "admin123"
+          value: "quarkus"
         - name: POSTGRESQL_SHARED_BUFFERS
           value: "32MB"
         - name: POSTGRESQL_WORK_MEM
