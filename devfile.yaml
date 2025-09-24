@@ -38,7 +38,7 @@ components:
           value: "jdbc:postgresql://localhost:5432/quarkus"
         - name: KAFKA_BOOTSTRAP_SERVERS
           # value: "ddd-workshop-kafka.ddd-workshop.svc.cluster.local:9092"
-          value: "ddd-workshop-kafka.ddd-workshop.svc.cluster.local:9092"
+          value: "localhost:9092"
       endpoints:
         - name: http-8080
           targetPort: 8080
