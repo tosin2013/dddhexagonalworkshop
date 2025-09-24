@@ -34,7 +34,7 @@ components:
         - name: JAVA_HOME
           value: "/usr/lib/jvm/java-21-openjdk"
         - name: QUARKUS_DATASOURCE_JDBC_URL
-          value: "jdbc:postgresql://ddd-workshop-postgresql:5432/quarkus"
+          value: "jdbc:postgresql://ddd-workshop-postgresql.ddd-workshop.svc.cluster.local:5432/quarkus"
         - name: KAFKA_BOOTSTRAP_SERVERS
           value: "localhost:9092"
       endpoints:
