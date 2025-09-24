@@ -326,13 +326,13 @@ spec:
           cpuRequest: 100m
           env:
             - name: POSTGRESQL_USER
-              value: "attendee"
+              value: "quarkus"
             - name: POSTGRESQL_PASSWORD
-              value: "workshop"
+              value: "quarkus"
             - name: POSTGRESQL_DATABASE
-              value: "conference"
+              value: "quarkus"
             - name: POSTGRESQL_ADMIN_PASSWORD
-              value: "admin123"
+              value: "quarkus"
           endpoints:
             - name: postgresql
               targetPort: 5432

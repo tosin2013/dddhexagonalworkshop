@@ -5,6 +5,27 @@ environment: development
 postgresql:
   image: rhel9/postgresql-16
   tag: latest
+  enabled: true
+  resources:
+    limits:
+      memory: 512Mi
+      cpu: 200m
+    requests:
+      memory: 256Mi
+      cpu: 100m
+  database: quarkus
+  username: quarkus
+  password: quarkus
+  adminPassword: quarkus
+  persistence:
+    enabled: false
+    storageClass: ""
+    size: 1Gi
+  service:
+    type: ClusterIP
+    port: 5432
+  expose:
+    enabled: false
 
 kafka:
   image: bitnami/kafka

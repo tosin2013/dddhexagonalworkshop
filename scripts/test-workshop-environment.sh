@@ -115,7 +115,7 @@ test_environment_startup() {
     
     # Test database connection
     if command -v psql >/dev/null 2>&1; then
-        run_test "PostgreSQL Database Connection" "PGPASSWORD=workshop psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U attendee -d conference -c 'SELECT 1;'"
+        run_test "PostgreSQL Database Connection" "PGPASSWORD=quarkus psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U quarkus -d quarkus -c 'SELECT 1;'"
     else
         skip_test "PostgreSQL Database Connection" "psql not available"
     fi
@@ -212,7 +212,7 @@ test_data_persistence() {
     
     # Test database table creation
     if command -v psql >/dev/null 2>&1; then
-        run_test "Database Tables Exist" "PGPASSWORD=workshop psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U attendee -d conference -c '\\dt' | grep -q 'public'"
+        run_test "Database Tables Exist" "PGPASSWORD=quarkus psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U quarkus -d quarkus -c '\\dt' | grep -q 'public'"
     else
         skip_test "Database Tables Exist" "psql not available"
     fi

@@ -19,10 +19,10 @@ postgresql:
     requests:
       memory: 256Mi
       cpu: 100m
-  database: conference
-  username: attendee
-  password: workshop
-  adminPassword: admin123
+  database: quarkus
+  username: quarkus
+  password: quarkus
+  adminPassword: quarkus
   persistence:
     enabled: false
     storageClass: ""
@@ -88,7 +88,7 @@ devSpaces:
   enabled: true
   devfileVersion: "2.2.0"
   # Development pattern: "self-contained" or "external-services"
-  pattern: "self-contained"  # self-contained = containers in workspace, external-services = connect to cluster services
+  pattern: "self-contained" # self-contained = containers in workspace, external-services = connect to cluster services
   workspace:
     name: ddd-workshop
     displayName: "DDD Hexagonal Architecture Workshop"

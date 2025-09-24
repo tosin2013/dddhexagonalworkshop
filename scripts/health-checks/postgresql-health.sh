@@ -7,8 +7,8 @@ set -e
 # Configuration
 POSTGRES_HOST=${POSTGRES_HOST:-localhost}
 POSTGRES_PORT=${POSTGRES_PORT:-5432}
-POSTGRES_USER=${POSTGRESQL_USER:-attendee}
-POSTGRES_DB=${POSTGRESQL_DATABASE:-conference}
+POSTGRES_USER=${POSTGRESQL_USER:-quarkus}
+POSTGRES_DB=${POSTGRESQL_DATABASE:-quarkus}
 MAX_ATTEMPTS=${MAX_ATTEMPTS:-30}
 SLEEP_INTERVAL=${SLEEP_INTERVAL:-2}
 
@@ -86,8 +86,8 @@ case "${1:-}" in
         echo "Environment Variables:"
         echo "  POSTGRES_HOST          PostgreSQL host (default: localhost)"
         echo "  POSTGRES_PORT          PostgreSQL port (default: 5432)"
-        echo "  POSTGRESQL_USER        PostgreSQL user (default: attendee)"
-        echo "  POSTGRESQL_DATABASE    PostgreSQL database (default: conference)"
+        echo "  POSTGRESQL_USER        PostgreSQL user (default: quarkus)"
+        echo "  POSTGRESQL_DATABASE    PostgreSQL database (default: quarkus)"
         echo "  MAX_ATTEMPTS           Maximum health check attempts (default: 30)"
         echo "  SLEEP_INTERVAL         Sleep interval between attempts (default: 2)"
         echo ""

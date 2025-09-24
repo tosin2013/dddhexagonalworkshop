@@ -5,8 +5,8 @@
 set -e
 
 # Cluster Configuration (set these environment variables or update here)
-CLUSTER_SERVER="${CLUSTER_SERVER:-https://api.<your-cluster-domain>:6443}"
-CLUSTER_TOKEN="${CLUSTER_TOKEN:-<your-cluster-token>}"
+CLUSTER_SERVER="${CLUSTER_SERVER:-https://api.cluster-6lwnl.6lwnl.sandbox1592.opentlc.com:6443}"
+CLUSTER_TOKEN="${CLUSTER_TOKEN:-sha256~3EKmx_JOIpbRxckQoJrSqVSg7nnWn9n58nUT2CRQOco}"
 
 # Script configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
