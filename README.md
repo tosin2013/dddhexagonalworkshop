@@ -32,7 +32,7 @@ There is a great deal of theory in Domain Driven Design. This workshop was built
 ### OpenShift Dev Spaces (Direct Access)
 **Complete Environment with Java 21 + PostgreSQL + Kafka:**
 ```
-https://devspaces.apps.<your-cluster-domain>#https://github.com/tosin2013/dddhexagonalworkshop.git&devfilePath=devfile-complete.yaml
+https://devspaces.apps.<your-cluster-domain>#https://github.com/tosin2013/dddhexagonalworkshop.git&devfilePath=devfile.yaml
 ```
 
 **📖 Deployment Guides:**
