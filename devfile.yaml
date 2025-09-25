@@ -86,7 +86,7 @@ components:
   # Kafka Sidecar Container
   - name: kafka
     container:
-      image: quay.io/strimzi/kafka:latest-kafka-3.6.1 #bitnami/kafka:3.6
+      image: quay.io/takinosh/kafka:3.6 #bitnami/kafka:3.6
       memoryLimit: "768Mi"
       memoryRequest: "384Mi"
       cpuLimit: "300m"
