@@ -8,13 +8,37 @@ There is a great deal of theory in Domain Driven Design. This workshop was built
 
 ## 🚀 Quick Start
 
-### OpenShift Dev Spaces (Recommended)
+### For Workshop Instructors (Multi-User)
+```bash
+# Setup cluster prerequisites (one-time)
+./scripts/deploy-workshop.sh --cluster-setup
+
+# Deploy workshop for 20 users
+./scripts/deploy-workshop.sh --workshop --count 20
+
+# Generate access URLs
+./scripts/deploy-workshop.sh --workshop --generate-urls --use-existing
+```
+
+### For Individual Developers (Single-User)
+```bash
+# Deploy personal workshop environment
+./scripts/deploy-workshop.sh --single-user --namespace my-workshop
+
+# Test your deployment
+./scripts/deploy-workshop.sh --test --single-user
+```
+
+### OpenShift Dev Spaces (Direct Access)
 **Complete Environment with Java 21 + PostgreSQL + Kafka:**
 ```
 https://devspaces.apps.<your-cluster-domain>#https://github.com/tosin2013/dddhexagonalworkshop.git&devfilePath=devfile-complete.yaml
 ```
 
-**Setup Guide:** See [Complete Environment Setup Guide](docs/devfile-complete-setup-guide.md)
+**📖 Deployment Guides:**
+- **[Consolidated Scripts Guide](docs/CONSOLIDATED_SCRIPTS_GUIDE.md)** - New unified deployment system
+- **[Complete Environment Setup Guide](docs/devfile-complete-setup-guide.md)** - Dev Spaces setup
+- **[Deployment Guide](docs/DEPLOYMENT_GUIDE.md)** - Comprehensive deployment instructions
 ## 🎯 Workshop Overview
 
 This workshop is for anyone who likes to get their hands on a keyboard as part of the learning process. Your project authors believe that architecture is best learned through practice, and this workshop provides a structured way to apply Domain-Driven Design (DDD) principles in a practical context.

@@ -1,14 +1,18 @@
 # OpenShift Deployment Guide
 ## DDD Hexagonal Architecture Workshop
 
-This guide provides comprehensive instructions for deploying the DDD Hexagonal Architecture Workshop to OpenShift clusters using Helm charts and OpenShift Dev Spaces.
+This guide provides comprehensive instructions for deploying the DDD Hexagonal Architecture Workshop to OpenShift clusters using the new consolidated script system.
+
+> **🆕 New Consolidated Scripts**: This workshop now uses a unified deployment system. See the **[Consolidated Scripts Guide](CONSOLIDATED_SCRIPTS_GUIDE.md)** for the complete new interface.
 
 ## Table of Contents
 
 1. [Prerequisites](#prerequisites)
-2. [Quick Start - Red Hat Workshop Cluster](#quick-start---red-hat-workshop-cluster)
+2. [Quick Start - Consolidated Scripts](#quick-start---consolidated-scripts)
 3. [Multi-User Workshop Deployment](#multi-user-workshop-deployment)
-4. [Additional Resources](#additional-resources)
+4. [Single-User Deployment](#single-user-deployment)
+5. [Legacy Scripts (Deprecated)](#legacy-scripts-deprecated)
+6. [Additional Resources](#additional-resources)
 
 ## Prerequisites
 
@@ -42,7 +46,42 @@ This guide provides comprehensive instructions for deploying the DDD Hexagonal A
 - **Access**: Cluster admin permissions required for multi-user deployments
 - **Network**: Ingress controller configured with wildcard DNS
 
-## Quick Start - Red Hat Workshop Cluster
+## Quick Start - Consolidated Scripts
+
+The new consolidated script system provides a unified interface for all deployment scenarios:
+
+### Multi-User Workshop (Instructors)
+
+```bash
+# 1. Setup cluster prerequisites (one-time)
+./scripts/deploy-workshop.sh --cluster-setup
+
+# 2. Deploy workshop for 20 users
+./scripts/deploy-workshop.sh --workshop --count 20
+
+# 3. Test the deployment
+./scripts/deploy-workshop.sh --test --workshop --count 20
+
+# 4. Generate access URLs
+./scripts/deploy-workshop.sh --workshop --generate-urls --count 20
+```
+
+### Single-User Deployment (Individual Developers)
+
+```bash
+# 1. Deploy personal environment
+./scripts/deploy-workshop.sh --single-user --namespace my-workshop
+
+# 2. Test deployment
+./scripts/deploy-workshop.sh --test --single-user
+
+# 3. Cleanup when done
+./scripts/deploy-workshop.sh --single-user --cleanup --namespace my-workshop
+```
+
+## Legacy Quick Start - Red Hat Workshop Cluster
+
+> **⚠️ Deprecated**: The following instructions use legacy scripts. Use the consolidated scripts above for new deployments.
 
 For the specific Red Hat workshop cluster mentioned in the PRD:
 
