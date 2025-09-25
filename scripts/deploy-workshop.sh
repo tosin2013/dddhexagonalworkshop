@@ -94,12 +94,12 @@ parse_arguments() {
                 ;;
             --count)
                 USER_COUNT="$2"
-                validate_numeric_range "$USER_COUNT" 1 100 "user count"
+                # Validation will be done after libraries are loaded
                 shift 2
                 ;;
             --users-file)
                 USERS_FILE="$2"
-                validate_file "$USERS_FILE" "users file"
+                # Validation will be done after libraries are loaded
                 shift 2
                 ;;
             --users)
@@ -162,7 +162,7 @@ parse_arguments() {
         exit 1
     fi
 
-    log_debug "Parsed arguments - Mode: $MODE, Namespace: $NAMESPACE"
+    # log_debug "Parsed arguments - Mode: $MODE, Namespace: $NAMESPACE"
 }
 
 #######################################
@@ -363,6 +363,68 @@ generate_workshop_urls() {
     echo ""
 }
 
+# Cluster setup mode implementation
+execute_cluster_setup_mode() {
+    log_step "Executing cluster setup mode..."
+    log_confidence "85" "Cluster setup process"
+
+    # Validate prerequisites
+    check_openshift_login || exit 1
+    check_cluster_admin || exit 1
+
+    if [[ "$DRY_RUN" == "true" ]]; then
+        log_warn "DRY RUN MODE - No changes will be made"
+        log_info "Would setup cluster for workshop deployment"
+        return 0
+    fi
+
+    # Setup cluster for workshop
+    setup_cluster_for_workshop
+}
+
+# Test mode implementation
+execute_test_mode() {
+    log_step "Executing test mode..."
+    log_confidence "80" "Testing framework execution"
+
+    # Validate prerequisites
+    check_openshift_login || exit 1
+
+    # Determine test mode and users
+    local test_mode="environment"
+    local users_for_test=""
+
+    if [[ "$MODE" == "test" ]]; then
+        # Build user list for testing
+        if [[ -n "$USERS_FILE" ]]; then
+            users_for_test=$(tr '\n' ',' < "$USERS_FILE" | sed 's/,$//')
+        elif [[ $USER_COUNT -gt 0 ]]; then
+            local user_array=()
+            for ((i=1; i<=USER_COUNT; i++)); do
+                user_array+=("${USER_PREFIX}${i}")
+            done
+            users_for_test=$(IFS=','; echo "${user_array[*]}")
+        elif [[ -n "$USERS_LIST" ]]; then
+            users_for_test="$USERS_LIST"
+        elif [[ "$USE_EXISTING_USERS" == "true" ]]; then
+            detect_existing_htpasswd_users
+            local existing_users=()
+            mapfile -t existing_users < <(get_detected_pattern_users)
+            users_for_test=$(IFS=','; echo "${existing_users[*]}")
+        fi
+
+        test_mode="workshop"
+    fi
+
+    log_info "Running test suite in $test_mode mode"
+    if [[ -n "$users_for_test" ]]; then
+        log_info "Testing users: $users_for_test"
+    fi
+
+    # Run comprehensive test suite
+    run_workshop_test_suite "$test_mode" "$users_for_test"
+}
+
 #######################################
 # Main Execution
 #######################################
@@ -370,17 +432,17 @@ generate_workshop_urls() {
 main() {
     # Handle help first without loading heavy libraries
     if [[ $# -eq 0 ]] || [[ "$1" == "--help" ]] || [[ "$1" == "-h" ]]; then
-        usage
+        show_usage "$SCRIPT_NAME" "$SCRIPT_VERSION" "$SCRIPT_DESCRIPTION"
         exit 0
     fi
+
+    # Parse command line arguments first (basic parsing)
+    parse_arguments "$@"
 
     # Load libraries only when we need to do actual work
     load_libraries
 
     print_script_header "$SCRIPT_NAME" "$SCRIPT_DESCRIPTION" "$SCRIPT_VERSION"
-
-    # Parse command line arguments
-    parse_arguments "$@"
     
     # Execute based on mode
     case "$MODE" in

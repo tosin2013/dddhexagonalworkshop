@@ -440,4 +440,4 @@ export -f deploy_multi_user_devworkspaces wait_for_multi_user_devworkspaces
 export -f remove_user_devworkspace remove_multi_user_devworkspaces
 export -f get_devworkspace_status display_multi_user_status
 
-log_debug "Multi-user deployment library loaded"
+# log_debug "Multi-user deployment library loaded"

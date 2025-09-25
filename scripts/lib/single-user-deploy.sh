@@ -376,4 +376,4 @@ export -f configure_dev_environment create_dev_configmap setup_dev_secrets
 export -f deploy_single_user_environment display_single_user_access_info
 export -f cleanup_single_user_environment
 
-log_debug "Single-user deployment library loaded"
+# log_debug "Single-user deployment library loaded"

@@ -358,4 +358,4 @@ export -f install_devspaces_operator create_checluster configure_cluster_for_wor
 export -f validate_devspaces_installation get_devspaces_url display_cluster_setup_info
 export -f setup_cluster_for_workshop
 
-log_debug "Cluster setup library loaded"
+# log_debug "Cluster setup library loaded"
