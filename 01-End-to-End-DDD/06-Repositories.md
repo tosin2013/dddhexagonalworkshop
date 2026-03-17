@@ -269,36 +269,9 @@ import java.util.Optional;
       public void persist(Attendee aggregate) {
       // Convert domain aggregate to persistence entity
       AttendeeEntity attendeeEntity = fromAggregate(aggregate);
-
-      // Use inherited Panache method to persist
-      persist(attendeeEntity);
-      }
-
-  /**
-    * Finds an attendee by their email address.
-    * Returns a domain aggregate, not a persistence entity.
-    *
-    * @param email The email address to search for
-    * @return Optional containing the Attendee aggregate if found
-      */
-      public Optional<Attendee> findByEmail(String email) {
-      // Query using persistence entity
-      Optional<AttendeeEntity> entityOpt = find("email", email).firstResultOptional();
-
-      // Convert persistence entity back to domain aggregate
-      return entityOpt.map(this::toAggregate);
-      }
-
-  /**
-    * Removes an attendee from the database.
-    *
-    * @param attendee The Attendee aggregate to remove
-      */
-      public void remove(Attendee attendee) {
-      // Find the corresponding entity and delete it
-      find("email", attendee.getEmail())
-      .firstResultOptional()
-      .ifPresent(this::delete);
+    
+          // Use inherited Panache method to persist
+          persist(attendeeEntity);
       }
 
   /**
@@ -309,22 +282,9 @@ import java.util.Optional;
     * @return The persistence entity
       */
       private AttendeeEntity fromAggregate(Attendee attendee) {
-      return new AttendeeEntity(attendee.getEmail());
+          return new AttendeeEntity(attendee.getEmail());
       }
-
-  /**
-    * Converts an AttendeeEntity from the database to a domain Attendee aggregate.
-    * This reconstitutes the domain object from persisted data.
-    *
-    * @param entity The persistence entity
-    * @return The domain aggregate
-      */
-      private Attendee toAggregate(AttendeeEntity entity) {
-      // Note: In a real system, you might need a factory method on Attendee
-      // to reconstruct from persisted state, since registerAttendee() is for new attendees
-      return Attendee.fromPersistedData(entity.getEmail());
-      }
-      }
+}
 
 ```
 
