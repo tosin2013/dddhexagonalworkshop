@@ -144,12 +144,48 @@ create_htpasswd_users() {
     
     # Update the htpasswd secret
     log_info "Updating HTPasswd secret in OpenShift..."
-    if oc create secret generic htpasswd --from-file=htpasswd="$temp_htpasswd" --dry-run=client -o yaml | oc replace -f - -n openshift-config; then
-        log_success "HTPasswd secret updated successfully"
+    if oc get secret htpasswd -n openshift-config >/dev/null 2>&1; then
+        if oc create secret generic htpasswd --from-file=htpasswd="$temp_htpasswd" --dry-run=client -o yaml | oc replace -f - -n openshift-config; then
+            log_success "HTPasswd secret updated successfully"
+        else
+            log_error "Failed to update HTPasswd secret"
+            rm -f "$temp_htpasswd"
+            return 1
+        fi
     else
-        log_error "Failed to update HTPasswd secret"
-        rm -f "$temp_htpasswd"
-        return 1
+        if oc create secret generic htpasswd --from-file=htpasswd="$temp_htpasswd" -n openshift-config; then
+            log_success "HTPasswd secret created successfully"
+        else
+            log_error "Failed to create HTPasswd secret"
+            rm -f "$temp_htpasswd"
+            return 1
+        fi
+    fi
+    
+    # Ensure OAuth is configured to use HTPasswd identity provider
+    log_info "Ensuring OAuth HTPasswd identity provider is configured..."
+    local current_idps
+    current_idps=$(oc get oauth cluster -o jsonpath='{.spec.identityProviders}' 2>/dev/null || echo "")
+    if [[ -z "$current_idps" || "$current_idps" == "null" ]]; then
+        oc patch oauth cluster --type=merge -p '{
+          "spec": {
+            "identityProviders": [{
+              "name": "htpasswd",
+              "mappingMethod": "claim",
+              "type": "HTPasswd",
+              "htpasswd": {
+                "fileData": {
+                  "name": "htpasswd"
+                }
+              }
+            }]
+          }
+        }'
+        log_success "OAuth HTPasswd identity provider configured"
+        log_info "Waiting for authentication operator to reconcile..."
+        sleep 30
+    else
+        log_info "OAuth identity providers already configured"
     fi
     
     # Clean up temporary file

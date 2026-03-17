@@ -109,7 +109,7 @@ spec:
       
       - name: kafka
         container:
-          image: bitnami/kafka:3.6
+          image: quay.io/takinosh/kafka:3.6
           memoryLimit: 768Mi
           memoryRequest: 384Mi
           cpuLimit: 300m
@@ -273,17 +273,17 @@ deploy_multi_user_devworkspaces() {
             
             if oc get devworkspace "$workspace_name" -n "$namespace" >/dev/null 2>&1; then
                 log_info "DevWorkspace already exists for $username, skipping..."
-                ((skipped_count++))
+                skipped_count=$((skipped_count + 1))
                 continue
             fi
         fi
         
         # Create DevWorkspace
         if create_user_devworkspace "$username"; then
-            ((deployed_count++))
+            deployed_count=$((deployed_count + 1))
             log_success "DevWorkspace deployed for user: $username"
         else
-            ((failed_count++))
+            failed_count=$((failed_count + 1))
             log_error "Failed to deploy DevWorkspace for user: $username"
         fi
     done
