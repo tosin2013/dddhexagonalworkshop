@@ -226,8 +226,11 @@ execute_workshop_mode() {
             create_workshop_users "$USER_PREFIX" "${#users[@]}" "$PASSWORD" "$NAMESPACE_SUFFIX"
         fi
 
-        # Deploy DevWorkspaces for all users
-        deploy_multi_user_devworkspaces "${users[@]}"
+        # NOTE: DevWorkspaces are NOT pre-created here. Users create their own
+        # workspace by clicking the Dev Spaces URL (which clones the repo and
+        # applies the devfile). Pre-creating DevWorkspaces causes PVC conflicts
+        # (Multi-Attach error) when users later try to create workspaces from the
+        # Dev Spaces dashboard, because the per-workspace PVC is ReadWriteOnce.
 
         # Generate access URLs
         generate_workshop_urls "${users[@]}"
@@ -342,24 +345,30 @@ generate_workshop_urls() {
         devspaces_url="https://devspaces.${cluster_domain}"
     fi
     
-    echo ""
-    echo "=== Workshop Access URLs ==="
-    echo ""
+    local workspace_url="${devspaces_url}/#https://github.com/tosin2013/dddhexagonalworkshop.git&devfilePath=devfile.yaml"
     
+    echo ""
+    echo "=== Workshop Access ==="
+    echo ""
+    echo "Dev Spaces URL:    $devspaces_url"
+    echo "Workspace URL:     $workspace_url"
+    echo "OpenShift Console: https://console-openshift-console.${cluster_domain}"
+    echo ""
+    echo "=== User Credentials ==="
+    echo ""
+    printf "%-12s %-15s %-20s\n" "Username" "Password" "Namespace"
+    echo "----------------------------------------------"
     for username in "${users[@]}"; do
-        local workspace_url="${devspaces_url}/#https://github.com/tosin2013/dddhexagonalworkshop.git&devfilePath=devfile-complete.yaml"
-        echo "User: $username"
-        echo "  Dev Spaces: $workspace_url"
-        echo "  Namespace: ${username}-${NAMESPACE_SUFFIX}"
-        echo ""
+        printf "%-12s %-15s %-20s\n" "$username" "$PASSWORD" "${username}-${NAMESPACE_SUFFIX}"
     done
-    
+    echo ""
     echo "=== Instructions for Users ==="
-    echo "1. Click your Dev Spaces URL above"
-    echo "2. Login with your OpenShift credentials"
-    echo "3. Wait for workspace to start (2-3 minutes)"
-    echo "4. Run 'check-env' command to verify services"
-    echo "5. Start with Module 01: 01-End-to-End-DDD/01-Events.md"
+    echo "1. Open the Workspace URL above in your browser"
+    echo "2. Select the 'htpasswd' login option"
+    echo "3. Login with your assigned credentials"
+    echo "4. Wait for workspace to start (2-3 minutes)"
+    echo "5. Run 'check-env' command to verify PostgreSQL and Kafka"
+    echo "6. Start with Module 01: 01-End-to-End-DDD"
     echo ""
 }
 
