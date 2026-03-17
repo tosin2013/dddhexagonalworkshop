@@ -3,6 +3,18 @@
 
 Welcome to the **OpenShift Dev Spaces** version of the DDD Hexagonal Architecture Workshop! This guide will help you get started with the workshop using Red Hat's cloud-native development environment.
 
+## Prerequisites
+
+### OpenShift Cluster
+
+Before deploying the workshop, you need access to an OpenShift 4 cluster. If you do not already have one provided by a workshop instructor, you can request an **AWS with OpenShift Open Environment** from the Red Hat Demo Platform:
+
+> **[Request an AWS with OpenShift Open Environment](https://catalog.demo.redhat.com/catalog?item=babylon-catalog-prod/sandboxes-gpte.sandbox-ocp.prod&utm_source=webapp&utm_medium=share-link)**
+>
+> This catalog item provisions an OpenShift 4 cluster running in an AWS sandbox. The cluster is installed but not configured. You will receive the `kubeadmin` user password and a service account with `cluster-admin` privileges.
+
+This is required if you plan to follow **Option 2** below (deploying to your own cluster). If you are attending a Red Hat-led workshop with a pre-configured cluster, you can skip this step and proceed directly to the Quick Start.
+
 ## 🚀 Quick Start
 
 ### Option 1: Red Hat Workshop Cluster (Recommended)
